@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <title>bookmarklet util</title>
+    <meta content="">
+    <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+    <style>
+
+body {
+  padding: 1rem 5%;
+  background: #eee;
+}
+
+.block {
+  border: solid 1px #ccc;
+  background: #fff;
+  margin: 0.5rem;
+  padding: 0.5rem;
+}
+
+.src {
+  width: 90%;
+}
+
+.block .title {
+  font-weight: bold;
+  font-size: 120%;
+}
+</style>
+  </head>
+  <body>
+
+<pre>
+※行の途中から // でコメントアウトすると正しく動きません
+</pre>
+
+<hr />
+
+<ul id="toc"></ul>
+
+<div class="block">
+  <p class="title">sample 1</p>
+  <textarea class="src">
+    alert("sample 1");
+  </textarea>
+</div>
+
+<div class="block">
+  <p class="title">sample 2</p>
+  <textarea class="src">
+    alert("sample 2");
+  </textarea>
+</div>
+
+
+<script type="text/javascript">
+function formatSrc(src){
+  var lines = src.split("\n");
+  var result = "";
+  $.each(lines, function(i, line){
+    if(line.match(/^\s\/\//)){
+      return;
+    }
+    result += line.replace(/\s*/, "");
+    result += "/*BR*/"
+  });
+
+  return "(function(){ " + result + " })()";
+}
+
+function initBlock(i, block){
+  var $block = $(block);
+  var src = $block.find(".src").text();
+  var title = $block.find(".title").text();
+
+  var $link = $("<a>")
+    .attr({ href: "javascript: " + formatSrc(src) })
+    .text("link") /* ?? */
+    .text(title) /* ?? */
+    .appendTo($block);
+
+  var ancName = "bm_" + i;
+  $block.attr("id", ancName);
+  
+  $block.find(".src").wrap("<div>")
+  var tocLink = $("<a>")
+    .attr({ href: "#" + ancName })
+    .text(title);
+  $("<li>").append(tocLink)
+    .appendTo($("#toc"));
+}
+
+function updateLink(ev){
+  var $block = $(ev.target).closest(".block");
+  var src = $block.find(".src").val();
+  // console.log(formatSrc(src));
+  var link = $block.find("a")
+    .attr({ href: "javascript: " + formatSrc(src) });
+}
+
+$(function(){
+  $(".block").each(function(i, block){
+    initBlock(i, block);
+  });
+
+  $(".src").on("input", updateLink);
+});
+</script>
+
+</body>
+</html>
