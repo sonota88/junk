@@ -88,12 +88,13 @@
 
    function _load(str) {
      var src = _readFile(str);
+     var scriptFullPath = "" + new File(str).getCanonicalPath();
 
      var oldFilename = engine.get(engine.FILENAME);
      engine.put(engine.FILENAME, str);
      try {
        engine.eval(
-         "(function(){ "
+         '(function(){ var __FILE__ = "' + scriptFullPath + '"; '
          + src
          + " })();"
        );
