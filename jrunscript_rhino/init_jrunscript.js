@@ -1,4 +1,68 @@
 (function(){
+  var global = this;
+
+  global.LOAD_PATH = global.LOAD_PATH || [];
+
+  function each(list, fn){
+    var ret = null;
+    for(var i=0,len=list.length; i<len; i++){
+      ret = fn(list[i], i);
+      if(ret === false){
+        break;
+      }
+    }
+  }
+
+  function getCallStack(){
+    var stack = [];
+    try{
+      eval(".");
+    }catch(e){
+      var lines = e.stack.split("\n");
+      for(var i=lines.length; i>=1; i--){
+        var line = lines[i];
+        if(typeof line === "undefined"
+           || line.match(/^\s*$/))
+        {
+          // skip
+        }else{
+          stack.push(line.replace(/^\s*/, ""));
+        }
+      }
+    }
+    return stack;
+  }
+
+  function dumpError(ex){
+    var s = "";
+    s += ex.name + ": ";
+    s += ex.message + "\n";
+    if(typeof ex.stack === "undefined"){
+      s += "(no stack)";
+    }else if(typeof ex.stack === "object" && ex.stack.length){
+      for(var i=ex.stack.length-1; i>=0; i--){
+        s += ex.stack[i] + "\n";
+      }
+    }else{
+      s += ex.stack;
+    }
+
+    println(s);
+  }
+
+  function MyError(msg){
+    var self = this;
+    this.name = "MyError";
+    this.message = msg;
+
+    var stack = getCallStack();
+    this.stack = [];
+    each(stack, function(stackLine){
+      self.stack.push(stackLine);
+    });
+  }
+
+  // ----------------
 
    function _readFile(path, opts){
      var fis = new FileInputStream(new File(path));
@@ -19,7 +83,7 @@
      reader.close();
      fis.close();
 
-     return sb.toString();
+     return "" + sb.toString();
    }
 
    function _load(str) {
@@ -34,11 +98,7 @@
          + " })();"
        );
      } catch(e) {
-       println("----");
-       for(var k in e){
-         println("" + k + "(" + e[k] + ")");
-       }
-       println("----");
+       dumpError(e);
        throw e;
      } finally {
        engine.put(engine.FILENAME, oldFilename);
@@ -50,8 +110,6 @@
     return file.exists();
   }
 
-  var requirePaths = ["."];
-
    function require(path){
      exports = {};
      var _path;
@@ -62,18 +120,22 @@
      }
 
      var foundPath;
-     for(var a=0,len=requirePaths.length; a<len; a++){
-       var modulePath = requirePaths[a] + "/" + _path;
-       if(fileExists(modulePath)){
-         foundPath = modulePath;
-         break;
+     each(global.LOAD_PATH, function(path2){
+       var fullPath;
+       if(_path.match( /^\// )){
+         fullPath = _path;
+       }else{
+         fullPath = path2 + "/" + _path;
        }
-     }
-     
+       if(fileExists(fullPath)){
+         foundPath = fullPath;
+         return false; // break
+       }
+     });
      if(foundPath){
        _load(foundPath);
      }else{
-       throw "module not found: " + path;
+       throw new MyError("module not found: " + path);
      }
 
      var obj;
@@ -87,7 +149,6 @@
 
    // ----------------
 
-   var toplevel = this;
-   toplevel.exports = {};
-   toplevel.require = require;
+   global.exports = {};
+   global.require = require;
  })();
