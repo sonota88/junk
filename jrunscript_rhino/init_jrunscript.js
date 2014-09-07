@@ -64,6 +64,26 @@
 
   // ----------------
 
+  var _File = {
+    join: function(){
+      var path = "";
+      each(arguments, function(arg){
+        if( path === "" || path.match( /\/$/ )){
+          ;
+        }else{
+          path += "/";
+        }
+        path += arg;
+      });
+      return path;
+    }
+    ,dirname: function(path){
+      return path.replace( /^(.+)\/.+?$/, '$1' );
+    }
+  };
+
+  // ----------------
+
    function _readFile(path, opts){
      var fis = new FileInputStream(new File(path));
      var reader = new java.io.InputStreamReader(fis, "UTF-8");
@@ -146,10 +166,12 @@
      exports = {};
      return obj;
    }
-  require.paths = requirePaths;
 
    // ----------------
 
    global.exports = {};
    global.require = require;
+   global.__init_jjs__ = {
+     File: _File
+   };
  })();
