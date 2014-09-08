@@ -80,34 +80,36 @@
     ,dirname: function(path){
       return path.replace( /^(.+)\/.+?$/, '$1' );
     }
+    ,exists: function(path){
+      return new File(path).exists();
+    }
+    ,read: function(path){
+      var fis = new FileInputStream(new File(path));
+      var reader = new java.io.InputStreamReader(fis, "UTF-8");
+      var br = new BufferedReader(reader);
+      var sb = new java.lang.StringBuilder();
+
+      var line;
+      while(true){
+        line = br.readLine();
+        if(line === null){
+          break;
+        }
+        sb.append(line + "\n");
+      }
+
+      br.close();
+      reader.close();
+      fis.close();
+
+      return "" + sb.toString();
+    }
   };
 
   // ----------------
 
-  function _readFile(path, opts){
-    var fis = new FileInputStream(new File(path));
-    var reader = new java.io.InputStreamReader(fis, "UTF-8");
-    var br = new BufferedReader(reader);
-    var sb = new java.lang.StringBuilder();
-
-    var line;
-    while(true){
-      line = br.readLine();
-      if(line === null){
-        break;
-      }
-      sb.append(line + "\n");
-    }
-
-    br.close();
-    reader.close();
-    fis.close();
-
-    return "" + sb.toString();
-  }
-
   function _load(str) {
-    var src = _readFile(str);
+    var src = _File.read(str);
     var scriptFullPath = "" + new File(str).getCanonicalPath();
 
     var oldFilename = engine.get(engine.FILENAME);
@@ -126,11 +128,6 @@
     }
   }
 
-  function fileExists(path){
-    var file = new File(path);
-    return file.exists();
-  }
-
   function require(path){
     exports = {};
     if( ! path.match(/\.js$/) ){
@@ -145,7 +142,7 @@
       }else{
         fullPath = loadPath + "/" + path;
       }
-      if(fileExists(fullPath)){
+      if(_File.exists(fullPath)){
         foundPath = fullPath;
         return false; // break
       }
