@@ -140,7 +140,7 @@
       if(path.match( /^\// )){
         fullPath = path;
       }else{
-        fullPath = loadPath + "/" + path;
+        fullPath = _File.join(loadPath, path);
       }
       if(_File.exists(fullPath)){
         foundPath = fullPath;
