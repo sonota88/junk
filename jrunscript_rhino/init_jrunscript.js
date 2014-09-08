@@ -133,20 +133,17 @@
 
    function require(path){
      exports = {};
-     var _path;
-     if(path.match(/\.js$/)){
-       _path = path;
-     }else{
-       _path = path + ".js";
+     if( ! path.match(/\.js$/) ){
+       path = path + ".js";
      }
 
      var foundPath;
-     each(global.LOAD_PATH, function(path2){
+     each(global.LOAD_PATH, function(loadPath){
        var fullPath;
-       if(_path.match( /^\// )){
-         fullPath = _path;
+       if(path.match( /^\// )){
+         fullPath = path;
        }else{
-         fullPath = path2 + "/" + _path;
+         fullPath = loadPath + "/" + path;
        }
        if(fileExists(fullPath)){
          foundPath = fullPath;
