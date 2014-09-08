@@ -84,91 +84,91 @@
 
   // ----------------
 
-   function _readFile(path, opts){
-     var fis = new FileInputStream(new File(path));
-     var reader = new java.io.InputStreamReader(fis, "UTF-8");
-     var br = new BufferedReader(reader);
-     var sb = new java.lang.StringBuilder();
+  function _readFile(path, opts){
+    var fis = new FileInputStream(new File(path));
+    var reader = new java.io.InputStreamReader(fis, "UTF-8");
+    var br = new BufferedReader(reader);
+    var sb = new java.lang.StringBuilder();
 
-     var line;
-     while(true){
-       line = br.readLine();
-       if(line === null){
-         break;
-       }
-       sb.append(line + "\n");
-     }
+    var line;
+    while(true){
+      line = br.readLine();
+      if(line === null){
+        break;
+      }
+      sb.append(line + "\n");
+    }
 
-     br.close();
-     reader.close();
-     fis.close();
+    br.close();
+    reader.close();
+    fis.close();
 
-     return "" + sb.toString();
-   }
+    return "" + sb.toString();
+  }
 
-   function _load(str) {
-     var src = _readFile(str);
-     var scriptFullPath = "" + new File(str).getCanonicalPath();
+  function _load(str) {
+    var src = _readFile(str);
+    var scriptFullPath = "" + new File(str).getCanonicalPath();
 
-     var oldFilename = engine.get(engine.FILENAME);
-     engine.put(engine.FILENAME, str);
-     try {
-       engine.eval(
-         '(function(){ var __FILE__ = "' + scriptFullPath + '"; '
-         + src
-         + " })();"
-       );
-     } catch(e) {
-       dumpError(e);
-       throw e;
-     } finally {
-       engine.put(engine.FILENAME, oldFilename);
-     }
-   }
+    var oldFilename = engine.get(engine.FILENAME);
+    engine.put(engine.FILENAME, str);
+    try {
+      engine.eval(
+        '(function(){ var __FILE__ = "' + scriptFullPath + '"; '
+        + src
+        + " })();"
+      );
+    } catch(e) {
+      dumpError(e);
+      throw e;
+    } finally {
+      engine.put(engine.FILENAME, oldFilename);
+    }
+  }
 
   function fileExists(path){
     var file = new File(path);
     return file.exists();
   }
 
-   function require(path){
-     exports = {};
-     if( ! path.match(/\.js$/) ){
-       path = path + ".js";
-     }
+  function require(path){
+    exports = {};
+    if( ! path.match(/\.js$/) ){
+      path = path + ".js";
+    }
 
-     var foundPath;
-     each(global.LOAD_PATH, function(loadPath){
-       var fullPath;
-       if(path.match( /^\// )){
-         fullPath = path;
-       }else{
-         fullPath = loadPath + "/" + path;
-       }
-       if(fileExists(fullPath)){
-         foundPath = fullPath;
-         return false; // break
-       }
-     });
-     if(foundPath){
-       _load(foundPath);
-     }else{
-       throw new MyError("module not found: " + path);
-     }
+    var foundPath;
+    each(global.LOAD_PATH, function(loadPath){
+      var fullPath;
+      if(path.match( /^\// )){
+        fullPath = path;
+      }else{
+        fullPath = loadPath + "/" + path;
+      }
+      if(fileExists(fullPath)){
+        foundPath = fullPath;
+        return false; // break
+      }
+    });
+    if(foundPath){
+      _load(foundPath);
+    }else{
+      throw new MyError("module not found: " + path);
+    }
 
-     var obj;
-     for(var k in exports){
-       obj = exports[k];
-     }
-     exports = {};
-     return obj;
-   }
+    var obj;
+    for(var k in exports){
+      obj = exports[k];
+    }
+    exports = {};
+    return obj;
+  }
 
-   // ----------------
+  // ----------------
 
-   global.exports = {};
-   global.require = require;
-   global.__init_jjs__ = {
-     File: _File
-   };
- })();
+  global.exports = {};
+  global.require = require;
+  global.__init_jjs__ = {
+    File: _File
+  };
+})();
