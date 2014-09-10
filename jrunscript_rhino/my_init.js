@@ -1,3 +1,4 @@
+(function(){
 var global = this;
 
 global.puts = function(){
@@ -107,4 +108,5 @@ global._File = (function(){
   };
   
   return _File;
+})();
 })();
