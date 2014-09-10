@@ -8,6 +8,7 @@
     , stdLibDir
   ];
   load(stdLibDir + "/init_jrunscript.js");
+  load(stdLibDir + "/my_init.js");
 })();
 
 ////////////////////////////////
