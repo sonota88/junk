@@ -158,17 +158,17 @@
 
     function makeReaderThread(is, out, enc){
       var _enc = enc || "UTF-8";
+      var isr = new InputStreamReader(is, _enc);
       return new java.lang.Thread(function(){
-        var n;
-        var bufSize = 1024;
-        var buf = createArray("Byte", bufSize);
+        var n, sw;
         while(true){
-          n = is.read(buf, 0, bufSize);
-          if(n <= 0){
+          n = isr.read();
+          if(n < 0){
             break;
           }
-          out.print(ByteArrayUtil.toStr(
-            ByteArrayUtil.substr(buf, 0, n), _enc));
+          sw = new StringWriter(1);
+          sw.write(n);
+          out.print(sw);
         }
       });
     }
