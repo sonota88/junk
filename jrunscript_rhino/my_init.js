@@ -88,6 +88,24 @@
       }
     }
 
+    function withFileWriter(file, fn){
+      var fw = new FileWriter(file);
+      try{
+        fn(fw);
+      } finally {
+        if(fw){ fw.close(); }
+      }
+    }
+
+    function withBufferedWriter(writer, fn){
+      var bw = new BufferedWriter(writer);
+      try {
+        fn(writer);
+      } finally {
+        if(bw){ bw.close(); }
+      }
+    }
+
     _File.read = function(path, opts){
       if(opts && opts.binary){
 
@@ -106,6 +124,14 @@
         var enc = (opts && opts.encoding) || "UTF-8";
         return "" + (new java.lang.String(byteArray, enc));
       }
+    };
+
+    _File.write = function(path, text){
+      withFileWriter(new File(path), function(fw){
+        withBufferedWriter(fw, function(bw){
+          bw.write(text);
+        });
+      });
     };
 
     return _File;
