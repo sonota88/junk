@@ -103,7 +103,8 @@
         return result;
       }else{
         var byteArray = _File.read(path, { binary: true });
-        return "" + (new java.lang.String(byteArray, "UTF-8"));
+        var enc = (opts && opts.encoding) || "UTF-8";
+        return "" + (new java.lang.String(byteArray, enc));
       }
     };
 
