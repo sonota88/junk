@@ -17,6 +17,14 @@
     }
   };
 
+  global.range = function(from, to){
+    var xs = [];
+    for(var x=from; x<=to; x++){
+      xs.push(x);
+    }
+    return xs;
+  };
+
 
   ////////////////////////////////
 
