@@ -25,6 +25,39 @@
     return xs;
   };
 
+  global.poorfmt = function(){
+    if(arguments.length === 0){
+      throw new Error("arguments must not be empty");
+    }
+
+    var template = arguments[0];
+    var vals = Array.prototype.slice.call(arguments, 1);
+    
+    var ret = "";
+    var i = 0;
+    while(template.length > 0){
+      var c2 = template.substring(0, 2);
+      if(c2 === "%%"){
+        ret += "%";
+        template = template.substring(2);
+      }else if(c2 === "%s"){
+        ret += vals[i]; i++;
+        template = template.substring(2);
+      }else{
+        ret += template.substring(0, 1);
+        template = template.substring(1);
+      }
+    }
+
+    var numPlaceholders = i;
+    var numVariables = arguments.length-1;
+    if(numPlaceholders !== numVariables){
+      throw new Error("invalid status");
+    }
+
+    return ret;
+  };
+
 
   ////////////////////////////////
 
