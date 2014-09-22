@@ -6,7 +6,7 @@ function _readFileSjis(path){
     sin.charset = "Shift_JIS";
     sin.open();
     sin.loadFromFile(path);
-    var text = sin.readText(-1); // ‘S•”“Ç‚Þ
+    var text = sin.readText(-1); // read all
     sin.close();
     return text;
 }
@@ -18,7 +18,7 @@ function load(path){
 
 // --------------------------------
 
-load("init_sjis.js");
+load("init_wsh.js");
 print(1);
 puts(2);
 
