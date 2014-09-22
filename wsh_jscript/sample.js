@@ -25,3 +25,6 @@ puts(2);
 each([11, 12, 13], function(it){
     puts(it);
 });
+
+_File.write("temp.txt", "‚  FDSA " + new Date());
+puts(_File.read("temp.txt", "Shift_JIS"));
