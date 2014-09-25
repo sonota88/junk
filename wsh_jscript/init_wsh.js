@@ -17,9 +17,9 @@ function print(arg){
 }
 
 function puts(){
-    each(arguments, function(it){
-        print(it + "\n"); 
-    });
+    for(var i=0,len=arguments.length; i<len; i++){
+        WScript.StdOut.Write(arguments[i] + "\n"); 
+    }
 }
 
 // --------------------------------
