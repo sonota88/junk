@@ -12,8 +12,10 @@ function each(list, fn){
     }
 }
 
-function print(arg){
-    WScript.StdOut.Write(arg);
+function print(){
+    for(var i=0,len=arguments.length; i<len; i++){
+        WScript.StdOut.Write(arguments[i]); 
+    }
 }
 
 function puts(){
