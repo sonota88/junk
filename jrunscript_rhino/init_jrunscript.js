@@ -132,6 +132,14 @@
     }
   }
 
+  function isAbsolutePath(path){
+    var osName = "" + java.lang.System.getProperty("os.name");
+    var re = /^Windows/.test(osName)
+        ? /^[A-Z]:\//i
+        : /^\//;
+    return re.test(path);
+  }
+
   function _require(path){
     exports = {};
     if( ! path.match(/\.js$/) ){
@@ -141,9 +149,7 @@
     var foundPath;
     each(global.LOAD_PATH, function(loadPath){
       var fullPath;
-      if(path.match( /^\// )
-         || path.match( /^[A-Z]:\//i ) // Windows
-        ){
+      if(isAbsolutePath(path)){
         fullPath = path;
       }else{
         fullPath = _File.join(loadPath, path);
