@@ -141,7 +141,9 @@
     var foundPath;
     each(global.LOAD_PATH, function(loadPath){
       var fullPath;
-      if(path.match( /^\// )){
+      if(path.match( /^\// )
+         || path.match( /^[A-Z]:\//i ) // Windows
+        ){
         fullPath = path;
       }else{
         fullPath = _File.join(loadPath, path);
