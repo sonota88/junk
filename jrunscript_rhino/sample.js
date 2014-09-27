@@ -1,8 +1,9 @@
 (function(){
   var global = this;
   var stdLibDir = "/foo/bar/stdlib";
-  global.__FILE__ = new File("./").getCanonicalPath()
-      + "/" + engine.get(engine.FILENAME);
+  global.__FILE__ = (new File("./").getCanonicalPath()
+      + "/" + engine.get(engine.FILENAME))
+      .replace( /\\/g, "/" );
   global.LOAD_PATH = [
     __FILE__.replace( /^(.*)\/.+?$/, '$1' )
     , stdLibDir
