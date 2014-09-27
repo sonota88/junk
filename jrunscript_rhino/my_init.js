@@ -175,6 +175,10 @@
       });
     };
 
+    _File.dirname = function(path){
+      return path.replace( /^(.+)\/.+?$/, '$1');
+    };
+
     return _File;
   })();
 
