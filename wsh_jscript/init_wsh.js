@@ -29,7 +29,25 @@ function puts(){
 var _File = (
     function(){
 
-        var _File = {};
+        var _File = {
+          join: function(){
+            var path = "";
+            each(arguments, function(arg){
+              if( path === "" || path.match( /\/$/ )){
+                ;
+              }else{
+                path += "/";
+              }
+              path += arg;
+            });
+            return path;
+          }
+
+          ,exists: function(path){
+            var fso = new ActiveXObject("Scripting.FileSystemObject");
+            return fso.FileExists(path);
+          }
+        };
 
         _File.read = function(path, charset){
             var sin = new ActiveXObject("ADODB.Stream");
@@ -52,9 +70,61 @@ var _File = (
             sout.saveToFile(path, 2);
             sout.close();
         };
-        
+
         return _File;
     })();
+
+function _load(str){
+  var src = _File.read(str);
+  var scriptFullPath = str;
+  try {
+    eval(
+      '(function(){ var __FILE__ = "' + scriptFullPath + '"; '
+        + src
+        + " })();"
+    );
+  } catch(e) {
+    // dumpError(e);
+    throw e;
+  } finally {
+    ;
+  }
+}
+
+function require(path){
+  global.exports = global.exports || {};
+  var exports = global.exports;
+
+  if( ! path.match( /\.js$/) ){
+    path = path + ".js";
+  }
+
+  var foundPath;
+  each(global.LOAD_PATH, function(loadPath){
+    var fullPath;
+    if(path.match( /^\// )){
+      fullPath = path;
+    }else{
+      fullPath = _File.join(loadPath, path);
+    }
+    if(_File.exists(fullPath)){
+      foundPath = fullPath;
+      return false; // break
+    }
+  });
+
+  if(foundPath){
+    _load(foundPath);
+  }else{
+    throw new Error("module not found: " + path);
+  }
+  var obj;
+  for(var k in exports){
+    obj = exports[k];
+  }
+  exports = {};
+  return obj;
+}
 
 // --------------------------------
 
@@ -62,3 +132,4 @@ global.each = each;
 global.print = print;
 global.puts = puts;
 global._File = _File;
+global.require = require;
