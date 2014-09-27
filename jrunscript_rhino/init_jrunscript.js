@@ -168,12 +168,14 @@
   }
 
   function require(path){
+    var module;
     try{
-      require(path);
+      module = require(path);
     } catch (ex) {
       dumpError(ex);
       throw ex;
     }
+    return module;
   }
 
   // ----------------
