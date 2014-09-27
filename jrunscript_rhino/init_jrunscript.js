@@ -132,7 +132,7 @@
     }
   }
 
-  function require(path){
+  function _require(path){
     exports = {};
     if( ! path.match(/\.js$/) ){
       path = path + ".js";
@@ -165,6 +165,15 @@
     }
     exports = {};
     return obj;
+  }
+
+  function require(path){
+    try{
+      require(path);
+    } catch (ex) {
+      dumpError(ex);
+      throw ex;
+    }
   }
 
   // ----------------
