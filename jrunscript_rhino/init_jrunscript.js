@@ -18,6 +18,10 @@
     try{
       eval(".");
     }catch(e){
+      if( ! e.stack){
+        return ["stack not available"];
+      }
+
       var lines = e.stack.split("\n");
       for(var i=lines.length; i>=1; i--){
         var line = lines[i];
