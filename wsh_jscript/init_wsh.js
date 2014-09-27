@@ -26,9 +26,6 @@ function puts(){
 
 // --------------------------------
 
-var _File = (
-    function(){
-
         var _File = {
           join: function(){
             var path = "";
@@ -70,9 +67,6 @@ var _File = (
             sout.saveToFile(path, 2);
             sout.close();
         };
-
-        return _File;
-    })();
 
 function _load(str){
   var src = _File.read(str);
