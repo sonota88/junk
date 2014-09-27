@@ -170,7 +170,7 @@
   function require(path){
     var module;
     try{
-      module = require(path);
+      module = _require(path);
     } catch (ex) {
       dumpError(ex);
       throw ex;
