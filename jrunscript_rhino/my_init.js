@@ -99,7 +99,7 @@
     };
 
     MyArray.prototype.map = function(fn){
-      var list = [];
+      var list = _ma([]);
       for(var i=0,len=this._list.length; i<len; i++){
         list.push( fn(this._list[i], i) );
       }
@@ -107,7 +107,7 @@
     };
 
     MyArray.prototype.filter = function(fn){
-      var list = [];
+      var list = _ma([]);
       for(var i=0,len=this._list.length; i<len; i++){
         if( fn(this._list[i], i) ){
           list.push( this._list[i] );
