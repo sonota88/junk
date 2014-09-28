@@ -86,6 +86,10 @@
       return this._list.length;
     };
 
+    MyArray.prototype.push = function(el){
+      return this._list.push(el);
+    };
+
     MyArray.prototype.each = function(fn){
       var ret;
       for(var i=0,len=this._list.length; i<len; i++){
