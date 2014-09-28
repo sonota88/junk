@@ -75,15 +75,15 @@
       return new MyArray(list);
     }
 
+    MyArray.prototype.size = function(){
+      return this._list.length;
+    };
+
     MyArray.prototype.get = function(i){
       if(arguments.length === 0){
         return this._list;
       }
       return this._list[i];
-    };
-
-    MyArray.prototype.size = function(){
-      return this._list.length;
     };
 
     MyArray.prototype.push = function(el){
