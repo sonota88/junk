@@ -68,7 +68,7 @@
       if(typeof arg === "undefined"){
         throw new Error("illegal argument");
       }
-      this.list = arg;
+      this._list = arg;
     }
 
     function _ma(list){
@@ -77,36 +77,36 @@
 
     MyArray.prototype.get = function(i){
       if(arguments.length === 0){
-        return this.list;
+        return this._list;
       }
-      return this.list[i];
+      return this._list[i];
     };
 
     MyArray.prototype.size = function(){
-      return this.list.length;
+      return this._list.length;
     };
 
     MyArray.prototype.each = function(fn){
       var ret;
-      for(var i=0,len=this.list.length; i<len; i++){
-        ret = fn(this.list[i], i);
+      for(var i=0,len=this._list.length; i<len; i++){
+        ret = fn(this._list[i], i);
         if(ret === false){ break; }
       }
     };
 
     MyArray.prototype.map = function(fn){
       var list = [];
-      for(var i=0,len=this.list.length; i<len; i++){
-        list.push( fn(this.list[i], i) );
+      for(var i=0,len=this._list.length; i<len; i++){
+        list.push( fn(this._list[i], i) );
       }
       return list;
     };
 
     MyArray.prototype.filter = function(fn){
       var list = [];
-      for(var i=0,len=this.list.length; i<len; i++){
-        if( fn(this.list[i], i) ){
-          list.push( this.list[i] );
+      for(var i=0,len=this._list.length; i<len; i++){
+        if( fn(this._list[i], i) ){
+          list.push( this._list[i] );
         }
       }
       return list;
