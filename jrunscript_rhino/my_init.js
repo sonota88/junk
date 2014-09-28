@@ -75,12 +75,38 @@
       return new MyArray(list);
     }
 
+    MyArray.prototype.get = function(i){
+      return this.list[i];
+    };
+
+    MyArray.prototype.size = function(){
+      return this.list.length;
+    };
+
     MyArray.prototype.each = function(fn){
       var ret;
       for(var i=0,len=this.list.length; i<len; i++){
         ret = fn(this.list[i], i);
         if(ret === false){ break; }
       }
+    };
+
+    MyArray.prototype.map = function(fn){
+      var list = [];
+      for(var i=0,len=this.list.length; i<len; i++){
+        list.push( fn(this.list[i], i) );
+      }
+      return list;
+    };
+
+    MyArray.prototype.filter = function(fn){
+      var list = [];
+      for(var i=0,len=this.list.length; i<len; i++){
+        if( fn(this.list[i], i) ){
+          list.push( this.list[i] );
+        }
+      }
+      return list;
     };
 
     global._ma = _ma;
