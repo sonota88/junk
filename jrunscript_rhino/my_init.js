@@ -76,6 +76,9 @@
     }
 
     MyArray.prototype.get = function(i){
+      if(arguments.length === 0){
+        return this.list;
+      }
       return this.list[i];
     };
 
