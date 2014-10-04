@@ -26,6 +26,8 @@ function stringify(arg){
     return escapeStr(arg);
   }else if(typeof arg === 'boolean'){
     return arg ? 'true' : 'false';
+  }else if(arg instanceof RegExp){
+    return "{}";
   }else if(isArray(arg)){
     return '[' + arg.map(stringify).join(', ') + ']';
   }else if(typeof arg === 'object'){

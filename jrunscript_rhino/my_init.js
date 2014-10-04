@@ -10,6 +10,7 @@
       || typeof val === "string"
       || typeof val === "number"
       || typeof val === "boolean"
+      || val instanceof RegExp
     ){
       println(val);
     }else{
