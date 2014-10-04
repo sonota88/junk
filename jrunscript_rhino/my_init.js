@@ -1,9 +1,25 @@
 (function(){
   var global = this;
 
+  global.JSON = JSON || require("my_json");
+
+  function _puts(val){
+    if(
+      val === null
+      || typeof val === "undefined"
+      || typeof val === "string"
+      || typeof val === "number"
+      || typeof val === "boolean"
+    ){
+      println(val);
+    }else{
+      println(JSON.stringify(val));
+    }
+  }
+
   global.puts = function(){
     for(var i=0,len=arguments.length; i<len; i++){
-      println(arguments[i]);
+      _puts(arguments[i]);
     }
   };
 
