@@ -29,7 +29,14 @@ function stringify(arg){
   }else if(arg instanceof RegExp){
     return "{}";
   }else if(isArray(arg)){
-    return '[' + arg.map(stringify).join(', ') + ']';
+    var s = '[';
+    for(var i=0,len=arg.length; i<len; i++){
+      if(i>0){
+        s += ", ";
+      }
+      s += stringify(arg[i]);
+    }
+    return s + ']';
   }else if(typeof arg === 'object'){
     var s = '{';
     var i=0;
