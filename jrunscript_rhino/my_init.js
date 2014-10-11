@@ -225,6 +225,10 @@
       });
     };
 
+    _File.exists = function(path){
+      return new File(path).exists();
+    };
+
     _File.dirname = function(path){
       return path.replace( /^(.+)\/.+?$/, '$1');
     };
