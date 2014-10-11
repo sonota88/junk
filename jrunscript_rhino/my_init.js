@@ -247,10 +247,10 @@
       for(var i=0,len=paths.length; i<len; i++){
         path = paths[i];
         if(path.isDirectory()){
-          fn("" + path + "/");
+          fn("" + path.getPath() + "/");
           _traverse(""+path, fn);
         }else{
-          fn("" + path);
+          fn("" + path.getPath());
         }
       }
     }
