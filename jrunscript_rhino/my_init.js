@@ -271,6 +271,14 @@
       _traverse(rootDir, fn);
     };
     
+    Dir.mkdir = function(dir){
+      new File(dir).mkdirs();
+    };
+    
+    Dir.rmdir = function(dir){
+      new File(dir)["delete"]();
+    };
+    
     return Dir;
   })();
 
