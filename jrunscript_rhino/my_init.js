@@ -236,6 +236,44 @@
   ////////////////////////////////
 
 
+  global.Dir = (function(){
+    
+    var Dir = {};
+
+    function _traverse(rootDir, fn){
+      var _rootDir = new File(rootDir);
+      var paths = _rootDir.listFiles();
+      var path;
+      for(var i=0,len=paths.length; i<len; i++){
+        path = paths[i];
+        if(path.isDirectory()){
+          fn("" + path + "/");
+          _traverse(""+path, fn);
+        }else{
+          fn("" + path);
+        }
+      }
+    }
+
+    Dir.allPaths = function(rootDir){
+      var paths = [];
+      _traverse(rootDir, function(path){
+        paths.push(path);
+      });
+      return paths;
+    };
+    
+    Dir.traverse = function(rootDir, fn){
+      _traverse(rootDir, fn);
+    };
+    
+    return Dir;
+  })();
+
+
+  ////////////////////////////////
+
+
   (function(){
     function createArray(type, size){
       var _type = type;
