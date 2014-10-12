@@ -85,6 +85,9 @@
       if(typeof arg === "undefined"){
         throw new Error("illegal argument");
       }
+      if(arg.constructor === MyArray){
+        return arg;
+      }
       this._list = arg;
     }
 
