@@ -200,6 +200,26 @@
       }
     }
 
+    function withFileOutputStream(path, fn){
+      var fos;
+      try {
+        fos = new FileOutputStream(path);
+        fn(fos);
+      } finally {
+        if(fos){ fos.close(); }
+      }
+    }
+
+    function withOutputStreamWriter(fos, encoding, fn){
+      var osw;
+      try {
+        osw = new OutputStreamWriter(fos, encoding);
+        fn(osw);
+      } finally {
+        if(osw){ osw.close(); }
+      }
+    }
+
     _File.read = function(path, opts){
       if(opts && opts.binary){
 
@@ -220,10 +240,12 @@
       }
     };
 
-    _File.write = function(path, text){
-      withFileWriter(new File(path), function(fw){
-        withBufferedWriter(fw, function(bw){
-          bw.write(text);
+    _File.write = function(path, text, opts){
+      opts = opts || {};
+      var encoding = opts.encoding || "UTF-8";
+      withFileOutputStream(path, function(fos){
+        withOutputStreamWriter(fos, encoding, function(osw){
+          osw.write(text);
         });
       });
     };
