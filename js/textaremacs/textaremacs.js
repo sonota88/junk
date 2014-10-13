@@ -7,19 +7,6 @@ var Textaremacs = (function(){
   // ----------------
   // Emacs commands
 
-  function move_beginning_of_line(me){
-    var point = me.getPoint();
-    var to = null;
-
-    if(me.isBeginningOfLine(point)){
-      to = me.getBeginningOfLineIgnoreSpace();
-    }else{
-      to = me.getBeginningOfLine();
-    }
-
-    me.goto_char(to);
-  }
-
   function move_end_of_line(me){
     var to = me.getEndOfLine();
     me.goto_char(to);
@@ -37,6 +24,19 @@ var Textaremacs = (function(){
   // ----------------
   // My commands
 
+  function kyMoveBeginningOfLine(me){
+    var point = me.getPoint();
+    var to = null;
+
+    if(me.isBeginningOfLine(point)){
+      to = me.getBeginningOfLineIgnoreSpace();
+    }else{
+      to = me.getBeginningOfLine();
+    }
+
+    me.goto_char(to);
+  }
+
   function selectRestOfLine(me){
     var from = me.getPoint();
     var to = me.getEndOfLine();
@@ -49,7 +49,7 @@ var Textaremacs = (function(){
     me.el.setSelectionRange(from, to);
   }
 
-  function deleteChars(me){
+  function kyDelete(me){
     if(me.isMarkActive()){
       me.deleteRegion();
     }else{
@@ -78,8 +78,8 @@ var Textaremacs = (function(){
   };
 
   THIS.keyBind = {
-    "C-a": move_beginning_of_line
-    ,"C-d": deleteChars
+    "C-a": kyMoveBeginningOfLine
+    ,"C-d": kyDelete
     ,"C-e": move_end_of_line
     ,"C-h": backward_delete_char
     ,"C-k": selectRestOfLine
