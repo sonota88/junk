@@ -43,7 +43,7 @@ var Textaremacs = (function(){
     me.el.setSelectionRange(from, to);
   }
 
-  function selectCuurentToken(me){
+  function selectCurrentToken(me){
     var from = me.getBeginningOfToken();
     var to = me.getEndOfToken();
     me.el.setSelectionRange(from, to);
@@ -83,7 +83,7 @@ var Textaremacs = (function(){
     ,"C-e": move_end_of_line
     ,"C-h": backward_delete_char
     ,"C-k": selectRestOfLine
-    ,"C-M-SPC": selectCuurentToken
+    ,"C-M-SPC": selectCurrentToken
   };
 
   THIS.prototype.dispatch = function(ev){
