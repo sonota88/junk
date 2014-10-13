@@ -94,6 +94,43 @@ var Textaremacs = (function(){
     });
   }
 
+  var kyRotateCase_orig = "";
+  var kyRotateCase_status = "original";
+  function kyRotateCase(me){
+
+    function capitalize(str){
+      return str.substring(0, 1).toUpperCase()
+          + str.substring(1).toLowerCase()
+      ;
+    }
+
+    if( ! me.isMarkActive()){
+      selectCurrentToken(me);
+    }
+    me.modifyRegion(function(sel){
+      if(kyRotateCase_orig.toLowerCase() !== sel.toLowerCase()){
+        kyRotateCase_orig = sel;
+        kyRotateCase_status = "original";
+      }
+
+      if(kyRotateCase_status === "original"){
+        kyRotateCase_status = "up";
+        return sel.toUpperCase();
+      }else if(kyRotateCase_status === "up"){
+        kyRotateCase_status = "down";
+        return sel.toLowerCase();
+      }else if(kyRotateCase_status === "down"){
+        kyRotateCase_status = "capitalized";
+        return capitalize(kyRotateCase_orig);
+      }else if(kyRotateCase_status === "capitalized"){
+        kyRotateCase_status = "original";
+        return kyRotateCase_orig;
+      }else{
+        throw new Error("invalid status");
+      }
+    });
+  }
+
   // ----------------
 
   function THIS($el){
@@ -112,6 +149,7 @@ var Textaremacs = (function(){
     ,69: "e"
     ,72: "h"
     ,75: "k"
+    ,76: "l"
     ,88: "x"
     ,89: "y"
   };
@@ -122,6 +160,7 @@ var Textaremacs = (function(){
     ,"C-e": move_end_of_line
     ,"C-h": backward_delete_char
     ,"C-k": selectRestOfLine
+    ,"M-l": kyRotateCase
     ,"SPC": kySpace
     ,"S-SPC": unindentRegionBySpace
     ,"C-M-SPC": selectCurrentToken
