@@ -21,6 +21,17 @@ var Textaremacs = (function(){
     me.goto_char(pos - 1);
   }
 
+  function kill_line(me){
+    var from = me.getPoint();
+    var to = me.getEndOfLine();
+    var val = me.val();
+    // me.killLing.push(val.substring(from, to));
+    me.val(
+      val.substring(0, from) + val.substring(to)
+    );
+    me.goto_char(from);
+  }
+
   // ----------------
   // My commands
 
@@ -35,12 +46,6 @@ var Textaremacs = (function(){
     }
 
     me.goto_char(to);
-  }
-
-  function selectRestOfLine(me){
-    var from = me.getPoint();
-    var to = me.getEndOfLine();
-    me.el.setSelectionRange(from, to);
   }
 
   function selectCurrentToken(me){
@@ -138,6 +143,7 @@ var Textaremacs = (function(){
     this.el = this.$el.get(0);
     
     this.cmd = "";
+    // this.killLing = [];
     
     this.$el.on("keydown", this.dispatch.bind(this));
   }
@@ -159,7 +165,7 @@ var Textaremacs = (function(){
     ,"C-d": kyDelete
     ,"C-e": move_end_of_line
     ,"C-h": backward_delete_char
-    ,"C-k": selectRestOfLine
+    ,"C-k": kill_line
     ,"M-l": kyRotateCase
     ,"SPC": kySpace
     ,"S-SPC": unindentRegionBySpace
