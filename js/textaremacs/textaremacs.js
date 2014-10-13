@@ -25,7 +25,7 @@ var Textaremacs = (function(){
     var from = me.getPoint();
     var to = me.getEndOfLine();
     var val = me.val();
-    // me.killLing.push(val.substring(from, to));
+    // me.killRing.push(val.substring(from, to));
     me.val(
       val.substring(0, from) + val.substring(to)
     );
@@ -143,7 +143,7 @@ var Textaremacs = (function(){
     this.el = this.$el.get(0);
     
     this.cmd = "";
-    // this.killLing = [];
+    // this.killRing = [];
     
     this.$el.on("keydown", this.dispatch.bind(this));
   }
