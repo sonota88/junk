@@ -2,7 +2,7 @@
 //   console.log.apply(console, arguments);
 // }
 
-var TextareaPlus = (function(){
+var Textaremacs = (function(){
 
   // ----------------
   // Emacs commands
@@ -59,7 +59,7 @@ var TextareaPlus = (function(){
 
   // ----------------
 
-  function TP($el){
+  function THIS($el){
     this.$el = $el;
     this.el = this.$el.get(0);
     
@@ -68,7 +68,7 @@ var TextareaPlus = (function(){
     this.$el.on("keydown", this.dispatch.bind(this));
   }
 
-  TP.keyCodeMap = {
+  THIS.keyCodeMap = {
     32: "SPC"
     ,65: "a"
     ,68: "d"
@@ -77,7 +77,7 @@ var TextareaPlus = (function(){
     ,75: "k"
   };
 
-  TP.keyBind = {
+  THIS.keyBind = {
     "C-a": move_beginning_of_line
     ,"C-d": deleteChars
     ,"C-e": move_end_of_line
@@ -86,7 +86,7 @@ var TextareaPlus = (function(){
     ,"C-M-SPC": selectCuurentToken
   };
 
-  TP.prototype.dispatch = function(ev){
+  THIS.prototype.dispatch = function(ev){
     var me = this;
     // puts(this, ev);
 
@@ -97,16 +97,16 @@ var TextareaPlus = (function(){
       me.cmd += "M-";
     }
 
-    if(ev.keyCode in TP.keyCodeMap){
-      me.cmd += TP.keyCodeMap[ev.keyCode];
+    if(ev.keyCode in THIS.keyCodeMap){
+      me.cmd += THIS.keyCodeMap[ev.keyCode];
     }
 
     me.execCommand(ev);
   };
 
-  TP.prototype.execCommand = function(ev){
+  THIS.prototype.execCommand = function(ev){
     var me = this;
-    var fn = TP.keyBind[me.cmd];
+    var fn = THIS.keyBind[me.cmd];
     if(fn){
       ev.preventDefault();
       fn.apply(me, [me, ev]);
@@ -116,7 +116,7 @@ var TextareaPlus = (function(){
 
   // ----------------
 
-  TP.prototype.delete_char = function(){
+  THIS.prototype.delete_char = function(){
     var me = this;
     var text = me.val();
     var pos = me.getPoint();
@@ -127,35 +127,35 @@ var TextareaPlus = (function(){
     me.goto_char(pos);
   };
 
-  TP.prototype.goto_char = function(point){
+  THIS.prototype.goto_char = function(point){
     this.el.setSelectionRange(point, point);
   };
 
   // ----------------
 
-  TP.prototype.getPoint = function(){
+  THIS.prototype.getPoint = function(){
     return this.el.selectionEnd;
   };
 
-  TP.prototype.focus = function(){
+  THIS.prototype.focus = function(){
     this.el.focus();
   };
 
-  TP.prototype.val = function(){
+  THIS.prototype.val = function(){
     if(arguments.length > 0){
       this.el.value = arguments[0];
     }
     return this.el.value;
   };
 
-  TP.prototype.isBeginningOfLine = function(point){
+  THIS.prototype.isBeginningOfLine = function(point){
     return (point === 0 || this.val().charAt(point - 1) === "\n");
   };
 
   /**
    * @return 最も近い前方の改行の次、またはテキストの最初
    */
-  TP.prototype.getBeginningOfLine = function(){
+  THIS.prototype.getBeginningOfLine = function(){
     var me = this;
     var text = me.val();
     var point = me.getPoint();
@@ -175,7 +175,7 @@ var TextareaPlus = (function(){
   /**
    * @return スペース・タブを無視した行頭の位置
    */
-  TP.prototype.getBeginningOfLineIgnoreSpace = function(){
+  THIS.prototype.getBeginningOfLineIgnoreSpace = function(){
     var me = this;
     var text = me.val();
     var point = me.getPoint();
@@ -201,7 +201,7 @@ var TextareaPlus = (function(){
   };
 
   // 改行またはテキストの最後
-  TP.prototype.getEndOfLine = function(){
+  THIS.prototype.getEndOfLine = function(){
     var me = this;
     var point = me.el.selectionEnd;
     var text = me.val();
@@ -218,11 +218,11 @@ var TextareaPlus = (function(){
     return to;
   };
 
-  TP.prototype.isTokenElem = function(ch){
+  THIS.prototype.isTokenElem = function(ch){
     return /^[a-zA-Z0-9_]$/.test(ch);
   };
 
-  TP.prototype.getBeginningOfToken = function(){
+  THIS.prototype.getBeginningOfToken = function(){
     var me = this;
     var text = me.val();
     var point = me.getPoint();
@@ -240,7 +240,7 @@ var TextareaPlus = (function(){
     return to;
   };
 
-  TP.prototype.getEndOfToken = function(){
+  THIS.prototype.getEndOfToken = function(){
     var me = this;
     var text = me.val();
     var point = me.getPoint();
@@ -257,11 +257,11 @@ var TextareaPlus = (function(){
     return to;
   };
 
-  TP.prototype.isMarkActive = function(){
+  THIS.prototype.isMarkActive = function(){
     return this.el.selectionStart != this.el.selectionEnd;
   };
 
-  TP.prototype.deleteRegion = function(){
+  THIS.prototype.deleteRegion = function(){
     var me = this;
 
     var pos1 = me.el.selectionStart;
@@ -283,5 +283,5 @@ var TextareaPlus = (function(){
     me.goto_char(from);
   };
 
-  return TP;
+  return THIS;
 })();
