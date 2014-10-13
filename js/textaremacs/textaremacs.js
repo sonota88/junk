@@ -76,6 +76,24 @@ var Textaremacs = (function(){
     });
   }
 
+  function upcaseRegion(me){
+    if( ! me.isMarkActive()){
+      return;
+    }
+    me.modifyRegion(function(sel){
+      return sel.toUpperCase();
+    });
+  }
+
+  function downcaseRegion(me){
+    if( ! me.isMarkActive()){
+      return;
+    }
+    me.modifyRegion(function(sel){
+      return sel.toLowerCase();
+    });
+  }
+
   // ----------------
 
   function THIS($el){
@@ -94,6 +112,8 @@ var Textaremacs = (function(){
     ,69: "e"
     ,72: "h"
     ,75: "k"
+    ,88: "x"
+    ,89: "y"
   };
 
   THIS.keyBind = {
@@ -105,6 +125,8 @@ var Textaremacs = (function(){
     ,"SPC": kySpace
     ,"S-SPC": unindentRegionBySpace
     ,"C-M-SPC": selectCurrentToken
+    ,"C-S-x": upcaseRegion
+    ,"C-S-y": downcaseRegion
   };
 
   THIS.prototype.dispatch = function(ev){
