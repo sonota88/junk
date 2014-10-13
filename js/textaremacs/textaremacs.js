@@ -57,6 +57,25 @@ var Textaremacs = (function(){
     }
   }
 
+  function kySpace(me){
+    if(me.isMarkActive()){
+      me.modifyRegion(function(sel){
+        return me.indent(sel, " ");
+      });
+    }else{
+      me.insert(" ");
+    }
+  }
+
+  function unindentRegionBySpace(me){
+    if( ! me.isMarkActive()){
+      return;
+    }
+    me.modifyRegion(function(sel){
+      return me.unindentSpace(sel);
+    });
+  }
+
   // ----------------
 
   function THIS($el){
@@ -83,6 +102,8 @@ var Textaremacs = (function(){
     ,"C-e": move_end_of_line
     ,"C-h": backward_delete_char
     ,"C-k": selectRestOfLine
+    ,"SPC": kySpace
+    ,"S-SPC": unindentRegionBySpace
     ,"C-M-SPC": selectCurrentToken
   };
 
@@ -95,6 +116,9 @@ var Textaremacs = (function(){
     }
     if(ev.altKey){
       me.cmd += "M-";
+    }
+    if(ev.shiftKey){
+      me.cmd += "S-";
     }
 
     if(ev.keyCode in THIS.keyCodeMap){
@@ -115,6 +139,27 @@ var Textaremacs = (function(){
   };
 
   // ----------------
+
+  /**
+   * 選択範囲を加工する
+   */
+  THIS.prototype.modifyRegion = function(fn){
+    var me = this;
+    if( ! me.isMarkActive()){
+      return;
+    }
+    var posStart = me.el.selectionStart;
+    var posEnd = me.el.selectionEnd;
+
+    var orig = me.val();
+    var pre = orig.substr(0, posStart);
+    var sel = orig.substring(posStart, posEnd);
+    var post = orig.substr(posEnd);
+    var modified = fn(sel);
+    me.val(pre + modified + post);
+    me.el.setSelectionRange(posStart, posStart + modified.length);
+    me.focus();
+  };
 
   THIS.prototype.delete_char = function(){
     var me = this;
@@ -281,6 +326,47 @@ var Textaremacs = (function(){
     me.val(pre + post);
 
     me.goto_char(from);
+  };
+
+  THIS.prototype.insert = function(str){
+    var me = this;
+    var text = me.val();
+    var pos = me.getPoint();
+    var pre = text.substring(0, pos);
+    var post = text.substring(pos);
+    me.val(pre + str + post);
+
+    me.goto_char(pos + str.length);
+  };
+
+  THIS.prototype.indent = function(text, indentStr){
+    var lines = text.split("\n");
+    var len = lines.length;
+
+    return lines.map(function(line, i){
+      if( i === lines.length - 1 && line === "" ){
+        return "";
+      }else{
+        return indentStr + line;
+      }
+    }).join("\n");
+  };
+
+  THIS.prototype.unindentSpace = function(text){
+    var lines = text.split("\n");
+
+    return lines.map(function(line){
+      if(line.match(/^\t/)){
+        line.match(/^(\t+)(.*)$/);
+        var tabs = RegExp.$1;
+        var rightContext = RegExp.$2;
+        return tabs.replace(/\t/g, "        ") + rightContext;
+      }else{
+        return line;
+      }
+    }).map(function(line){
+      return line.replace(/^ /, "");
+    }).join("\n");
   };
 
   return THIS;
