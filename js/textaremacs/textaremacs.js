@@ -179,15 +179,9 @@ var Textaremacs = (function(){
     var me = this;
     // puts(this, ev);
 
-    if(ev.ctrlKey){
-      me.cmd += "C-";
-    }
-    if(ev.altKey){
-      me.cmd += "M-";
-    }
-    if(ev.shiftKey){
-      me.cmd += "S-";
-    }
+    if(ev.ctrlKey ){ me.cmd += "C-"; }
+    if(ev.altKey  ){ me.cmd += "M-"; }
+    if(ev.shiftKey){ me.cmd += "S-"; }
 
     if(ev.keyCode in THIS.keyCodeMap){
       me.cmd += THIS.keyCodeMap[ev.keyCode];
