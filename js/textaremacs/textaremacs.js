@@ -147,6 +147,7 @@ var Textaremacs = (function(){
     
     this.$el.on("keydown", this.dispatch.bind(this));
   }
+  var _proto_ = THIS.prototype;
 
   THIS.keyCodeMap = {
     32: "SPC"
@@ -376,23 +377,15 @@ var Textaremacs = (function(){
   THIS.prototype.deleteRegion = function(){
     var me = this;
 
-    var pos1 = me.el.selectionStart;
-    var pos2 = me.el.selectionEnd;
-    var from, to;
-    if(pos1 < pos2){
-      from = pos1;
-      to = pos2;
-    }else{
-      from = pos2;
-      to = pos1;
-    }
+    var beg = me.region_beginning();
+    var end = me.region_end();
 
     var text = me.val();
-    var pre = text.substring(0, from);
-    var post = text.substring(to);
+    var pre = text.substring(0, beg);
+    var post = text.substring(end);
     me.val(pre + post);
 
-    me.goto_char(from);
+    me.goto_char(beg);
   };
 
   THIS.prototype.insert = function(str){
@@ -434,6 +427,14 @@ var Textaremacs = (function(){
     }).map(function(line){
       return line.replace(/^ /, "");
     }).join("\n");
+  };
+
+  _proto_.region_beginning = function(){
+    return Math.min(this.el.selectionStart, this.el.selectionEnd);
+  };
+
+  _proto_.region_end = function(){
+    return Math.max(this.el.selectionStart, this.el.selectionEnd);
   };
 
   return THIS;
