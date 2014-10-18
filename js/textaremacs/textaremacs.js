@@ -372,12 +372,10 @@ var Textaremacs = (function(){
     var me = this;
 
     var beg = me.region_beginning();
-    var end = me.region_end();
 
-    var text = me.val();
-    var pre = text.substring(0, beg);
-    var post = text.substring(end);
-    me.val(pre + post);
+    me.modifyRegion(function(sel){
+      return "";
+    });
 
     me.goto_char(beg);
   };
