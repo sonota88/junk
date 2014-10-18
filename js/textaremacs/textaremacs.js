@@ -310,7 +310,7 @@ var Textaremacs = (function(){
   // 改行またはテキストの最後
   THIS.prototype.getEndOfLine = function(){
     var me = this;
-    var point = me.el.selectionEnd;
+    var point = me.getPoint();
     var text = me.val();
     var to = null;
     for(var i=point; i<=text.length; i++){
