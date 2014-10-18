@@ -55,7 +55,7 @@ var Textaremacs = (function(){
   }
 
   function kyDelete(me){
-    if(me.isMarkActive()){
+    if(me.region_active_p()){
       me.deleteRegion();
     }else{
       me.delete_char();
@@ -63,7 +63,7 @@ var Textaremacs = (function(){
   }
 
   function kySpace(me){
-    if(me.isMarkActive()){
+    if(me.region_active_p()){
       me.modifyRegion(function(sel){
         return me.indent(sel, " ");
       });
@@ -73,7 +73,7 @@ var Textaremacs = (function(){
   }
 
   function unindentRegionBySpace(me){
-    if( ! me.isMarkActive()){
+    if( ! me.region_active_p()){
       return;
     }
     me.modifyRegion(function(sel){
@@ -82,7 +82,7 @@ var Textaremacs = (function(){
   }
 
   function upcaseRegion(me){
-    if( ! me.isMarkActive()){
+    if( ! me.region_active_p()){
       return;
     }
     me.modifyRegion(function(sel){
@@ -91,7 +91,7 @@ var Textaremacs = (function(){
   }
 
   function downcaseRegion(me){
-    if( ! me.isMarkActive()){
+    if( ! me.region_active_p()){
       return;
     }
     me.modifyRegion(function(sel){
@@ -109,7 +109,7 @@ var Textaremacs = (function(){
       ;
     }
 
-    if( ! me.isMarkActive()){
+    if( ! me.region_active_p()){
       selectCurrentToken(me);
     }
     me.modifyRegion(function(sel){
@@ -207,7 +207,7 @@ var Textaremacs = (function(){
    */
   THIS.prototype.modifyRegion = function(fn){
     var me = this;
-    if( ! me.isMarkActive()){
+    if( ! me.region_active_p()){
       return;
     }
     var posStart = me.el.selectionStart;
@@ -236,6 +236,10 @@ var Textaremacs = (function(){
 
   THIS.prototype.goto_char = function(point){
     this.el.setSelectionRange(point, point);
+  };
+
+  _proto_.region_active_p = function(){
+    return this.el.selectionStart != this.el.selectionEnd;
   };
 
   // ----------------
@@ -362,10 +366,6 @@ var Textaremacs = (function(){
       to = text.length;
     }
     return to;
-  };
-
-  THIS.prototype.isMarkActive = function(){
-    return this.el.selectionStart != this.el.selectionEnd;
   };
 
   THIS.prototype.deleteRegion = function(){
