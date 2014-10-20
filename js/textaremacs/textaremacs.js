@@ -270,6 +270,10 @@ var Textaremacs = (function(){
     return this.el.value;
   };
 
+  _proto_.setKeybind = function(cmd, fn){
+    this.keyBind[cmd] = fn;
+  };
+
   THIS.prototype.isBeginningOfLine = function(point){
     return (point === 0 || this.val().charAt(point - 1) === "\n");
   };
