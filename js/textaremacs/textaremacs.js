@@ -168,7 +168,7 @@ var Textaremacs = (function(){
     ,89: "y"
   };
 
-  THIS.keyBind = {
+  _proto_.keyBind = {
     "C-a": kyMoveBeginningOfLine
     ,"C-d": kyDelete
     ,"C-e": move_end_of_line
@@ -199,7 +199,7 @@ var Textaremacs = (function(){
 
   THIS.prototype.execCommand = function(ev){
     var me = this;
-    var fn = THIS.keyBind[me.cmd];
+    var fn = me.keyBind[me.cmd];
     if(fn){
       ev.preventDefault();
       fn.apply(me, [me, ev]);
