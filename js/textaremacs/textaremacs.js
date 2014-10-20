@@ -1,11 +1,15 @@
-// function puts(){
-//   console.log.apply(console, arguments);
-// }
+function puts(){
+  console.log.apply(console, arguments);
+}
 
 var Textaremacs = (function(){
 
   // ----------------
   // Emacs commands
+
+  function keyboard_quit(me){
+    me.cmd = "";
+  }
 
   function move_end_of_line(me){
     var to = me.getEndOfLine();
@@ -172,6 +176,7 @@ var Textaremacs = (function(){
     "C-a": kyMoveBeginningOfLine
     ,"C-d": kyDelete
     ,"C-e": move_end_of_line
+    ,"C-g": keyboard_quit
     ,"C-h": backward_delete_char
     ,"C-k": kill_line
     ,"M-l": kyRotateCase
@@ -186,13 +191,17 @@ var Textaremacs = (function(){
     var me = this;
     // puts(this, ev);
 
+    if(me.cmd.length > 0){ me.cmd += " "; }
     if(ev.ctrlKey ){ me.cmd += "C-"; }
     if(ev.altKey  ){ me.cmd += "M-"; }
     if(ev.shiftKey){ me.cmd += "S-"; }
 
     if(ev.keyCode in THIS.keyCodeMap){
       me.cmd += THIS.keyCodeMap[ev.keyCode];
+    }else{
+      me.cmd = "";
     }
+    puts(me.cmd);
 
     me.execCommand(ev);
   };
@@ -203,8 +212,8 @@ var Textaremacs = (function(){
     if(fn){
       ev.preventDefault();
       fn.apply(me, [me, ev]);
+      me.cmd = "";
     }
-    me.cmd = "";
   };
 
   // ----------------
