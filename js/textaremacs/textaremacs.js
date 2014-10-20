@@ -150,13 +150,20 @@ var Textaremacs = (function(){
   var _proto_ = THIS.prototype;
 
   THIS.keyCodeMap = {
-    32: "SPC"
+    9: "TAB"
+    ,13: "RET"
+    ,32: "SPC"
     ,65: "a"
+    ,66: "b"
     ,68: "d"
     ,69: "e"
+    ,70: "f"
+    ,71: "g"
     ,72: "h"
     ,75: "k"
     ,76: "l"
+    ,80: "p"
+    ,87: "w"
     ,88: "x"
     ,89: "y"
   };
