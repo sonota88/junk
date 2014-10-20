@@ -157,6 +157,8 @@ var Textaremacs = (function(){
     9: "TAB"
     ,13: "RET"
     ,32: "SPC"
+    ,38: "<up>"
+    ,40: "<down>"
     ,65: "a"
     ,66: "b"
     ,68: "d"
@@ -183,13 +185,13 @@ var Textaremacs = (function(){
     ,"SPC": kySpace
     ,"S-SPC": unindentRegionBySpace
     ,"C-M-SPC": selectCurrentToken
-    ,"C-S-x": upcaseRegion
-    ,"C-S-y": downcaseRegion
+    ,"C-S-<up>": upcaseRegion
+    ,"C-S-<down>": downcaseRegion
   };
 
   THIS.prototype.dispatch = function(ev){
     var me = this;
-    // puts(this, ev);
+    puts(this, ev, ev.keyCode);
 
     if(me.cmd.length > 0){ me.cmd += " "; }
     if(ev.ctrlKey ){ me.cmd += "C-"; }
@@ -201,7 +203,7 @@ var Textaremacs = (function(){
     }else{
       me.cmd = "";
     }
-    // puts(me.cmd);
+    puts(me.cmd);
 
     var fn = me.keyBind[me.cmd];
     if(fn){
