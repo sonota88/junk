@@ -1,5 +1,5 @@
 function puts(){
-  console.log.apply(console, arguments);
+  // console.log.apply(console, arguments);
 }
 
 var Textaremacs = (function(){
@@ -201,13 +201,8 @@ var Textaremacs = (function(){
     }else{
       me.cmd = "";
     }
-    puts(me.cmd);
+    // puts(me.cmd);
 
-    me.execCommand(ev);
-  };
-
-  THIS.prototype.execCommand = function(ev){
-    var me = this;
     var fn = me.keyBind[me.cmd];
     if(fn){
       ev.preventDefault();
