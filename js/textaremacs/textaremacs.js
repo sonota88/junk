@@ -4,6 +4,8 @@ function puts(){
 
 var Textaremacs = (function(){
 
+  var features = {};
+
   // ----------------
   // Emacs commands
 
@@ -85,6 +87,14 @@ var Textaremacs = (function(){
     });
   }
 
+  function kyShiftSpace(me){
+    if(me.region_active_p()){
+      unindentRegionBySpace(me);
+    }else{
+      me.dabbrev_expand();
+    }
+  }
+
   function upcaseRegion(me){
     if( ! me.region_active_p()){
       return;
@@ -148,6 +158,8 @@ var Textaremacs = (function(){
     
     this.cmd = "";
     // this.killRing = [];
+    this.keyHistory = [];
+    this.featureParams = {};
     
     this.$el.on("keydown", this.dispatch.bind(this));
   }
@@ -183,7 +195,7 @@ var Textaremacs = (function(){
     ,"C-k": kill_line
     ,"M-l": kyRotateCase
     ,"SPC": kySpace
-    ,"S-SPC": unindentRegionBySpace
+    ,"S-SPC": kyShiftSpace
     ,"C-M-SPC": selectCurrentToken
     ,"C-S-<up>": upcaseRegion
     ,"C-S-<down>": downcaseRegion
@@ -203,7 +215,11 @@ var Textaremacs = (function(){
     }else{
       me.cmd = "";
     }
-    puts(me.cmd);
+
+    me.keyHistory.push(me.cmd === "" ? null : me.cmd);
+    if(me.keyHistory.length > 4){
+      me.keyHistory.shift();
+    }
 
     var fn = me.keyBind[me.cmd];
     if(fn){
@@ -255,6 +271,14 @@ var Textaremacs = (function(){
     return this.el.selectionStart != this.el.selectionEnd;
   };
 
+  function startsWith(str, pat){
+    return str.indexOf(pat) === 0;
+  }
+
+  _proto_.dabbrev_expand = function(){
+    features.dabbrev_expand.exec(this);
+  };
+
   // ----------------
 
   THIS.prototype.getPoint = function(){
@@ -270,6 +294,10 @@ var Textaremacs = (function(){
       this.el.value = arguments[0];
     }
     return this.el.value;
+  };
+
+  _proto_.getText = function(from, to){
+    return this.val().substring(from, to);
   };
 
   _proto_.setKeybind = function(cmd, fn){
@@ -445,6 +473,144 @@ var Textaremacs = (function(){
   _proto_.region_end = function(){
     return Math.max(this.el.selectionStart, this.el.selectionEnd);
   };
+
+
+  ////////////////////////////////
+  // Features
+
+  features.dabbrev_expand = {
+    extractTokens: function(text, target){
+      var ts = [];
+      var tail = text;
+      var tok;
+      while(tail.length > 0){
+        if(tail.match(/^([a-zA-Z0-9_]+)/)){
+          tok = RegExp.$1;
+          tail = RegExp.rightContext;
+          if(startsWith(tok, target) && tok !== target){
+            ts.push(tok);
+          }
+        }else{
+          tail = tail.substring(1);
+        }
+      }
+      return ts;
+    }
+
+    ,prepareCandidateTokens: function(
+      searchRangeBefore, searchRangeAfter, curTok
+    ){
+      // 前方からトークンを抽出
+      var ts = this.extractTokens(searchRangeBefore, curTok);
+
+      var cts = [];
+      var _tok;
+
+      // 重複排除＋近い方から追加
+      for(var i=ts.length-1; i>=0; i--){
+        _tok = ts[i];
+        if(cts.indexOf(_tok) >= 0){
+          continue;
+        }
+        cts.push(_tok);
+      }
+
+      // 後方からトークンを抽出
+      ts = this.extractTokens(searchRangeAfter, curTok);
+
+      // 重複排除＋近い方から追加
+      var len = ts.length;
+      for(i=0; i<len; i++){
+        _tok = ts[i];
+        if(cts.indexOf(_tok) >= 0){
+          continue;
+        }
+        cts.push(_tok);
+      }
+
+      if(cts.length === 0){
+        return [];
+      }
+
+      cts.push(curTok);
+
+      return cts;
+    }
+
+    ,getBeginningOfCurrentToken: function(me){
+      var former = me.getText(0, me.getPoint());
+
+      // 現在入力途中の単語の最初
+      var begOfCur;
+      for(var i=me.getPoint() - 1; i>=0; i--){
+        if( ! me.isTokenElem(former.charAt(i))){
+          begOfCur = i + 1;
+          break;
+        }
+      }
+      if( ! begOfCur){
+        // テキスト先頭まで現在のトークン
+        return null;
+      }
+      if(begOfCur === me.getPoint()){
+        // 入力途中のトークンなし
+        return null;
+      }
+
+      return begOfCur;
+    }
+
+    ,exec: function(me){
+      if( ! me.featureParams.dabbrev_expand){
+        me.featureParams.dabbrev_expand = {
+          beg: null
+          ,cts: [] // candidate tokens
+          ,i: 0
+        };
+      }
+      // feature params
+      var fp = me.featureParams.dabbrev_expand;
+
+      var begOfCur = this.getBeginningOfCurrentToken(me);
+      if(begOfCur === null){
+        return;
+      }
+
+      // 現在入力途中の単語
+      var curTok = me.getText(begOfCur, me.getPoint());
+
+      // 直前のキー入力が S-SPC
+      //   → begOfCur, cts をそのまま使う（キャッシュを使う）
+      // 直前のキー入力が S-SPC ではない
+      //   → begOfCur, cts を作りなおす
+      var changed = (me.keyHistory[me.keyHistory.length - 2] !== 'S-SPC');
+      if(changed){
+        fp.beg = begOfCur;
+        var searchRangeBefore = me.getText(0, begOfCur);
+        var searchRangeAfter = me.getText(me.getPoint(), me.$el.val().length);
+        fp.cts = this.prepareCandidateTokens(
+          searchRangeBefore, searchRangeAfter, curTok);
+        fp.i = 0;
+      }
+      if(fp.cts.length === 0){
+        return;
+      }
+
+      var next_i = fp.i + 1;
+      if(next_i >= fp.cts.length){
+        next_i = 0;
+      }
+      // 候補
+      var cand = fp.cts[fp.i];
+      me.el.setSelectionRange(fp.beg, me.getPoint());
+      me.modifyRegion(function(sel){
+        return cand;
+      });
+      me.goto_char(begOfCur + cand.length);
+      fp.i = next_i;
+    }
+  };
+
 
   return THIS;
 })();
