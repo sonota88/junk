@@ -1,16 +1,16 @@
 <html>
   <head>
-    <title>textarea_plus sample</title>
+    <title>Chotto Buffer Sample</title>
   </head>
   <body>
     <textarea style="width: 100%; height: 10rem;"></textarea>
   </body>
   <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
-  <script type="text/javascript" src="textaremacs.js"></script>
+  <script type="text/javascript" src="chotto_buffer.js"></script>
   <script type="text/javascript">
     $(function(){
-      var te = new Textaremacs($("textarea"));
-      te.focus();
+      var cb = new ChottoBuffer($("textarea"));
+      cb.focus();
     });
   </script>
 </html>

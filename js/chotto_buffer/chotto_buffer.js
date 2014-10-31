@@ -2,7 +2,7 @@ function puts(){
   // console.log.apply(console, arguments);
 }
 
-var Textaremacs = (function(){
+var ChottoBuffer = (function(){
 
   var features = {};
 
@@ -152,7 +152,7 @@ var Textaremacs = (function(){
 
   // ----------------
 
-  function THIS($el){
+  function ChottoBuffer($el){
     this.$el = $el;
     this.el = this.$el.get(0);
     
@@ -163,9 +163,9 @@ var Textaremacs = (function(){
     
     this.$el.on("keydown", this.dispatch.bind(this));
   }
-  var _proto_ = THIS.prototype;
+  var _proto_ = ChottoBuffer.prototype;
 
-  THIS.keyCodeMap = {
+  ChottoBuffer.keyCodeMap = {
     9: "TAB"
     ,13: "RET"
     ,32: "SPC"
@@ -201,7 +201,7 @@ var Textaremacs = (function(){
     ,"C-S-<down>": downcaseRegion
   };
 
-  THIS.prototype.dispatch = function(ev){
+  ChottoBuffer.prototype.dispatch = function(ev){
     var me = this;
     puts(this, ev, ev.keyCode);
 
@@ -210,8 +210,8 @@ var Textaremacs = (function(){
     if(ev.altKey  ){ me.cmd += "M-"; }
     if(ev.shiftKey){ me.cmd += "S-"; }
 
-    if(ev.keyCode in THIS.keyCodeMap){
-      me.cmd += THIS.keyCodeMap[ev.keyCode];
+    if(ev.keyCode in ChottoBuffer.keyCodeMap){
+      me.cmd += ChottoBuffer.keyCodeMap[ev.keyCode];
     }else{
       me.cmd = "";
     }
@@ -234,7 +234,7 @@ var Textaremacs = (function(){
   /**
    * 選択範囲を加工する
    */
-  THIS.prototype.modifyRegion = function(fn){
+  ChottoBuffer.prototype.modifyRegion = function(fn){
     var me = this;
     if( ! me.region_active_p()){
       return;
@@ -252,7 +252,7 @@ var Textaremacs = (function(){
     me.focus();
   };
 
-  THIS.prototype.delete_char = function(){
+  ChottoBuffer.prototype.delete_char = function(){
     var me = this;
     var text = me.val();
     var pos = me.getPoint();
@@ -263,7 +263,7 @@ var Textaremacs = (function(){
     me.goto_char(pos);
   };
 
-  THIS.prototype.goto_char = function(point){
+  ChottoBuffer.prototype.goto_char = function(point){
     this.el.setSelectionRange(point, point);
   };
 
@@ -281,15 +281,15 @@ var Textaremacs = (function(){
 
   // ----------------
 
-  THIS.prototype.getPoint = function(){
+  ChottoBuffer.prototype.getPoint = function(){
     return this.el.selectionEnd;
   };
 
-  THIS.prototype.focus = function(){
+  ChottoBuffer.prototype.focus = function(){
     this.el.focus();
   };
 
-  THIS.prototype.val = function(){
+  ChottoBuffer.prototype.val = function(){
     if(arguments.length > 0){
       this.el.value = arguments[0];
     }
@@ -304,14 +304,14 @@ var Textaremacs = (function(){
     this.keyBind[cmd] = fn;
   };
 
-  THIS.prototype.isBeginningOfLine = function(point){
+  ChottoBuffer.prototype.isBeginningOfLine = function(point){
     return (point === 0 || this.val().charAt(point - 1) === "\n");
   };
 
   /**
    * @return 最も近い前方の改行の次、またはテキストの最初
    */
-  THIS.prototype.getBeginningOfLine = function(){
+  ChottoBuffer.prototype.getBeginningOfLine = function(){
     var me = this;
     var text = me.val();
     var point = me.getPoint();
@@ -331,7 +331,7 @@ var Textaremacs = (function(){
   /**
    * @return スペース・タブを無視した行頭の位置
    */
-  THIS.prototype.getBeginningOfLineIgnoreSpace = function(){
+  ChottoBuffer.prototype.getBeginningOfLineIgnoreSpace = function(){
     var me = this;
     var text = me.val();
     var point = me.getPoint();
@@ -357,7 +357,7 @@ var Textaremacs = (function(){
   };
 
   // 改行またはテキストの最後
-  THIS.prototype.getEndOfLine = function(){
+  ChottoBuffer.prototype.getEndOfLine = function(){
     var me = this;
     var point = me.getPoint();
     var text = me.val();
@@ -374,11 +374,11 @@ var Textaremacs = (function(){
     return to;
   };
 
-  THIS.prototype.isTokenElem = function(ch){
+  ChottoBuffer.prototype.isTokenElem = function(ch){
     return /^[a-zA-Z0-9_]$/.test(ch);
   };
 
-  THIS.prototype.getBeginningOfToken = function(){
+  ChottoBuffer.prototype.getBeginningOfToken = function(){
     var me = this;
     var text = me.val();
     var point = me.getPoint();
@@ -396,7 +396,7 @@ var Textaremacs = (function(){
     return to;
   };
 
-  THIS.prototype.getEndOfToken = function(){
+  ChottoBuffer.prototype.getEndOfToken = function(){
     var me = this;
     var text = me.val();
     var point = me.getPoint();
@@ -413,7 +413,7 @@ var Textaremacs = (function(){
     return to;
   };
 
-  THIS.prototype.deleteRegion = function(){
+  ChottoBuffer.prototype.deleteRegion = function(){
     var me = this;
 
     var beg = me.region_beginning();
@@ -425,7 +425,7 @@ var Textaremacs = (function(){
     me.goto_char(beg);
   };
 
-  THIS.prototype.insert = function(str){
+  ChottoBuffer.prototype.insert = function(str){
     var me = this;
     var text = me.val();
     var pos = me.getPoint();
@@ -436,7 +436,7 @@ var Textaremacs = (function(){
     me.goto_char(pos + str.length);
   };
 
-  THIS.prototype.indent = function(text, indentStr){
+  ChottoBuffer.prototype.indent = function(text, indentStr){
     var lines = text.split("\n");
     var len = lines.length;
 
@@ -449,7 +449,7 @@ var Textaremacs = (function(){
     }).join("\n");
   };
 
-  THIS.prototype.unindentSpace = function(text){
+  ChottoBuffer.prototype.unindentSpace = function(text){
     var lines = text.split("\n");
 
     return lines.map(function(line){
@@ -612,5 +612,5 @@ var Textaremacs = (function(){
   };
 
 
-  return THIS;
+  return ChottoBuffer;
 })();
