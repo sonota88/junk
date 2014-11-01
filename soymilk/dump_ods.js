@@ -70,14 +70,15 @@ var TableSheet = (function(){
 
   TableSheet.prototype.getDataRowRange = function(){
     var ri = this.offset.row + 2;
+    var ci = this.offset.col;
     var ris = [];
     while(true){
       // コメント行を除き4行空白が続いたらデータ部終了
       var col0  = this.get(0, ri    );
-      var cell1 = this.get(1, ri    );
-      var cell2 = this.get(1, ri + 1);
-      var cell3 = this.get(1, ri + 2);
-      var cell4 = this.get(1, ri + 3);
+      var cell1 = this.get(ci, ri    );
+      var cell2 = this.get(ci, ri + 1);
+      var cell3 = this.get(ci, ri + 2);
+      var cell4 = this.get(ci, ri + 3);
 
       if(
         ! /^#/.test(col0)
