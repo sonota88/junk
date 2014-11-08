@@ -136,6 +136,17 @@
       return list;
     };
 
+    MyArray.prototype.join = function(sep){
+      var s = "";
+      this.each(function(it, i){
+        if(i >= 1){
+          s += sep;
+        }
+        s += it;
+      });
+      return s;
+    };
+
     global._ma = _ma;
   })();
 
