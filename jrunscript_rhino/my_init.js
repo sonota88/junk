@@ -138,12 +138,13 @@
 
     MyArray.prototype.join = function(sep){
       var s = "";
-      this.each(function(it, i){
+      sep = sep || ",";
+      for(var i=0,len=this._list.length; i<len; i++){
         if(i >= 1){
           s += sep;
         }
-        s += it;
-      });
+        s += this._list[i];
+      }
       return s;
     };
 
