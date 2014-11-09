@@ -136,6 +136,15 @@
       return list;
     };
 
+    MyArray.prototype.find = function(fn){
+      for(var i=0,len=this._list.length; i<len; i++){
+        if( fn(this._list[i], i) ){
+          return this._list[i];
+        }
+      }
+      return undefined;
+    };
+
     MyArray.prototype.join = function(sep){
       var s = "";
       sep = sep || ",";
