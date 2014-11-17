@@ -38,7 +38,10 @@ var FileUtils = (function(){
   };
 
   FileUtils.rm = function(path){
-    new File(path)["delete"]();
+    var ret = new File(path)["delete"]();
+    if(ret === false){
+      throw new Error("failed to delete (" + path + ")");
+    }
   };
 
   FileUtils.mv = function(src, dest){
