@@ -325,6 +325,10 @@
       new File(dir)["delete"]();
     };
     
+    Dir.isDir = function(path){
+      return new File(path).isDirectory();
+    };
+    
     return Dir;
   })();
 

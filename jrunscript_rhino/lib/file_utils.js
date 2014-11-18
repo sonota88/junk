@@ -2,6 +2,8 @@
 
 var FileUtils = (function(){
 
+  var _ = require("lib/underscore/underscore");
+
   var FileUtils = {};
 
   function createByteArray(size){
@@ -42,6 +44,29 @@ var FileUtils = (function(){
     if(ret === false){
       throw new Error("failed to delete (" + path + ")");
     }
+  };
+
+  FileUtils.rmRecursive = function(dir){
+    var paths;
+
+    paths = Dir.allPaths(dir);
+    _(paths).each(function(path){
+      if( ! Dir.isDir(path) ){
+        FileUtils.rm(path);
+      }
+    });
+
+    paths = Dir.allPaths(dir).sort(function(a, b){
+      // descending order
+      return b.length - a.length;
+    });
+    _(paths).each(function(path){
+      if( Dir.isDir(path) ){
+        Dir.rmdir(path);
+      }
+    });
+
+    Dir.rmdir(dir);
   };
 
   FileUtils.mv = function(src, dest){
