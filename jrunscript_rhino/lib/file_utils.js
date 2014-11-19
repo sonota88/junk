@@ -65,8 +65,6 @@ var FileUtils = (function(){
         Dir.rmdir(path);
       }
     });
-
-    Dir.rmdir(dir);
   };
 
   FileUtils.mv = function(src, dest){

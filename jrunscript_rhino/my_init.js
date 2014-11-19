@@ -290,18 +290,17 @@
     
     var Dir = {};
 
-    function _traverse(rootDir, fn){
-      var _rootDir = new File(rootDir);
-      var paths = _rootDir.listFiles();
-      var path;
-      for(var i=0,len=paths.length; i<len; i++){
-        path = paths[i];
-        if(path.isDirectory()){
-          fn("" + path.getPath() + "/");
-          _traverse(""+path, fn);
-        }else{
-          fn("" + path.getPath());
+    function _traverse(path, fn){
+      var file = new File(path);
+      if(file.isDirectory()){
+        fn("" + file.getPath() + "/");
+        var kids = file.listFiles();
+        var kid;
+        for(var i=0,len=kids.length; i<len; i++){
+          _traverse("" + kids[i].getPath(), fn);
         }
+      }else{
+        fn("" + file.getPath());
       }
     }
 
