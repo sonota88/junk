@@ -69,7 +69,7 @@ var TableSheet = (function(){
   };
 
   TableSheet.prototype.getDataRowRange = function(){
-    var ri = this.offset.row + 2;
+    var ri = this.offset.row + 3;
     var ci = this.offset.col;
     var ris = [];
     while(true){
