@@ -17,48 +17,48 @@ importClass(Packages.com.sun.star.comp.servicemanager.ServiceManager);
 
 var Calc = (function(){
 
-    function Calc(){}
+  function Calc(){}
 
-    Calc.open = function(path, fn){
-        var /* XMultiComponentFactory */ mcf,
-        /* XComponent */ component,
-        /* XComponentContext */ context,
-        /* XSpreadsheetDocument */ doc,
-        /* XComponentLoader */ componentLoader,
-        /* com.sun.star.frame.Desktop */ desktop,
-        /* com.sun.star.beans.PropertyValue[] */ args,
-        fileUrl = "file:///" + path;
+  Calc.open = function(path, fn){
+    var /* XMultiComponentFactory */ mcf,
+    /* XComponent */ component,
+    /* XComponentContext */ context,
+    /* XSpreadsheetDocument */ doc,
+    /* XComponentLoader */ componentLoader,
+    /* com.sun.star.frame.Desktop */ desktop,
+    /* com.sun.star.beans.PropertyValue[] */ args,
+    fileUrl = "file:///" + path;
 
-        function arg(name, value){
-            var _arg = new PropertyValue();
-            _arg.Name = name;
-            _arg.Value = value;
-            return _arg;
-        }
+    function arg(name, value){
+      var _arg = new PropertyValue();
+      _arg.Name = name;
+      _arg.Value = value;
+      return _arg;
+    }
 
-        context = Bootstrap.bootstrap();
+    context = Bootstrap.bootstrap();
 
-        mcf = context.getServiceManager();
+    mcf = context.getServiceManager();
 
-        desktop = mcf.createInstanceWithContext(
-            "com.sun.star.frame.Desktop", context);
+    desktop = mcf.createInstanceWithContext(
+      "com.sun.star.frame.Desktop", context);
 
-        componentLoader = UnoRuntime.queryInterface(XComponentLoader, desktop);
+    componentLoader = UnoRuntime.queryInterface(XComponentLoader, desktop);
 
-        // GUI表示なし
-        args = [ arg("Hidden", true) ];
-        component = componentLoader.loadComponentFromURL(
-            fileUrl, "_blank", 0, args);
+    // GUI表示なし
+    args = [ arg("Hidden", true) ];
+    component = componentLoader.loadComponentFromURL(
+      fileUrl, "_blank", 0, args);
 
-        try{
-            doc = new CalcDocument(component);
-            fn(doc);
-        }finally{
-            doc.close();
-        }
-    };
+    try{
+      doc = new CalcDocument(component);
+      fn(doc);
+    }finally{
+      doc.close();
+    }
+  };
 
-    return Calc;
+  return Calc;
 })();
 
 
@@ -72,90 +72,90 @@ var Calc = (function(){
  * _doc: com.sun.star.sheet.XSpreadsheetDocument
  */
 var CalcDocument = (function(){
-        
-    /**
-     * @param {com.sun.star.lang.XComponent} component
-     */
-    function CalcDocument(component){
-        this._component = component;
 
-        this._doc = UnoRuntime.queryInterface(
-            XSpreadsheetDocument, this._component);
+  /**
+   * @param {com.sun.star.lang.XComponent} component
+   */
+  function CalcDocument(component){
+    this._component = component;
+
+    this._doc = UnoRuntime.queryInterface(
+      XSpreadsheetDocument, this._component);
+  }
+
+  CalcDocument.prototype.save = function(){
+    var /* XStorable */ storable = UnoRuntime.queryInterface(
+      XStorable, this._component);
+    storable.store();
+  };
+
+  CalcDocument.prototype.close = function(){
+    var /* XCloseable */ closable = UnoRuntime.queryInterface(
+      XCloseable, this._component);
+    closable.close(true);
+  };
+
+  CalcDocument.prototype.getSheets = function(){
+    var sheets = [],
+    sheetNames = this._doc.getSheets().getElementNames(),
+    i, sheetName;
+
+    for(i=0,len=sheetNames.length; i<len; i++){
+      sheetName = sheetNames[i];
+      var /* XSpreadsheet */ sheet = this.getSheetByIndex(i);
+      sheets.push(new Sheet(sheet, sheetName));
     }
 
-    CalcDocument.prototype.save = function(){
-        var /* XStorable */ storable = UnoRuntime.queryInterface(
-            XStorable, this._component);
-        storable.store();
-    };
+    return sheets;
+  };
 
-    CalcDocument.prototype.close = function(){
-        var /* XCloseable */ closable = UnoRuntime.queryInterface(
-            XCloseable, this._component);
-        closable.close(true);
-    };
+  CalcDocument.prototype.each = function(fn){
+    var sheetNames = this._doc.getSheets().getElementNames(),
+    i;
 
-    CalcDocument.prototype.getSheets = function(){
-        var sheets = [],
-        sheetNames = this._doc.getSheets().getElementNames(),
-        i, sheetName;
+    for(i=0,len=sheetNames.length; i<len; i++ ){
+      fn(this.getSheetByIndex(i), i);
+    }
+  };
 
-        for(i=0,len=sheetNames.length; i<len; i++){
-            sheetName = sheetNames[i];
-            var /* XSpreadsheet */ sheet = this.getSheetByIndex(i);
-            sheets.push(new Sheet(sheet, sheetName));
-        }
+  /**
+   * @return {XSpreadsheet}
+   */
+  CalcDocument.prototype.getSheetByIndex = function(i){
+    var /* XSpreadsheets */ sheets,
+    /* XIndexAccess */ indexAccess;
 
-        return sheets;
-    };
+    sheets = this._doc.getSheets();
 
-    CalcDocument.prototype.each = function(fn){
-        var sheetNames = this._doc.getSheets().getElementNames(),
-        i;
+    indexAccess = UnoRuntime.queryInterface(XIndexAccess, sheets);
 
-        for(i=0,len=sheetNames.length; i<len; i++ ){
-            fn(this.getSheetByIndex(i), i);
-        }
-    };
+    return UnoRuntime.queryInterface(
+      XSpreadsheet, indexAccess.getByIndex(i));
+  };
 
-    /**
-     * @return {XSpreadsheet}
-     */
-    CalcDocument.prototype.getSheetByIndex = function(i){
-        var /* XSpreadsheets */ sheets,
-        /* XIndexAccess */ indexAccess;
+  /**
+   * @return {Sheet}
+   */
+  CalcDocument.prototype.getSheetByName = function(name){
+    var sheets = this._doc.getSheets(),
+    /* XSpreadsheet */ sheet,
+    sheetNames = sheets.getElementNames(),
+    sheetName,
+    i, targetIndex;
 
-        sheets = this._doc.getSheets();
+    for(i=0,len=sheetNames.length; i<len; i++ ){
+      sheetName = sheetNames[i];
+      if(sheetName == name){
+        targetIndex = i;
+        break;
+      }
+    }
 
-        indexAccess = UnoRuntime.queryInterface(XIndexAccess, sheets);
+    sheet = this.getSheetByIndex(targetIndex);
+    return new Sheet(sheet, sheetName);
+  };
 
-        return UnoRuntime.queryInterface(
-            XSpreadsheet, indexAccess.getByIndex(i));
-    };
-
-    /**
-     * @return {Sheet}
-     */
-    CalcDocument.prototype.getSheetByName = function(name){
-        var sheets = this._doc.getSheets(),
-        /* XSpreadsheet */ sheet,
-        sheetNames = sheets.getElementNames(),
-        sheetName,
-        i, targetIndex;
-
-        for(i=0,len=sheetNames.length; i<len; i++ ){
-            sheetName = sheetNames[i];
-            if(sheetName == name){
-                targetIndex = i;
-                break;
-            }
-        }
-
-        sheet = this.getSheetByIndex(targetIndex);
-        return new Sheet(sheet, sheetName);
-    };
-
-    return CalcDocument;
+  return CalcDocument;
 })();
 
 
@@ -167,42 +167,42 @@ var CalcDocument = (function(){
  */
 var Sheet = (function(){
 
-    /**
-     * @param {com.sun.star.sheet.XSpreadsheet} sheet
-     * @param {string} name
-     */
-    function Sheet(sheet, name){
-        this._sheet = sheet;
-        this.name = name;
-    }
+  /**
+   * @param {com.sun.star.sheet.XSpreadsheet} sheet
+   * @param {string} name
+   */
+  function Sheet(sheet, name){
+    this._sheet = sheet;
+    this.name = name;
+  }
 
-    /**
-     * @return {string} JavaScript の Stringプリミティブ値
-     *     （nullは返さない）
-     */
-    Sheet.prototype.get = function(col, row){
-        var /* XCell */ cell;
+  /**
+   * @return {string} JavaScript の Stringプリミティブ値
+   *     （nullは返さない）
+   */
+  Sheet.prototype.get = function(col, row){
+    var /* XCell */ cell;
 
-        cell = this._sheet.getCellByPosition(col, row);
-        return "" + cell.getFormula();
-    };
+    cell = this._sheet.getCellByPosition(col, row);
+    return "" + cell.getFormula();
+  };
 
-    Sheet.prototype.set = function(col, row, val){
-        var /* XCell */ cell;
+  Sheet.prototype.set = function(col, row, val){
+    var /* XCell */ cell;
 
-        cell = this._sheet.getCellByPosition(col, row);
-        cell.setFormula(val);
-    };
+    cell = this._sheet.getCellByPosition(col, row);
+    cell.setFormula(val);
+  };
 
-    Sheet.prototype.getInt = function(col, row){
-        var cell = this._sheet.getCellByPosition(col, row);
-        return parseInt(cell.getFormula(), 10);
-    };
+  Sheet.prototype.getInt = function(col, row){
+    var cell = this._sheet.getCellByPosition(col, row);
+    return parseInt(cell.getFormula(), 10);
+  };
 
-    Sheet.prototype.getFloat = function(col, row){
-        var cell = this._sheet.getCellByPosition(col, row);
-        return parseFloat(cell.getFormula());
-    };
+  Sheet.prototype.getFloat = function(col, row){
+    var cell = this._sheet.getCellByPosition(col, row);
+    return parseFloat(cell.getFormula());
+  };
 
-    return Sheet;
+  return Sheet;
 })();
