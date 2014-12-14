@@ -18,15 +18,15 @@ var TableSheet = (function(){
     this.offset = this._getOffset(sheet);
   }
 
-  TableSheet.prototype.get = function(ci, ri){
-    return this.sh.get(ci, ri);
+  TableSheet.prototype.get = function(ri, ci){
+    return this.sh.get(ri, ci);
   };
 
   TableSheet.prototype.getTablePName = function(){
     return this.sh.get(0, 0);
   };
   TableSheet.prototype.getTableLName = function(){
-    return this.sh.get(0, 1);
+    return this.sh.get(1, 0);
   };
 
   TableSheet.prototype.getOffset = function(){
@@ -44,7 +44,7 @@ var TableSheet = (function(){
 
     // row
     for(var ri=0; ri<limit; ri++){
-      val = this.get(0, ri);
+      val = this.get(ri, 0);
       if(val === '>>begin'){
         offset.row = ri;
       }
@@ -52,7 +52,7 @@ var TableSheet = (function(){
 
     // column
     for(var ci=0; ci<limit; ci++){
-      val = this.get(ci, 0);
+      val = this.get(0, ci);
       if(val === '>>begin'){
         offset.col = ci;
       }
@@ -74,11 +74,11 @@ var TableSheet = (function(){
     var ris = [];
     while(true){
       // コメント行を除き4行空白が続いたらデータ部終了
-      var col0  = this.get(0, ri    );
-      var cell1 = this.get(ci, ri    );
-      var cell2 = this.get(ci, ri + 1);
-      var cell3 = this.get(ci, ri + 2);
-      var cell4 = this.get(ci, ri + 3);
+      var col0  = this.get(ri    ,  0);
+      var cell1 = this.get(ri    , ci);
+      var cell2 = this.get(ri + 1, ci);
+      var cell3 = this.get(ri + 2, ci);
+      var cell4 = this.get(ri + 3, ci);
 
       if(
         ! /^#/.test(col0)
@@ -103,7 +103,7 @@ var TableSheet = (function(){
 
     var ci = this.offset.col;
     while(true){
-      var pname = this.get(ci, riFrom + 1);
+      var pname = this.get(riFrom + 1, ci);
 
       if(isBlank(pname)){
         break;
@@ -123,8 +123,8 @@ var TableSheet = (function(){
     var md = [];
 
     range(this.offset.col, this.offset.col + numCols - 1).each(function(ci){
-      var lname = me.get(ci, me.offset.row);
-      var pname = me.get(ci, me.offset.row + 1);
+      var lname = me.get(me.offset.row    , ci);
+      var pname = me.get(me.offset.row + 1, ci);
       md.push({
         lname: lname, pname: pname
       });
@@ -147,14 +147,14 @@ var TableSheet = (function(){
          + "-" + dataRowRange[dataRowRange.length - 1]);
     _ma(dataRowRange).each(function(ri){
       // 1列目 ＝ 制御列
-      var ctrlStr = "" + me.get(0, ri);
+      var ctrlStr = "" + me.get(ri, 0);
       var cols = [];
       if(ctrlStr.match(/^#/)){
         // "#" で始まっている行は無視
         return; // continue
       }
       for(var ci=me.offset.col; ci <= me.offset.col + numCols - 1; ci++){
-        var val = "" + me.get(ci, ri);
+        var val = "" + me.get(ri, ci);
         val = val.replace(/^'/, "");
         cols.push(val);
       }

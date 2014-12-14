@@ -180,26 +180,26 @@ var Sheet = (function(){
    * @return {string} JavaScript の Stringプリミティブ値
    *     （nullは返さない）
    */
-  Sheet.prototype.get = function(col, row){
+  Sheet.prototype.get = function(row, col){
     var /* XCell */ cell;
 
     cell = this._sheet.getCellByPosition(col, row);
     return "" + cell.getFormula();
   };
 
-  Sheet.prototype.set = function(col, row, val){
+  Sheet.prototype.set = function(row, col, val){
     var /* XCell */ cell;
 
     cell = this._sheet.getCellByPosition(col, row);
     cell.setFormula(val);
   };
 
-  Sheet.prototype.getInt = function(col, row){
+  Sheet.prototype.getInt = function(row, col){
     var cell = this._sheet.getCellByPosition(col, row);
     return parseInt(cell.getFormula(), 10);
   };
 
-  Sheet.prototype.getFloat = function(col, row){
+  Sheet.prototype.getFloat = function(row, col){
     var cell = this._sheet.getCellByPosition(col, row);
     return parseFloat(cell.getFormula());
   };
