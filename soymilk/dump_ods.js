@@ -18,22 +18,24 @@ var TableSheet = (function(){
     this.offset = this._getOffset(sheet);
   }
 
-  TableSheet.prototype.get = function(ri, ci){
+  var __ = TableSheet.prototype;
+
+  __.get = function(ri, ci){
     return this.sh.get(ri, ci);
   };
 
-  TableSheet.prototype.getTablePName = function(){
+  __.getTablePName = function(){
     return this.sh.get(0, 0);
   };
-  TableSheet.prototype.getTableLName = function(){
+  __.getTableLName = function(){
     return this.sh.get(1, 0);
   };
 
-  TableSheet.prototype.getOffset = function(){
+  __.getOffset = function(){
     return this.offset;
   };
 
-  TableSheet.prototype._getOffset = function(){
+  __._getOffset = function(){
     var offset = {
       row: null
       ,col: null
@@ -68,7 +70,7 @@ var TableSheet = (function(){
     return offset;
   };
 
-  TableSheet.prototype.getDataRowRange = function(){
+  __.getDataRowRange = function(){
     var ri = this.offset.row + 3;
     var ci = this.offset.col;
     var ris = [];
@@ -98,7 +100,7 @@ var TableSheet = (function(){
   /**
    * @return 対象テーブルのカラム数
    */
-  TableSheet.prototype.getNumCols = function(){
+  __.getNumCols = function(){
     var riFrom = this.offset.row;
 
     var ci = this.offset.col;
@@ -116,7 +118,7 @@ var TableSheet = (function(){
     return ci - this.offset.col;
   };
 
-  TableSheet.prototype.getMetaData = function(){
+  __.getMetaData = function(){
     var me = this;
     var numCols = this.getNumCols();
 
@@ -133,7 +135,7 @@ var TableSheet = (function(){
     return md;
   };
 
-  TableSheet.prototype.toTsv = function(){
+  __.toTsv = function(){
     var me = this;
 
     var md = this.getMetaData();

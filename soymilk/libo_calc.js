@@ -83,19 +83,21 @@ var CalcDocument = (function(){
       XSpreadsheetDocument, this._component);
   }
 
-  CalcDocument.prototype.save = function(){
+  var __ = CalcDocument.prototype;
+
+  __.save = function(){
     var /* XStorable */ storable = UnoRuntime.queryInterface(
       XStorable, this._component);
     storable.store();
   };
 
-  CalcDocument.prototype.close = function(){
+  __.close = function(){
     var /* XCloseable */ closable = UnoRuntime.queryInterface(
       XCloseable, this._component);
     closable.close(true);
   };
 
-  CalcDocument.prototype.getSheets = function(){
+  __.getSheets = function(){
     var sheets = [],
     sheetNames = this._doc.getSheets().getElementNames(),
     i, sheetName;
@@ -109,7 +111,7 @@ var CalcDocument = (function(){
     return sheets;
   };
 
-  CalcDocument.prototype.each = function(fn){
+  __.each = function(fn){
     var sheetNames = this._doc.getSheets().getElementNames(),
     i;
 
@@ -121,7 +123,7 @@ var CalcDocument = (function(){
   /**
    * @return {XSpreadsheet}
    */
-  CalcDocument.prototype.getSheetByIndex = function(i){
+  __.getSheetByIndex = function(i){
     var /* XSpreadsheets */ sheets,
     /* XIndexAccess */ indexAccess;
 
@@ -136,7 +138,7 @@ var CalcDocument = (function(){
   /**
    * @return {Sheet}
    */
-  CalcDocument.prototype.getSheetByName = function(name){
+  __.getSheetByName = function(name){
     var sheets = this._doc.getSheets(),
     /* XSpreadsheet */ sheet,
     sheetNames = sheets.getElementNames(),
@@ -176,30 +178,32 @@ var Sheet = (function(){
     this.name = name;
   }
 
+  var __ = Sheet.prototype;
+
   /**
    * @return {string} JavaScript の Stringプリミティブ値
    *     （nullは返さない）
    */
-  Sheet.prototype.get = function(row, col){
+  __.get = function(row, col){
     var /* XCell */ cell;
 
     cell = this._sheet.getCellByPosition(col, row);
     return "" + cell.getFormula();
   };
 
-  Sheet.prototype.set = function(row, col, val){
+  __.set = function(row, col, val){
     var /* XCell */ cell;
 
     cell = this._sheet.getCellByPosition(col, row);
     cell.setFormula(val);
   };
 
-  Sheet.prototype.getInt = function(row, col){
+  __.getInt = function(row, col){
     var cell = this._sheet.getCellByPosition(col, row);
     return parseInt(cell.getFormula(), 10);
   };
 
-  Sheet.prototype.getFloat = function(row, col){
+  __.getFloat = function(row, col){
     var cell = this._sheet.getCellByPosition(col, row);
     return parseFloat(cell.getFormula());
   };
