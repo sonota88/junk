@@ -1,6 +1,6 @@
 (function(){
   var global = this;
-  var stdLibDir = "/foo/bar/stdlib";
+  var stdLibDir = "" + java.lang.System.getenv("JJS_STDLIB_DIR");
   global.__FILE__ = (new File("./").getCanonicalPath()
       + "/" + engine.get(engine.FILENAME))
       .replace( /\\/g, "/" );
