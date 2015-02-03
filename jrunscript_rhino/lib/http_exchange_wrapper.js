@@ -11,6 +11,13 @@ var HttpExchangeWrapper = (function(){
     return "" + this._he.getRequestURI().getPath();
   };
 
+  __.addResponseHeaders = function(obj){
+    var headers = this._he.getResponseHeaders();
+    for(var key in obj){
+      headers.add(key, obj[key]);
+    }
+  };
+
   return HttpExchangeWrapper;
 })();
 
