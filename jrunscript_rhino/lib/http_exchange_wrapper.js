@@ -40,6 +40,10 @@ var HttpExchangeWrapper = (function(){
     return "" + this._he.getRequestURI().getPath();
   };
 
+  __.getMethod = function(){
+    return "" + this._he.getRequestMethod();
+  };
+
   __.addResponseHeaders = function(obj){
     var headers = this._he.getResponseHeaders();
     for(var key in obj){
