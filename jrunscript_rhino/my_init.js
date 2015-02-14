@@ -12,6 +12,7 @@
       || type === "number"
       || type === "boolean"
       || val instanceof RegExp
+      || val instanceof Error
     ){
       println(val);
     }else{
