@@ -1,3 +1,5 @@
+var JavaUtils = require("lib/java_utils");
+
 var HttpExchangeWrapper = (function(){
   
   "use strict";
@@ -129,6 +131,7 @@ var HttpExchangeWrapper = (function(){
     resOS.close();
   };
 
+
   /**
    * @return Java byte[]
    */
@@ -143,7 +146,7 @@ var HttpExchangeWrapper = (function(){
 
       while(true){
         n = is.read(buf);
-        if(n == -1){
+        if(n === -1){
           break;
         }
         baos.write(buf, 0, n);
@@ -155,10 +158,72 @@ var HttpExchangeWrapper = (function(){
     return baos.toByteArray();
   };
 
-  __.getRequest = function(){
+  __._isMultipartFormData = function(){
+    var headers = JavaUtils.map2obj(this._he.getRequestHeaders());
+
+    if( ! headers["Content-type"]){
+      return false;
+    }
+
+    var contentTypes = JavaUtils.list2ary(headers["Content-type"]);
+    var contentType = contentTypes[0];
+
+    return contentType.match(/^multipart\/form-data/) != null;
+  };
+
+
+  /**
+   * @param queryStr java.lang.String
+   */
+  __._parseQueryString = function(str){
+    var params = {};
+
+    if( str == null ){
+      return params;
+    }
+
+    var pairs = str.split("&");
+    _.each(pairs, function(pair){
+      pair.match(/^(.+?)=(.*)/);
+      var k = RegExp.$1;
+      var v = decodeURIComponent(("" + RegExp.$2).replace(/\+/g, " "));
+      params[k] = v;
+    });
+
+    return params;
+  };
+
+
+  /**
+   * @param reqBody Java byte[]
+   */
+  __.getParams = function(){
     var reqBody = this.getRequestBody();
+
+    // java.lang.String
+    var queryStr;
+
+    if( this._isMultipartFormData() ){
+      throw "TODO multipart form data";
+    }else{
+      // puts("is not multipart");
+      var method = this.getMethod().toUpperCase();
+
+      if( method === "GET" ){
+        queryStr = this._he.getRequestURI().getQuery();
+      }else if( method === "POST" ){
+        queryStr = JavaUtils.byteArrayToString(reqBody);
+      }else{
+        throw "method not supported: " + method;
+      }
+    }
+    return this._parseQueryString(queryStr);
+  };
+
+
+  __.getRequest = function(){
     var req = {
-      params: HttpUtils.getParams(this._he, reqBody)
+      params: this.getParams()
     };
     return req;
   };
