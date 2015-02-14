@@ -4,12 +4,13 @@
   global.JSON = JSON || require("my_json");
 
   function _puts(val){
+    var type = typeof val;
     if(
       val === null
-      || typeof val === "undefined"
-      || typeof val === "string"
-      || typeof val === "number"
-      || typeof val === "boolean"
+      || type === "undefined"
+      || type === "string"
+      || type === "number"
+      || type === "boolean"
       || val instanceof RegExp
     ){
       println(val);
