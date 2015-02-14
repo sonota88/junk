@@ -129,6 +129,44 @@ var HttpExchangeWrapper = (function(){
     resOS.close();
   };
 
+  /**
+   * @return Java byte[]
+   */
+  __.getRequestBody = function(){
+
+    // InputStream
+    var is = this._he.getRequestBody();
+    try{
+      var buf = createByteArray(1024);
+      var n;
+      var baos = new ByteArrayOutputStream();
+
+      while(true){
+        n = is.read(buf);
+        if(n == -1){
+          break;
+        }
+        baos.write(buf, 0, n);
+      }
+    } finally {
+      if(is){ is.close(); }
+    }
+
+    return baos.toByteArray();
+  };
+
+  __.getRequest = function(){
+    var reqBody = this.getRequestBody();
+    var req = {
+      params: HttpUtils.getParams(this._he, reqBody)
+    };
+    return req;
+  };
+
+  __.close = function(){
+    this._he.close();
+  };
+
   return HttpExchangeWrapper;
 })();
 
