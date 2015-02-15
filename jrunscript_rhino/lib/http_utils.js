@@ -17,8 +17,9 @@ var HttpUtils = (function(){
   function HttpUtils(){}
 
   HttpUtils.makeErrorPageHtml = function(ex, isDebug){
+    var html = '<html><body>';
+
     if(isDebug){
-      var html = '<html><body>';
       html += ex;
       html += '<hr />';
       html += '<pre style="font-family: monospace;">';
@@ -26,14 +27,12 @@ var HttpUtils = (function(){
         html += "" + k + " (" + escapeHTML("" + ex[k]) + ")\n";
       }
       html += '</pre>';
-      html += '</body></html>';
-      return html;
     }else{
-      var html = '<html><body>';
       html += '<p>Error</p>';
-      html += '</body></html>';
-      return html;
     }
+
+    html += '</body></html>';
+    return html;
   };
 
   return HttpUtils;
