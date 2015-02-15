@@ -220,12 +220,6 @@ var HttpExchangeWrapper = (function(){
     return this._parseQueryString(queryStr);
   };
 
-  __.getRequest = function(){
-    var req = new HttpUtils.Request();
-    req.params = this.getParams();
-    return req;
-  };
-
   __.close = function(){
     this._he.close();
   };
