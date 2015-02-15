@@ -18,16 +18,16 @@ var HttpUtils = (function(){
 
   HttpUtils.makeErrorPageHtml = function(ex, isDebug){
     if(isDebug){
-    var html = '<html><body>';
-    html += ex;
-    html += '<hr />';
-    html += '<pre style="font-family: monospace;">';
-    for(var k in ex){
-      html += "" + k + " (" + escapeHTML("" + ex[k]) + ")\n";
-    }
-    html += '</pre>';
-    html += '</body></html>';
-    return html;
+      var html = '<html><body>';
+      html += ex;
+      html += '<hr />';
+      html += '<pre style="font-family: monospace;">';
+      for(var k in ex){
+        html += "" + k + " (" + escapeHTML("" + ex[k]) + ")\n";
+      }
+      html += '</pre>';
+      html += '</body></html>';
+      return html;
     }else{
       var html = '<html><body>';
       html += '<p>Error</p>';
