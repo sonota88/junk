@@ -1,5 +1,7 @@
 var HttpUtils = (function(){
 
+  "use strict";
+
   function escapeHTML(src){
     return src
     .replace(/&/g, "&amp;")
@@ -29,5 +31,38 @@ var HttpUtils = (function(){
 
   return HttpUtils;
 })();
+
+
+HttpUtils.Request = (function(){
+
+  function Request(){
+    this.params = {};
+  }
+
+  return Request;
+})();
+
+
+HttpUtils.Response = (function(){
+
+  function Response(){
+    this.body = "{body}";
+    this.status = 500;
+    this.contentType = null;
+  }
+  var __ = Response.prototype;
+
+  __.send = function(body){
+    this.status = 200;
+    this.body = body;
+  };
+
+  __.setContentType = function(contentType){
+    this.contentType = contentType;
+  };
+
+  return Response;
+})();
+
 
 exports.HttpUtils = HttpUtils;
