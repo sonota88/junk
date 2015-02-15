@@ -16,7 +16,8 @@ var HttpUtils = (function(){
 
   function HttpUtils(){}
 
-  HttpUtils.makeErrorPageHtmlForDebug = function(ex){
+  HttpUtils.makeErrorPageHtml = function(ex, isDebug){
+    if(isDebug){
     var html = '<html><body>';
     html += ex;
     html += '<hr />';
@@ -27,6 +28,12 @@ var HttpUtils = (function(){
     html += '</pre>';
     html += '</body></html>';
     return html;
+    }else{
+      var html = '<html><body>';
+      html += '<p>Error</p>';
+      html += '</body></html>';
+      return html;
+    }
   };
 
   return HttpUtils;
