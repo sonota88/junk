@@ -18,6 +18,16 @@ var JavaUtils = (function(){
     return java.lang.reflect.Array.newInstance(_type, size);
   };
 
+  __.map2obj = function(javaMap){
+    var obj = {};
+    var k;
+    for(var it = javaMap.keySet().iterator(); it.hasNext();){
+      k = it.next();
+      obj[k] = javaMap.get(k);
+    }
+    return obj;
+  };
+
   return __;
 })();
 
