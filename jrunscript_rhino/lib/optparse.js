@@ -13,8 +13,9 @@ var Options = (function(){
   };
 
   __.has = function(name){
-    var flags = _.pluck(this.flags, "name");
-    return _.contains(flags, name);
+    return _.any(this.flags, function(flag){
+      return flag.name === name;
+    });
   };
 
   __.valueOf = function(name){
@@ -27,40 +28,68 @@ var Options = (function(){
   return Options;
 })();
 
+
+var Cfg = (function(){
+
+  "use strict";
+
+  function Cfg(name, required){
+    this.name = name;
+    this.required = required;
+  }
+  var __ = Cfg.prototype;
+
+  Cfg.fromArray = function(xs){
+    return new Cfg(xs[0], !! xs[1]);
+  };
+
+  return Cfg;
+})();
+
+
 var Optparse = (function(){
 
   "use strict";
 
-  function valueRequired(requireValueList, name){
-    return _.contains(requireValueList, name);
+  function findCfg(cfgs, name){
+    return _.find(cfgs, function(cfg){
+      return cfg.name === name;
+    });
   }
 
   var Optparse = {};
   
-  Optparse.parse = function(args, opts){
-
-    opts = opts || {};
-    opts.requireValue = opts.requireValue || [];
+  Optparse.parse = function(args, argCfgs){
 
     var _args = _.map(args, function(arg){
       return "" + arg;
     });
     
+    var cfgs = _.map(argCfgs || [], Cfg.fromArray);
+
+    var names = _.map(cfgs, function(cfg){
+      return cfg.name;
+    });
+
     var ret = new Options();
 
     var i=0;
     while(i < _args.length){
       var arg = _args[i];
-      if(arg.match(/^-/)){
+
+      if(_.contains(names, arg)){
         var name = arg;
+        var cfg = findCfg(cfgs, name);
+
         var value = null;
-        if(valueRequired(opts.requireValue, name)){
-          if(i + 1 >= args.length){
+        if(cfg.required){
+          if(i + 1 >= _args.length){
             throw "value does not exist";
           }
           value = _args[i + 1];
           i++;
         }
+
         ret.flags.push({
           name: name, value: value
         });
