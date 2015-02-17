@@ -1,4 +1,4 @@
-var JavaUtils = require("lib/java_utils");
+var JavaUtils = require("java_utils");
 
 var HttpExchangeWrapper = (function(){
   
