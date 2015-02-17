@@ -12,7 +12,7 @@ function createArray(type, size){
   return java.lang.reflect.Array.newInstance(_type, size);
 };
 
-exports.JavaUtil = {
+exports.JavaUtils = {
   toJavaString: toJavaString
   , createArray: createArray
 };
