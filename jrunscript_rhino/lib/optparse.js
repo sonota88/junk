@@ -71,7 +71,7 @@ var Optparse = (function(){
       return cfg.name;
     });
 
-    var ret = new Options();
+    var opts = new Options();
 
     var i=0;
     while(i < _args.length){
@@ -90,16 +90,16 @@ var Optparse = (function(){
           i++;
         }
 
-        ret.flags.push({
+        opts.flags.push({
           name: name, value: value
         });
       }else{
-        ret.rest.push(arg);
+        opts.rest.push(arg);
       }
       i++;
     }
 
-    return ret;
+    return opts;
   };
 
   return Optparse;
