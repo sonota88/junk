@@ -1,18 +1,24 @@
-function toJavaString(javaScriptString){
-  return new java.lang.String(javaScriptString);
-};
+var JavaUtils = (function(){
 
-function createArray(type, size){
-  var _type;
-  if(type === "Byte"){
-    _type = java.lang.Byte.TYPE;
-  }else{
-    _type = type;
-  }
-  return java.lang.reflect.Array.newInstance(_type, size);
-};
+  "use strict";
 
-exports.JavaUtils = {
-  toJavaString: toJavaString
-  , createArray: createArray
-};
+  var __ = {};
+
+  __.toJavaString = function(javaScriptString){
+    return new java.lang.String(javaScriptString);
+  };
+
+  __.createArray = function(type, size){
+    var _type;
+    if(type === "Byte"){
+      _type = java.lang.Byte.TYPE;
+    }else{
+      _type = type;
+    }
+    return java.lang.reflect.Array.newInstance(_type, size);
+  };
+
+  return __;
+})();
+
+exports.JavaUtils = JavaUtils;
