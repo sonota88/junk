@@ -1,5 +1,4 @@
-(function(){
-  var global = this;
+(function(global){
   var stdLibDir = "" + java.lang.System.getenv("JJS_STDLIB_DIR");
   global.__FILE__ = (new File("./").getCanonicalPath()
       + "/" + engine.get(engine.FILENAME))
@@ -10,7 +9,7 @@
   ];
   load(stdLibDir + "/init_jrunscript.js");
   load(stdLibDir + "/my_init.js");
-})();
+})(this);
 
 ////////////////////////////////
 
