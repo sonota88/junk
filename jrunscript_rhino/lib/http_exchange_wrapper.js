@@ -87,7 +87,7 @@ var HttpExchangeWrapper = (function(){
     }
   };
 
-  __.writeStringResponse = function(status, body){
+  __.writeString = function(status, body){
     var javaStr = new toJavaString(body);
 
     this._he.sendResponseHeaders(
@@ -104,7 +104,7 @@ var HttpExchangeWrapper = (function(){
     os.close();
   };
 
-  __.writeFileResponse = function(path){
+  __.writeFile = function(path){
     var resOS = this._he.getResponseBody();
 
     var file = new File(path);
