@@ -1,4 +1,5 @@
 var JavaUtils = require("java_utils");
+var ByteArrayUtils = require("byte_array_utils");
 
 var HttpExchangeWrapper = (function(){
   
@@ -212,7 +213,7 @@ var HttpExchangeWrapper = (function(){
       if( method === "GET" ){
         queryStr = this._he.getRequestURI().getQuery();
       }else if( method === "POST" ){
-        queryStr = JavaUtils.byteArrayToString(reqBody);
+        queryStr = ByteArrayUtils.toStr(reqBody);
       }else{
         throw "method not supported: " + method;
       }

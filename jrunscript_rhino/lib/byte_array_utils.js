@@ -15,6 +15,10 @@ var ByteArrayUtils = (function(){
      return java.util.Arrays.copyOfRange(array, from, to);
   };
 
+  __.toStr = function(array, encoding){
+    return new java.lang.String(array, encoding || "UTF-8");
+  };
+
   return __;
 })();
 
