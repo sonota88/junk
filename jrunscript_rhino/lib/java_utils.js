@@ -18,6 +18,17 @@ var JavaUtils = (function(){
     return java.lang.reflect.Array.newInstance(_type, size);
   };
 
+  /**
+   * @param javaList {java.util.List}
+   */
+  __.list2ary = function(javaList){
+    var xs = [];
+    for(var i=0; i<javaList.size(); i++){
+      xs.push(javaList.get(i));
+    }
+    return xs;
+  };
+
   __.map2obj = function(javaMap){
     var obj = {};
     var k;
