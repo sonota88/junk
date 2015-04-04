@@ -34,6 +34,7 @@ Kijitora.App = (function(){
   __["delete"] = function(path, func){
     this.addAction("DELETE", path, func);
   };
+  __.delete_ = __["delete"]; // alias
 
   /**
    * @return params. マッチしない場合は null.
