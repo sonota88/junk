@@ -4,3 +4,4 @@
 
 jrunscript byte_array_utils.js
 jrunscript optparse.js
+jrunscript base64.js

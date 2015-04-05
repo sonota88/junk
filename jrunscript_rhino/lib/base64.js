@@ -50,6 +50,7 @@ var Base64 = (function(){
     var ascii = "";
     var bin8;
     for(i=0, len=binstr.length; i<len; i += 8){
+      if(i + 8 > len) break;
       bin8 = binstr.substring(i, i + 8);
       ascii += String.fromCharCode(b2n(bin8));
     }
