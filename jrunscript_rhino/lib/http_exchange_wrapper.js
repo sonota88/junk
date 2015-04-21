@@ -67,6 +67,73 @@ var HttpExchangeWrapper = (function(){
       java.lang.Byte.TYPE, size);
   }
 
+  function splitBytes(reqBody, boundary){
+    var tail = reqBody;
+    var result = [];
+    while(true){
+      var pos = ByteArrayUtils.indexOf(tail, boundary);
+      if(pos < 0) break;
+      var pre = ByteArrayUtils.substr(tail, 0, pos);
+      result.push(pre);
+      tail = ByteArrayUtils.substr(tail, pos + boundary.length);
+    }
+
+    return result;
+  }
+
+  function javaString(str){
+    return new java.lang.String(str);
+  }
+
+  function parsePart(part){
+    var str = "" + ByteArrayUtils.toStr(part, "UTF-8");
+
+    if( ! str.match(/Content-Disposition:/) ){
+      return null;
+    }
+
+    var sep = javaString("\r\n\r\n").getBytes();
+    var pos = ByteArrayUtils.indexOf(part, sep);
+    var header = ByteArrayUtils.toStr(ByteArrayUtils.substr(part, 0, pos));
+    var terminater = javaString("\r\n--");
+    var body = ByteArrayUtils.substr(
+      part
+      , pos + sep.length
+      , part.length - terminater.length()
+    );
+    
+    var jsHeader = "" + header;
+    var name = null;
+    if(jsHeader.match(/; name="(.+?)"/)){
+      name = RegExp.$1;
+    }
+    var filename = null;
+    if(jsHeader.match(/; filename="(.+?)"/)){
+      filename = RegExp.$1;
+    }
+    var _body;
+    if(jsHeader.match(/Content-Type: (.+)/)){
+      var contentType = RegExp.$1;
+      _body = {
+        contentType: contentType
+        , type: "binary"
+        , value: body
+        , filename: filename
+      };
+    }else{
+      _body = {
+        type: "string"
+        , value: "" + ByteArrayUtils.toStr(body)
+      };
+    }
+
+    return {
+      header: "" + header
+      , name: name
+      , body: _body
+    };
+  }
+
 
   function HttpExchangeWrapper(he){
     this._he = he;
@@ -160,6 +227,7 @@ var HttpExchangeWrapper = (function(){
   };
 
   __._isMultipartFormData = function(){
+    // TODO refactor
     var headers = JavaUtils.map2obj(this._he.getRequestHeaders());
 
     if( ! headers["Content-type"]){
@@ -194,6 +262,43 @@ var HttpExchangeWrapper = (function(){
     return params;
   };
 
+  __._getBoundary = function(){
+    // TODO refactor
+    var headers = JavaUtils.map2obj(this._he.getRequestHeaders());
+    if( ! headers["Content-type"] ){
+      return false;
+    }
+
+    var contentTypes = JavaUtils.list2ary(headers["Content-type"]);
+    var contentType = contentTypes[0];
+
+    contentType.match(/boundary=(\-+\d+)$/);
+    return RegExp.$1;
+  };
+
+  __._getMultipartParams = function(reqBody){
+    var boundary = this._getBoundary();
+    var parts = splitBytes(reqBody, javaString(boundary).getBytes());
+    var partDataList = [];
+    _(parts).each(function(part, i){
+      var partData = parsePart(part);
+      if(partData){ partDataList.push(partData); }
+    });
+
+    var params = {};
+    _(partDataList).each(function(partData, i){
+      if(partData.body.type === "string"){
+        params[partData.name] = partData.body.value;
+      }else if(partData.body.type === "binary"){
+        params[partData.name] = partData;
+      }else{
+        _dump(partData);
+        throw "must not happen";
+      }
+    });
+    return params;
+  };
+
 
   /**
    * @param reqBody Java byte[]
@@ -205,7 +310,8 @@ var HttpExchangeWrapper = (function(){
     var queryStr;
 
     if( this._isMultipartFormData() ){
-      throw "TODO multipart form data";
+      return this._getMultipartParams(reqBody);
+
     }else{
       // puts("is not multipart");
       var method = this.getMethod().toUpperCase();
@@ -217,8 +323,9 @@ var HttpExchangeWrapper = (function(){
       }else{
         throw "method not supported: " + method;
       }
+
+      return this._parseQueryString(queryStr);
     }
-    return this._parseQueryString(queryStr);
   };
 
   __.close = function(){
