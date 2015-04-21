@@ -226,9 +226,12 @@ var HttpExchangeWrapper = (function(){
     return baos.toByteArray();
   };
 
+  __._getRequestHeaders = function(){
+    return JavaUtils.map2obj(this._he.getRequestHeaders());
+  };
+
   __._isMultipartFormData = function(){
-    // TODO refactor
-    var headers = JavaUtils.map2obj(this._he.getRequestHeaders());
+    var headers = this._getRequestHeaders();
 
     if( ! headers["Content-type"]){
       return false;
@@ -263,8 +266,7 @@ var HttpExchangeWrapper = (function(){
   };
 
   __._getBoundary = function(){
-    // TODO refactor
-    var headers = JavaUtils.map2obj(this._he.getRequestHeaders());
+    var headers = this._getRequestHeaders();
     if( ! headers["Content-type"] ){
       return false;
     }
