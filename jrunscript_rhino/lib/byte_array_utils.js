@@ -19,6 +19,21 @@ var ByteArrayUtils = (function(){
     return new java.lang.String(array, encoding || "UTF-8");
   };
 
+  __.indexOf = function(bytes, subset){
+     for(var a=0,len1=bytes.length; a<len1; a++){
+       for(var b=0,len2=subset.length; b<len2; b++){
+         if(bytes[a+b] == subset[b]){
+           if(b == subset.length - 1){
+             return a;
+           }
+         }else{
+           break;
+         }
+       }
+     }
+     return -1;
+  };
+
   return __;
 })();
 
