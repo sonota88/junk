@@ -282,12 +282,12 @@
           });
         });
       }else{
-      var encoding = opts.encoding || "UTF-8";
-      withFileOutputStream(path, function(fos){
-        withOutputStreamWriter(fos, encoding, function(osw){
-          osw.write(text);
+        var encoding = opts.encoding || "UTF-8";
+        withFileOutputStream(path, function(fos){
+          withOutputStreamWriter(fos, encoding, function(osw){
+            osw.write(text);
+          });
         });
-      });
       }
     };
 
