@@ -10,6 +10,7 @@ Kijitora.App = (function(){
       , POST: {}
       , PUT: {}
       , DELETE: {}
+      , PATCH: {}
     };
     this._appRoot = appRoot;
   };
@@ -35,6 +36,9 @@ Kijitora.App = (function(){
     this.addAction("DELETE", path, func);
   };
   __.delete_ = __["delete"]; // alias
+  __.patch = function(path, func){
+    this.addAction("PATCH", path, func);
+  };
 
   /**
    * @return params. マッチしない場合は null.
