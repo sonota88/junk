@@ -3,6 +3,10 @@
 
   global.JSON = JSON || require("my_json");
 
+  function isJavaObject(val){
+    return typeof val === "object" && val.getClass;
+  }
+
   function _puts(val){
     var type = typeof val;
     if(
@@ -15,6 +19,8 @@
       || val instanceof Error
     ){
       println(val);
+    }else if( isJavaObject(val) ){
+      println( "{#" + val.getClass().getName() + " " + val.toString() + "}");
     }else{
       println(JSON.stringify(val));
     }
