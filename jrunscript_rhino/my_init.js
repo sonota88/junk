@@ -1,7 +1,7 @@
 (function(){
   var global = this;
 
-  global.JSON = JSON || require("my_json");
+  var MyJSON = require("my_json");
 
   function isJavaObject(val){
     return typeof val === "object" && val.getClass;
@@ -22,7 +22,7 @@
     }else if( isJavaObject(val) ){
       println( "{#" + val.getClass().getName() + " " + val.toString() + "}");
     }else{
-      println(JSON.stringify(val));
+      println(MyJSON.stringify(val));
     }
   }
 
