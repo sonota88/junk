@@ -4,6 +4,10 @@ function isArray(arg){
   return Object.prototype.toString.call(arg) === '[object Array]';
 }
 
+function isJavaObject(arg){
+  return typeof arg === "object" && arg.getClass;
+}
+
 function escapeStr(s){
   return '"' + s
       .replace(/\\/g, "\\\\")
@@ -28,6 +32,8 @@ function stringify(arg){
     return arg ? 'true' : 'false';
   }else if(typeof arg === 'function'){
     return "<#fn>";
+  }else if( isJavaObject(arg) ){
+    return "<#" + arg.getClass().getName() + " " + arg.toString() + ">";
   }else if(arg instanceof RegExp){
     return "{}";
   }else if(isArray(arg)){
