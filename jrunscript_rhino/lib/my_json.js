@@ -26,6 +26,8 @@ function stringify(arg){
     return escapeStr(arg);
   }else if(typeof arg === 'boolean'){
     return arg ? 'true' : 'false';
+  }else if(typeof arg === 'function'){
+    return "<#fn>";
   }else if(arg instanceof RegExp){
     return "{}";
   }else if(isArray(arg)){
