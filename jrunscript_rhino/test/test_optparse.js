@@ -1,4 +1,4 @@
-var Optparse = require("lib/optparse");
+var Optparse = require("optparse");
 
 (function(){
   puts("no options");

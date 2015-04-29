@@ -6,13 +6,13 @@
       .replace( /\\/g, "/" );
   global.LOAD_PATH = [
     __FILE__.replace( /^(.*)\/.+?$/, '$1' )
-    , stdLibDir
+    , stdLibDir + "/lib"
   ];
   load(stdLibDir + "/init_jrunscript.js");
   load(stdLibDir + "/my_init.js");
 })();
 
-var _ = require("lib/underscore/underscore");
+var _ = require("underscore/underscore");
 
 ////////////////////////////////
 

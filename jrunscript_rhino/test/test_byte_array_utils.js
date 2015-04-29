@@ -1,4 +1,4 @@
-var ByteArrayUtils = require("lib/byte_array_utils");
+var ByteArrayUtils = require("byte_array_utils");
 
 // byte array to JavaScript string
 function b2s(bytes){
