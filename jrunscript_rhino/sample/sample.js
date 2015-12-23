@@ -4,7 +4,8 @@
     return parts[parts.length-1];
   }
 
-  var stdLibDir = "" + java.lang.System.getenv("JJS_STDLIB_DIR");
+  var stdLibDir = ("" + java.lang.System.getenv("JJS_STDLIB_DIR"))
+      .replace(/\\/g, "/");
   global.__FILE__ = (new File("./").getCanonicalPath()
       + "/" + basename(engine.get(engine.FILENAME)))
       .replace( /\\/g, "/" );
