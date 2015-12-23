@@ -1,7 +1,12 @@
 (function(global){
+  function basename(path){
+    var parts = ("" + path).replace(/\\/g, "/").split("/");
+    return parts[parts.length-1];
+  }
+
   var stdLibDir = "" + java.lang.System.getenv("JJS_STDLIB_DIR");
   global.__FILE__ = (new File("./").getCanonicalPath()
-      + "/" + engine.get(engine.FILENAME))
+      + "/" + basename(engine.get(engine.FILENAME)))
       .replace( /\\/g, "/" );
   global.LOAD_PATH = [
     __FILE__.replace( /^(.*)\/.+?$/, '$1' )
