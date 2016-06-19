@@ -17,3 +17,18 @@
  (kbd "<delete>")
  (lambda () (interactive)
    (delete-char-or-region :del)))
+
+
+;; --------------------------------
+
+(defun my-beginning-of-line:space-p ()
+  (string= " " (string (following-char))))
+
+(defun my-beginning-of-line:move ()
+  (interactive)
+  (if (bolp)
+      (when (my-beginning-of-line:space-p)
+        (back-to-indentation))
+    (beginning-of-line)))
+
+(global-set-key (kbd "C-a") 'my-beginning-of-line:move)
