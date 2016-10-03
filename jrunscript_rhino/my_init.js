@@ -291,6 +291,12 @@
       }
     };
 
+    _File.rm = function(path){
+      if( ! new File(path)["delete"]() ){
+        throw new Error("failed to delete (" + path + ")");
+      }
+    };
+
     _File.exists = function(path){
       return new File(path).exists();
     };
