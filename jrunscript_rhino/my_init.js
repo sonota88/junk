@@ -159,6 +159,10 @@
       return s;
     };
 
+    MyArray.prototype.last = function(){
+      return this._list[this._list.length - 1];
+    };
+
     global._ma = _ma;
   })();
 
