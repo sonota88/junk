@@ -309,6 +309,14 @@
       return path.replace( /^(.+)\/.+?$/, '$1');
     };
 
+    _File.basename = function(path){
+      if( path.indexOf("/") < 0 ){
+        return path;
+      }
+      var parts = path.split("/");
+      return _ma(parts).last();
+    };
+
     return _File;
   })();
 
