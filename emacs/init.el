@@ -1,3 +1,8 @@
+(setq sh-basic-offset 2)
+(setq sh-indentation 2)
+
+;; --------------------------------
+
 (defun delete-char-or-region (dir)
   "範囲選択している場合は delete"
   (let ((n (cond
