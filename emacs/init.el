@@ -37,3 +37,16 @@
     (beginning-of-line)))
 
 (global-set-key (kbd "C-a") 'my-beginning-of-line:move)
+
+
+;; ----------------
+;; tramp
+
+;; 2017-07-04 helm の初回起動に 20秒くらいかかる問題への対策
+(setq tramp-ssh-controlmaster-options
+      "-o ControlMaster=auto -o ControlPath='tramp.%%C' -o ControlPersist=no")
+
+;; ----------------
+;; markdown-mode
+
+(setq markdown-gfm-use-electric-backquote nil)
