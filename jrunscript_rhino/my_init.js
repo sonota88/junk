@@ -301,6 +301,30 @@
       }
     };
 
+    /**
+     * opts:
+     *   overwrite: overwrite dest file if true
+     */
+    _File.mv = function(src, dest, opts){
+      opts = opts || {};
+      var srcFile = new File(src);
+      var destFile = new File(dest);
+      var ret;
+
+      if( opts.overwrite ){
+        ret = srcFile.renameTo(destFile);
+      }else{
+        if( _File.exists(dest) ){
+          throw new Error("dest file exists (" + dest + ")");
+        }
+        ret = srcFile.renameTo(destFile);
+      }
+
+      if( ! ret ){
+        throw new Error("failed to mv (" + src + ") (" + dest + ")");
+      }
+    };
+
     _File.exists = function(path){
       return new File(path).exists();
     };
