@@ -118,7 +118,6 @@ class RmSqlCommentTest < Minitest::Test
       from b
     "
     result = main(sql)
-    puts("result (#{result})")
     assert_equal("
       select a, '--Xあ', '/*Xあ
       Xあ*/'
@@ -132,7 +131,6 @@ class RmSqlCommentTest < Minitest::Test
       select /* \\*/ */a
     "
     result = main(sql)
-    puts("result (#{result})")
     assert_equal("
       select a
     ", result
@@ -144,7 +142,6 @@ class RmSqlCommentTest < Minitest::Test
       select 'abあ
     "
     result = main(sql)
-    puts("result (#{result})")
     assert_equal("
       select 'abあ
     ", result
@@ -157,7 +154,6 @@ class RmSqlCommentTest < Minitest::Test
       select 12/*abあ
     "
     result = main(sql)
-    puts("result (#{result})")
     assert_equal("
       select 12/*abあ
     ", result
@@ -169,7 +165,6 @@ class RmSqlCommentTest < Minitest::Test
       select /*aあ*/'bあ'
     "
     result = main(sql)
-    puts("result (#{result})")
     assert_equal("
       select 'bあ'
     ", result
@@ -181,7 +176,6 @@ class RmSqlCommentTest < Minitest::Test
       select 'bあ'/*aあ*/
     "
     result = main(sql)
-    puts("result (#{result})")
     assert_equal("
       select 'bあ'
     ", result
@@ -193,7 +187,6 @@ class RmSqlCommentTest < Minitest::Test
       select 'bあ'--aあ
     "
     result = main(sql)
-    puts("result (#{result})")
     assert_equal("
       select 'bあ'
     ", result
