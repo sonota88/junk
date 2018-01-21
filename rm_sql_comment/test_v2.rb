@@ -25,13 +25,13 @@ class RmSqlCommentTest < Minitest::Test
     assert_equal(4, size)
   end
 
-  # not terminated
+  # not closed
   def test_str_rest_size_5
     size = str_rest_size("aあb\\")
     assert_equal(4, size)
   end
 
-  # not terminated
+  # not closed
   def test_str_rest_size_6
     size = str_rest_size("aあb")
     assert_equal(3, size)
@@ -47,25 +47,25 @@ class RmSqlCommentTest < Minitest::Test
     assert_equal(7, size)
   end
 
-  # not terminated
+  # not closed
   def test_block_cmt_rest_size_3
     size = block_cmt_rest_size("aあb")
     assert_equal(nil, size)
   end
 
-  # not terminated
+  # not closed
   def test_block_cmt_rest_size_4
     size = block_cmt_rest_size("aあ\nb")
     assert_equal(nil, size)
   end
 
-  # not terminated
+  # not closed
   def test_block_cmt_rest_size_5
     size = block_cmt_rest_size("aあ\\")
     assert_equal(nil, size)
   end
 
-  # not terminated
+  # not closed
   def test_block_cmt_rest_size_6
     size = block_cmt_rest_size("aあ*")
     assert_equal(nil, size)
@@ -137,7 +137,7 @@ class RmSqlCommentTest < Minitest::Test
     )
   end
 
-  def test_main_str_not_terminated
+  def test_main_str_not_closed
     sql = "
       select 'abあ
     "
@@ -150,7 +150,7 @@ class RmSqlCommentTest < Minitest::Test
   end
 
   # コメントが閉じていない場合は除去しない
-  def test_main_comment_not_terminated
+  def test_main_comment_not_closed
     sql = "
       select 12/*abあ
     "

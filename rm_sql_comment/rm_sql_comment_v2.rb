@@ -34,7 +34,7 @@ end
 def block_cmt_rest_size(rest)
   pos = 0
   pos_last = rest.size - 1
-  terminated = false
+  closed = false
 
   while pos <= pos_last
     c = rest[pos]
@@ -52,7 +52,7 @@ def block_cmt_rest_size(rest)
         pos += 1
       elsif rest[pos+1] == "/"
         pos += 2
-        terminated = true
+        closed = true
         break
       else
         pos += 1
@@ -62,7 +62,7 @@ def block_cmt_rest_size(rest)
     end
   end
 
-  terminated ? pos : nil
+  closed ? pos : nil
 end
 
 def main(sql)
@@ -94,7 +94,7 @@ def main(sql)
       size = block_cmt_rest_size(ss.rest)
 
       if size.nil?
-        # not terminated
+        # not closed
         result += "/*" + ss.rest
         ss.move(ss.rest.size)
       else
