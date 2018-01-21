@@ -7,12 +7,14 @@ require "./my_strscan"
 
 def str_rest_size(rest)
   pos = 0
-  while pos < rest.size
+  pos_last = rest.size - 1
+
+  while pos <= pos_last
     c = rest[pos]
 
     case c
     when "\\"
-      if pos == rest.size - 1
+      if pos == pos_last
         pos += 1
       else
         # 次の文字まで読み飛ばす
@@ -31,19 +33,21 @@ end
 
 def block_cmt_rest_size(rest)
   pos = 0
-  while pos < rest.size
+  pos_last = rest.size - 1
+
+  while pos <= pos_last
     c = rest[pos]
 
     case c
     when "\\"
-      if pos == rest.size - 1
+      if pos == pos_last
         pos += 1
       else
         # 次の文字まで読み飛ばす
         pos += 2
       end
     when "*"
-      if pos == rest.size - 1
+      if pos == pos_last
         pos += 1
       elsif rest[pos+1] == "/"
         pos += 2
