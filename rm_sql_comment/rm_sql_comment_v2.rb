@@ -62,7 +62,7 @@ def block_cmt_rest_size(rest)
     end
   end
 
-  closed ? pos : nil
+  [pos, closed]
 end
 
 def main(sql)
@@ -91,14 +91,14 @@ def main(sql)
     when ss.scan( /\/\*/ )
       result += ss.substr(pos_prev_eom, ss.pos_bom)
 
-      size = block_cmt_rest_size(ss.rest)
+      size, closed = block_cmt_rest_size(ss.rest)
 
-      if size.nil?
+      if closed
+        ss.move(size)
+      else
         # not closed
         result += "/*" + ss.rest
         ss.move(ss.rest.size)
-      else
-        ss.move(size)
       end
 
       pos_prev_eom = ss.pos

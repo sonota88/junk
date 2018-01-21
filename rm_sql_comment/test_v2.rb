@@ -38,37 +38,39 @@ class RmSqlCommentTest < Minitest::Test
   end
 
   def test_block_cmt_rest_size_1
-    size = block_cmt_rest_size("aあ*/b")
+    size, closed = block_cmt_rest_size("aあ*/b")
     assert_equal(4, size)
+    assert_equal(true, closed)
   end
 
   def test_block_cmt_rest_size_2
-    size = block_cmt_rest_size("a\\*/あ*/b")
+    size, closed = block_cmt_rest_size("a\\*/あ*/b")
     assert_equal(7, size)
+    assert_equal(true, closed)
   end
 
   # not closed
   def test_block_cmt_rest_size_3
-    size = block_cmt_rest_size("aあb")
-    assert_equal(nil, size)
+    size, closed = block_cmt_rest_size("aあb")
+    assert_equal(false, closed)
   end
 
   # not closed
   def test_block_cmt_rest_size_4
-    size = block_cmt_rest_size("aあ\nb")
-    assert_equal(nil, size)
+    size, closed = block_cmt_rest_size("aあ\nb")
+    assert_equal(false, closed)
   end
 
   # not closed
   def test_block_cmt_rest_size_5
-    size = block_cmt_rest_size("aあ\\")
-    assert_equal(nil, size)
+    size, closed = block_cmt_rest_size("aあ\\")
+    assert_equal(false, closed)
   end
 
   # not closed
   def test_block_cmt_rest_size_6
-    size = block_cmt_rest_size("aあ*")
-    assert_equal(nil, size)
+    size, closed = block_cmt_rest_size("aあ*")
+    assert_equal(false, closed)
   end
 
   def test_main
