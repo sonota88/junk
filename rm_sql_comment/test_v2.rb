@@ -5,68 +5,68 @@ require 'minitest/autorun'
 
 class RmSqlCommentTest < Minitest::Test
 
-  def test_str_content_bytesize_1
+  def test_str_rest_size_1
     size = str_rest_size("ab'")
     assert_equal(3, size)
   end
 
-  def test_str_content_bytesize_2
+  def test_str_rest_size_2
     size = str_rest_size("a\\'b'")
     assert_equal(5, size)
   end
 
-  def test_str_content_bytesize_3
+  def test_str_rest_size_3
     size = str_rest_size("a\\r\\n\\tb'")
     assert_equal(9, size)
   end
 
-  def test_str_content_bytesize_4
+  def test_str_rest_size_4
     size = str_rest_size("aあb'")
     assert_equal(4, size)
   end
 
   # not terminated
-  def test_str_content_bytesize_5
+  def test_str_rest_size_5
     size = str_rest_size("aあb\\")
     assert_equal(4, size)
   end
 
   # not terminated
-  def test_str_content_bytesize_6
+  def test_str_rest_size_6
     size = str_rest_size("aあb")
     assert_equal(3, size)
   end
 
-  def test_block_cmt_content_bytesize_1
+  def test_block_cmt_rest_size_1
     size = block_cmt_rest_size("aあ*/b")
     assert_equal(4, size)
   end
 
-  def test_block_cmt_content_bytesize_2
+  def test_block_cmt_rest_size_2
     size = block_cmt_rest_size("a\\*/あ*/b")
     assert_equal(7, size)
   end
 
   # not terminated
-  def test_block_cmt_content_bytesize_3
+  def test_block_cmt_rest_size_3
     size = block_cmt_rest_size("aあb")
     assert_equal(nil, size)
   end
 
   # not terminated
-  def test_block_cmt_content_bytesize_4
+  def test_block_cmt_rest_size_4
     size = block_cmt_rest_size("aあ\nb")
     assert_equal(nil, size)
   end
 
   # not terminated
-  def test_block_cmt_content_bytesize_5
+  def test_block_cmt_rest_size_5
     size = block_cmt_rest_size("aあ\\")
     assert_equal(nil, size)
   end
 
   # not terminated
-  def test_block_cmt_content_bytesize_6
+  def test_block_cmt_rest_size_6
     size = block_cmt_rest_size("aあ*")
     assert_equal(nil, size)
   end
