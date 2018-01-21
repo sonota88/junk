@@ -93,13 +93,11 @@ def main(sql)
 
       size, closed = block_cmt_rest_size(ss.rest)
 
-      if closed
-        ss.move(size)
-      else
-        # not closed
-        result += "/*" + ss.rest
-        ss.move(ss.rest.size)
+      unless closed
+        str_rest = ss.substr(ss.pos, ss.pos + size)
+        result += "/*" + str_rest
       end
+      ss.move(size)
 
       pos_prev_eom = ss.pos
 
