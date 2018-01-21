@@ -1,7 +1,6 @@
 #!/usr/bin/env ruby
 # coding: utf-8
 
-require "strscan"
 require "./my_strscan"
 
 
@@ -77,8 +76,7 @@ def main(sql)
 
       size = str_rest_size(ss.rest)
 
-      str_rest = ss.substr(ss.pos, ss.pos + size)
-      result += "'" + str_rest
+      result += "'" + ss.substr(ss.pos, ss.pos + size)
 
       ss.move(size)
       pos_prev_eom = ss.pos
@@ -94,11 +92,10 @@ def main(sql)
       size, closed = block_cmt_rest_size(ss.rest)
 
       unless closed
-        str_rest = ss.substr(ss.pos, ss.pos + size)
-        result += "/*" + str_rest
+        result += "/*" + ss.substr(ss.pos, ss.pos + size)
       end
-      ss.move(size)
 
+      ss.move(size)
       pos_prev_eom = ss.pos
 
     else
