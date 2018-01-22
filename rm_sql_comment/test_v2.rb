@@ -5,9 +5,14 @@ require 'minitest/autorun'
 
 class RmSqlCommentTest < Minitest::Test
 
-  def test_str_rest_size_1
-    size = str_rest_size("ab'")
-    assert_equal(3, size)
+  def test_str_rest_size_basic
+    size = str_rest_size("aあb'cd")
+    assert_equal(4, size)
+  end
+
+  def test_str_rest_size_basic_not_continued
+    size = str_rest_size("aあb'")
+    assert_equal(4, size)
   end
 
   def test_str_rest_size_2
@@ -18,11 +23,6 @@ class RmSqlCommentTest < Minitest::Test
   def test_str_rest_size_3
     size = str_rest_size("a\\r\\n\\tb'")
     assert_equal(9, size)
-  end
-
-  def test_str_rest_size_4
-    size = str_rest_size("aあb'")
-    assert_equal(4, size)
   end
 
   # not closed
@@ -38,13 +38,13 @@ class RmSqlCommentTest < Minitest::Test
   end
 
   def test_block_cmt_rest_size_1
-    size, closed = block_cmt_rest_size("aあ*/b")
+    size, closed = block_cmt_rest_size("aあ*/bc")
     assert_equal(4, size)
     assert_equal(true, closed)
   end
 
   def test_block_cmt_rest_size_2
-    size, closed = block_cmt_rest_size("a\\*/あ*/b")
+    size, closed = block_cmt_rest_size("a\\*/あ*/bc")
     assert_equal(7, size)
     assert_equal(true, closed)
   end
@@ -52,24 +52,28 @@ class RmSqlCommentTest < Minitest::Test
   # not closed
   def test_block_cmt_rest_size_3
     size, closed = block_cmt_rest_size("aあb")
+    assert_equal(3, size)
     assert_equal(false, closed)
   end
 
   # not closed
   def test_block_cmt_rest_size_4
     size, closed = block_cmt_rest_size("aあ\nb")
+    assert_equal(4, size)
     assert_equal(false, closed)
   end
 
   # not closed
   def test_block_cmt_rest_size_5
     size, closed = block_cmt_rest_size("aあ\\")
+    assert_equal(3, size)
     assert_equal(false, closed)
   end
 
   # not closed
   def test_block_cmt_rest_size_6
     size, closed = block_cmt_rest_size("aあ*")
+    assert_equal(3, size)
     assert_equal(false, closed)
   end
 
