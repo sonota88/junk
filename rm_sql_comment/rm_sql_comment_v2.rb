@@ -75,7 +75,6 @@ def main(sql)
       result += ss.substr(pos_prev_eom, ss.pos_bom)
 
       size = str_rest_size(ss.rest)
-
       result += "'" + ss.substr(ss.pos, ss.pos + size)
 
       ss.move(size)
@@ -90,10 +89,7 @@ def main(sql)
       result += ss.substr(pos_prev_eom, ss.pos_bom)
 
       size, closed = block_cmt_rest_size(ss.rest)
-
-      unless closed
-        result += "/*" + ss.substr(ss.pos, ss.pos + size)
-      end
+      result += "/*" + ss.substr(ss.pos, ss.pos + size) unless closed
 
       ss.move(size)
       pos_prev_eom = ss.pos
@@ -104,9 +100,7 @@ def main(sql)
     end
   end
 
-  if pos_prev_eom < ss.string.size
-    result += ss.substr(pos_prev_eom, ss.string.size)
-  end
+  result += ss.substr(pos_prev_eom, ss.string.size)
 
   result
 end
