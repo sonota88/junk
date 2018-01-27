@@ -41,6 +41,24 @@ def str_rest_bytesize(rest)
   rest[0..pos].bytesize
 end
 
+def str_bytesize(rest)
+  pos = 1
+  while pos < rest.size
+    c = rest[pos]
+    case c
+    when "\\"
+      # 次の文字まで読み飛ばす
+      pos += 2
+    when "'"
+      break
+    else
+      pos += 1
+    end
+  end
+
+  rest[0..pos].bytesize
+end
+
 def block_cmt_rest_bytesize(rest)
   pos = 0
   while pos < rest.size - 1
@@ -60,6 +78,30 @@ def block_cmt_rest_bytesize(rest)
       pos += 1
     end
   end
+
+  rest[0..pos].bytesize
+end
+
+def block_cmt_bytesize(rest)
+  pos = 2
+  while pos < rest.size - 1
+    c = rest[pos]
+    case c
+    when "\\"
+      # 次の文字まで読み飛ばす
+      pos += 2
+    when "*"
+      if rest[pos+1] == "/"
+        pos += 1
+        break
+      else
+        pos += 1
+      end
+    else
+      pos += 1
+    end
+  end
+
   rest[0..pos].bytesize
 end
 
@@ -145,8 +187,40 @@ def main_v2(sql)
   result
 end
 
+def main_v3(sql)
+  ss = MyStringScanner.new(sql)
+  result = ""
+
+  while not ss.eos?
+    case
+    when ss.match?( /'/ )
+      size = str_bytesize(ss.rest)
+      result += ss.byteslice(ss.pos, ss.pos + size)
+      ss.pos += size
+
+    when ss.skip( /--(.*)/ )
+      # pass
+
+    when ss.match?( /\/\*/ )
+      size = block_cmt_bytesize(ss.rest)
+      ss.pos += size
+
+    else
+      plain_part = if ss.match?( /(.*?)(\'|\/\*|\-\-)/m )
+                     ss[1]
+                   else
+                     ss.rest
+                   end
+      result += plain_part
+      ss.pos += plain_part.size
+    end
+  end
+
+  result
+end
+
 def main(str)
-  main_v2(str)
+  main_v3(str)
 end
 
 def main_io(io)
