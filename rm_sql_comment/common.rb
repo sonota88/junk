@@ -5,9 +5,7 @@ def str_size(rest)
   pos_last = rest.size - 1
 
   while pos <= pos_last
-    c = rest[pos]
-
-    case c
+    case rest[pos]
     when "\\"
       if pos == pos_last
         pos += 1
@@ -37,9 +35,7 @@ def block_cmt_size(rest)
   closed = false
 
   while pos <= pos_last
-    c = rest[pos]
-
-    case c
+    case rest[pos]
     when "\\"
       if pos == pos_last
         pos += 1
