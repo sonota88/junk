@@ -63,7 +63,7 @@ def block_cmt_rest_bytesize(rest)
   rest[0..pos].bytesize
 end
 
-def main(sql)
+def main_v1(sql)
   ss = MyStringScanner.new(sql)
   pos_prev_eom = ss.pos # previous end of match
   result = ""
@@ -106,6 +106,47 @@ def main(sql)
   end
 
   result
+end
+
+def main_v2(sql)
+  ss = MyStringScanner.new(sql)
+  result = ""
+
+  while not ss.eos?
+    case
+    when ss.skip( /'/ )
+      size = str_rest_bytesize(ss.rest)
+
+      str_rest = ss.byteslice(ss.pos, ss.pos + size)
+      result += "'" + str_rest
+
+      ss.pos += size
+
+    when ss.skip( /--(.*)/ )
+      pos_prev_eom = ss.pos
+
+    when ss.skip( /\/\*/ )
+      size = block_cmt_rest_bytesize(ss.rest)
+
+      ss.pos += size
+
+    else
+      matched_size = ss.skip( /(.*?)(\'|\/\*|\-\-)/m )
+      if matched_size
+        result += ss[1]
+        ss.pos -= ss[2].size
+      else
+        result += ss.rest
+        ss.pos += ss.rest_size
+      end
+    end
+  end
+
+  result
+end
+
+def main(str)
+  main_v2(str)
 end
 
 def main_io(io)
