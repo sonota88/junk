@@ -2,6 +2,7 @@
 # coding: utf-8
 
 require "strscan"
+require "./common"
 
 class MyStringScanner < StringScanner
 
@@ -24,88 +25,13 @@ end
 
 
 def str_rest_bytesize(rest)
-  pos = 0
-  while pos < rest.size
-    c = rest[pos]
-    case c
-    when "\\"
-      # 次の文字まで読み飛ばす
-      pos += 2
-    when "'"
-      break
-    else
-      pos += 1
-    end
-  end
-
-  rest[0..pos].bytesize
-end
-
-def str_bytesize(rest)
-  pos = 1
-  while pos < rest.size
-    c = rest[pos]
-    case c
-    when "\\"
-      # 次の文字まで読み飛ばす
-      pos += 2
-    when "'"
-      break
-    else
-      pos += 1
-    end
-  end
-
-  rest[0..pos].bytesize
+  pos = str_size("'" + rest)
+  rest[0...pos].bytesize - 1
 end
 
 def block_cmt_rest_bytesize(rest)
-  pos = 0
-  while pos < rest.size - 1
-    c = rest[pos]
-    case c
-    when "\\"
-      # 次の文字まで読み飛ばす
-      pos += 2
-    when "*"
-      if rest[pos+1] == "/"
-        pos += 1
-        break
-      else
-        pos += 1
-      end
-    else
-      pos += 1
-    end
-  end
-
-  rest[0..pos].bytesize
-end
-
-def block_cmt_bytesize(rest)
-  pos = 2
-  closed = false
-
-  while pos < rest.size - 1
-    c = rest[pos]
-    case c
-    when "\\"
-      # 次の文字まで読み飛ばす
-      pos += 2
-    when "*"
-      if rest[pos+1] == "/"
-        pos += 1
-        closed = true
-        break
-      else
-        pos += 1
-      end
-    else
-      pos += 1
-    end
-  end
-
-  [rest[0..pos].bytesize, closed]
+  pos, closed = block_cmt_size("/*" + rest)
+  [rest[0...pos].bytesize - 2, closed]
 end
 
 def main_v1(sql)
@@ -134,7 +60,8 @@ def main_v1(sql)
     when ss.scan( /\/\*/ )
       result += ss.byteslice(pos_prev_eom, ss.pos_bom)
 
-      size = block_cmt_rest_bytesize(ss.rest)
+      size, closed = block_cmt_rest_bytesize(ss.rest)
+      result += "/*" + ss.byteslice(ss.pos, ss.pos + size) unless closed
 
       ss.pos += size
 
@@ -171,7 +98,8 @@ def main_v2(sql)
       pos_prev_eom = ss.pos
 
     when ss.skip( /\/\*/ )
-      size = block_cmt_rest_bytesize(ss.rest)
+      size, closed = block_cmt_rest_bytesize(ss.rest)
+      result += "/*" + ss.byteslice(ss.pos, ss.pos + size) unless closed
 
       ss.pos += size
 
