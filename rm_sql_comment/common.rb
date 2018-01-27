@@ -70,7 +70,7 @@ def block_cmt_size_v1(rest)
 end
 
 def block_cmt_size(rest)
-  if /\A\/\*(\\.|.)*?\*\// =~ rest
+  if /\A\/\*(\\.|.)*?\*\//m =~ rest
     [Regexp.last_match(0).size, true]
   else
     [rest.size, false]
