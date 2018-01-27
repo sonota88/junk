@@ -137,13 +137,13 @@ def main_v3(sql)
       ss.pos += size
 
     else
-      plain_part = if ss.match?( /(.*?)(\'|\/\*|\-\-)/m )
+      other_part = if ss.match?( /(.*?)(\'|\/\*|\-\-)/m )
                      ss[1]
                    else
                      ss.rest
                    end
-      result += plain_part
-      ss.pos += plain_part.size
+      result += other_part
+      ss.pos += other_part.size
     end
   end
 
