@@ -206,6 +206,7 @@ def main_v3(sql)
 
     when ss.match?( /\/\*/ )
       size, closed = block_cmt_bytesize(ss.rest)
+      result += ss.byteslice(ss.pos, ss.pos + size) unless closed
       ss.pos += size
 
     else

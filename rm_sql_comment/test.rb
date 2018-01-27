@@ -229,7 +229,8 @@ class RmSqlCommentTest < Minitest::Test
     "
     result = main(sql)
     assert_equal("
-      select 12",
+      select 12/*abあ
+    ",
       result
     )
   end
