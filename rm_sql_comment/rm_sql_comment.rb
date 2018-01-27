@@ -96,7 +96,7 @@ def main(sql)
       pos_prev_eom = ss.pos
 
     else
-      ss.pos += 1
+      ss.getch
 
     end
   end
