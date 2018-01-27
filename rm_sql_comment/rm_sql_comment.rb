@@ -84,6 +84,8 @@ end
 
 def block_cmt_bytesize(rest)
   pos = 2
+  closed = false
+
   while pos < rest.size - 1
     c = rest[pos]
     case c
@@ -93,6 +95,7 @@ def block_cmt_bytesize(rest)
     when "*"
       if rest[pos+1] == "/"
         pos += 1
+        closed = true
         break
       else
         pos += 1
@@ -102,7 +105,7 @@ def block_cmt_bytesize(rest)
     end
   end
 
-  rest[0..pos].bytesize
+  [rest[0..pos].bytesize, closed]
 end
 
 def main_v1(sql)
@@ -202,7 +205,7 @@ def main_v3(sql)
       # pass
 
     when ss.match?( /\/\*/ )
-      size = block_cmt_bytesize(ss.rest)
+      size, closed = block_cmt_bytesize(ss.rest)
       ss.pos += size
 
     else

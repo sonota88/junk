@@ -72,6 +72,82 @@ class RmSqlCommentTest < Minitest::Test
     assert_equal(5, size)
   end
 
+  ################################
+
+  def test_str_bytesize_basic
+    size = str_bytesize("'aあb'cd")
+    assert_equal(7, size)
+  end
+
+  def test_str_bytesize_basic_not_continued
+    size = str_bytesize("'aあb'")
+    assert_equal(7, size)
+  end
+
+  def test_str_bytesize_2
+    size = str_bytesize("'a\\'b'")
+    assert_equal(6, size)
+  end
+
+  def test_str_bytesize_3
+    size = str_bytesize("'a\\r\\n\\tb'")
+    assert_equal(10, size)
+  end
+
+  # not closed
+  def test_str_bytesize_5
+    size = str_bytesize("'aあb\\")
+    assert_equal(7, size)
+  end
+
+  # not closed
+  def test_str_bytesize_6
+    size = str_bytesize("'aあb")
+    assert_equal(6, size)
+  end
+
+  def test_block_cmt_bytesize_1
+    size, closed = block_cmt_bytesize("/*aあ*/bc")
+    assert_equal(8, size)
+    assert_equal(true, closed)
+  end
+
+  def test_block_cmt_bytesize_2
+    size, closed = block_cmt_bytesize("/*a\\*/あ*/bc")
+    assert_equal(11, size)
+    assert_equal(true, closed)
+  end
+
+  # not closed
+  def test_block_cmt_bytesize_3
+    size, closed = block_cmt_bytesize("/*aあb")
+    assert_equal(7, size)
+    assert_equal(false, closed)
+  end
+
+  # not closed
+  def test_block_cmt_bytesize_4
+    size, closed = block_cmt_bytesize("/*aあ\nb")
+    assert_equal(8, size)
+    assert_equal(false, closed)
+  end
+
+  # not closed
+  def test_block_cmt_bytesize_5
+    size, closed = block_cmt_bytesize("/*aあ\\")
+    assert_equal(7, size)
+    assert_equal(false, closed)
+  end
+
+  # not closed
+  def test_block_cmt_bytesize_6
+    size, closed = block_cmt_bytesize("/*aあ*")
+    assert_equal(7, size)
+    assert_equal(false, closed)
+  end
+
+  ################################
+
   def test_main
     sql = "
       select a
