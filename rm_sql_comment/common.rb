@@ -1,6 +1,6 @@
 # coding: utf-8
 
-def str_size(rest)
+def str_size_v1(rest)
   pos = 1
   pos_last = rest.size - 1
 
@@ -24,12 +24,20 @@ def str_size(rest)
   pos
 end
 
+def str_size(rest)
+  if /\A'(\\.|.)*?'/ =~ rest
+    Regexp.last_match(0).size
+  else
+    rest.size
+  end
+end
+
 def str_bytesize(rest)
   size = str_size(rest)
   rest[0...size].bytesize
 end
 
-def block_cmt_size(rest)
+def block_cmt_size_v1(rest)
   pos = 2
   pos_last = rest.size - 1
   closed = false
@@ -59,6 +67,14 @@ def block_cmt_size(rest)
   end
 
   [pos, closed]
+end
+
+def block_cmt_size(rest)
+  if /\A\/\*(\\.|.)*?\*\// =~ rest
+    [Regexp.last_match(0).size, true]
+  else
+    [rest.size, false]
+  end
 end
 
 def block_cmt_bytesize(rest)
