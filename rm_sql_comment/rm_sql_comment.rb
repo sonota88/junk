@@ -25,13 +25,12 @@ end
 
 
 def str_rest_bytesize(rest)
-  pos = str_size("'" + rest)
-  rest[0...pos].bytesize - 1
+  str_bytesize("'" + rest) - 1
 end
 
 def block_cmt_rest_bytesize(rest)
-  pos, closed = block_cmt_size("/*" + rest)
-  [rest[0...pos].bytesize - 2, closed]
+  size, closed = block_cmt_bytesize("/*" + rest)
+  [size - 2, closed]
 end
 
 def main_v1(sql)
