@@ -56,6 +56,12 @@ class RmSqlCommentTest < Minitest::Test
     assert_equal(true, closed)
   end
 
+  def test_block_cmt_size_2_2
+    size, closed = block_cmt_size("/*a/*あ*/bc")
+    assert_equal(8, size)
+    assert_equal(true, closed)
+  end
+
   # not closed
   def test_block_cmt_size_3
     size, closed = block_cmt_size("/*aあb")
