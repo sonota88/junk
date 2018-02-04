@@ -1,5 +1,5 @@
 # coding: utf-8
-require "./rm_sql_comment"
+require "./rm_sql_comment_work"
 
 require 'minitest/autorun'
 
