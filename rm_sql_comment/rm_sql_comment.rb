@@ -143,7 +143,7 @@ def main_v3(sql)
                      ss.rest
                    end
       result += other_part
-      ss.pos += other_part.size
+      ss.pos += other_part.bytesize
     end
   end
 
@@ -176,7 +176,7 @@ def main_v4(sql)
                      ss.rest
                    end
       result += other_part
-      ss.pos += other_part.size
+      ss.pos += other_part.bytesize
     end
   end
 

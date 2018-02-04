@@ -7,12 +7,12 @@ class RmSqlCommentTest < Minitest::Test
 
   def test_main
     sql = "
-      select a
+      select aあ
       from b
     "
     result = main(sql)
     assert_equal("
-      select a
+      select aあ
       from b
     ", result
     )
