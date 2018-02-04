@@ -151,7 +151,7 @@ def main_v3(sql)
 end
 
 def main_v4(sql)
-  ss = MyStringScanner.new(sql)
+  ss = StringScanner.new(sql)
   result = ""
 
   while not ss.eos?
