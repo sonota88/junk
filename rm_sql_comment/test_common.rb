@@ -6,6 +6,17 @@ require 'minitest/autorun'
 # "あ".bytesize #=> 3
 class RmSqlCommentTest < Minitest::Test
 
+  def test_take_str_basic
+    str = take_str("'aあb'cd")
+    assert_equal("'aあb'", str)
+  end
+
+  # not closed
+  def test_take_str_6
+    str = take_str("'aあb")
+    assert_equal("'aあb", str)
+  end
+
   def test_str_size_basic
     size = str_size("'aあb'cd")
     assert_equal(5, size)
@@ -36,6 +47,21 @@ class RmSqlCommentTest < Minitest::Test
   def test_str_size_6
     size = str_size("'aあb")
     assert_equal(4, size)
+  end
+
+  ################################
+
+  def test_take_block_cmt_1
+    cmt, closed = take_block_cmt("/*aあ*/bc")
+    assert_equal("/*aあ*/", cmt)
+    assert_equal(true, closed)
+  end
+
+  # not closed
+  def test_take_block_cmt_3
+    cmt, closed = take_block_cmt("/*aあb")
+    assert_equal("/*aあb", cmt)
+    assert_equal(false, closed)
   end
 
   def test_block_cmt_size_1

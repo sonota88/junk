@@ -24,17 +24,20 @@ def str_size_v1(rest)
   pos
 end
 
-def str_size(rest)
+def take_str(rest)
   if /\A'(\\.|.)*?'/ =~ rest
-    Regexp.last_match(0).size
+    Regexp.last_match(0)
   else
-    rest.size
+    rest
   end
 end
 
+def str_size(rest)
+  take_str(rest).size
+end
+
 def str_bytesize(rest)
-  size = str_size(rest)
-  rest[0...size].bytesize
+  take_str(rest).bytesize
 end
 
 def block_cmt_size_v1(rest)
@@ -69,15 +72,20 @@ def block_cmt_size_v1(rest)
   [pos, closed]
 end
 
-def block_cmt_size(rest)
+def take_block_cmt(rest)
   if /\A\/\*(\\.|.)*?\*\//m =~ rest
-    [Regexp.last_match(0).size, true]
+    [Regexp.last_match(0), true]
   else
-    [rest.size, false]
+    [rest, false]
   end
 end
 
+def block_cmt_size(rest)
+  cmt, closed = take_block_cmt(rest)
+  [cmt.size, closed]
+end
+
 def block_cmt_bytesize(rest)
-  size, closed = block_cmt_size(rest)
-  [rest[0...size].bytesize, closed]
+  cmt, closed = take_block_cmt(rest)
+  [cmt.bytesize, closed]
 end
