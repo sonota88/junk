@@ -54,3 +54,10 @@
 ;; markdown-mode
 
 (setq markdown-gfm-use-electric-backquote nil)
+
+(add-hook
+ 'markdown-mode-hook
+ (lambda ()
+   (set-face-background 'markdown-code-face "#222")
+   (set-face-foreground 'markdown-code-face "#ccc")
+   ))
