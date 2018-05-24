@@ -6,6 +6,14 @@
 (setq sh-indentation 2)
 
 ;; --------------------------------
+;; 色
+
+;; http://d.hatena.ne.jp/sonota88/20110111/1294695497
+(set-face-foreground 'font-lock-regexp-grouping-backslash "#666")
+(set-face-foreground 'font-lock-regexp-grouping-construct "#f60")
+
+
+;; --------------------------------
 
 (defun delete-char-or-region (dir)
   "範囲選択している場合は delete"
