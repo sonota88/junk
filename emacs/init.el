@@ -14,6 +14,20 @@
 
 
 ;; --------------------------------
+;; 括弧のハイライト
+
+(defface my-paren-face
+  '((t (:foreground "#4ac")))
+  "my paren face")
+
+(add-hook 'emacs-lisp-mode-hook
+          (lambda ()
+            (font-lock-add-keywords
+             nil
+             '(("(\\|)" . 'my-paren-face)))))
+
+
+;; --------------------------------
 
 (defun delete-char-or-region (dir)
   "範囲選択している場合は delete"
