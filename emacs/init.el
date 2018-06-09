@@ -83,3 +83,8 @@
    (set-face-background 'markdown-code-face "#222")
    (set-face-foreground 'markdown-code-face "#ccc")
    ))
+
+;; ----------------
+;; JavaScript
+
+(setq js-indent-level 2)
