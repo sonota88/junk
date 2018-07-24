@@ -88,3 +88,18 @@
 ;; JavaScript
 
 (setq js-indent-level 2)
+
+
+;; ----------------
+
+(defun eval-by-ruby ()
+  "eval by Ruby"
+  (interactive)
+  (save-excursion
+    (shell-command-on-region
+     (point) (mark)
+     "ruby /path/to/eval-by-ruby.rb"
+     nil
+     t)))
+
+(global-set-key (kbd "C-x C-r") 'eval-by-ruby)
