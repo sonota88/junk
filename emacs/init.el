@@ -1,3 +1,16 @@
+;; --------------------------------
+;; 基本
+
+(tool-bar-mode 0) ; ツールバーを表示しない（v24）
+
+(setq inhibit-startup-message t) ; 起動時にメッセージを出さない
+(setq initial-scratch-message nil)
+
+;; ファイル末尾に自動で改行追加
+(setq require-final-newline nil)
+;; 末尾が改行でない場合ユーザに問い合わせ
+(setq mode-require-final-newline 0)
+
 (electric-indent-mode 0)
 
 ;; --------------------------------
@@ -26,6 +39,12 @@
              nil
              '(("(\\|)" . 'my-paren-face)))))
 
+
+(add-hook 'ruby-mode-hook
+          (lambda ()
+            (font-lock-add-keywords
+             nil
+             '(("(\\|)\\|\\[\\|\\]\\|{\\|}" . 'my-paren-face)))))
 
 ;; --------------------------------
 
