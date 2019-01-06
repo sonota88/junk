@@ -1,2 +1,5 @@
 *~
 
+# Ruby
+vendor/
+.bundle/
