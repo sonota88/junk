@@ -37,8 +37,10 @@ features.dabbrev_expand = {
   ,prepareCandidateTokens: function(
     searchRangeBefore, searchRangeAfter, curTok
   ){
+    const feat = features.dabbrev_expand;
+
     // 前方からトークンを抽出
-    var ts = this.extractTokens(searchRangeBefore, curTok);
+    var ts = feat.extractTokens(searchRangeBefore, curTok);
 
     var cts = [];
     var _tok;
@@ -53,7 +55,7 @@ features.dabbrev_expand = {
     }
 
     // 後方からトークンを抽出
-    ts = this.extractTokens(searchRangeAfter, curTok);
+    ts = feat.extractTokens(searchRangeAfter, curTok);
 
     // 重複排除＋近い方から追加
     var len = ts.length;
@@ -98,6 +100,8 @@ features.dabbrev_expand = {
   }
 
   ,exec: function(cb){
+    const feat = features.dabbrev_expand;
+
     if( ! featureParams.dabbrev_expand){
       featureParams.dabbrev_expand = {
         beg: null
@@ -108,7 +112,7 @@ features.dabbrev_expand = {
     // feature params
     var fp = featureParams.dabbrev_expand;
 
-    var begOfCur = this.getBeginningOfCurrentToken(cb);
+    var begOfCur = feat.getBeginningOfCurrentToken(cb);
     if(begOfCur === null){
       return;
     }
@@ -125,7 +129,7 @@ features.dabbrev_expand = {
       fp.beg = begOfCur;
       var searchRangeBefore = cb.getText(0, begOfCur);
       var searchRangeAfter = cb.getText(cb.getPoint(), cb.$el.val().length);
-      fp.cts = this.prepareCandidateTokens(
+      fp.cts = feat.prepareCandidateTokens(
         searchRangeBefore, searchRangeAfter, curTok);
       fp.i = 0;
     }
