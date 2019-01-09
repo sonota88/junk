@@ -97,7 +97,7 @@ features.dabbrev_expand = {
     return begOfCur;
   }
 
-  ,exec: function(me){
+  ,exec: function(cb){
     if( ! featureParams.dabbrev_expand){
       featureParams.dabbrev_expand = {
         beg: null
@@ -108,23 +108,23 @@ features.dabbrev_expand = {
     // feature params
     var fp = featureParams.dabbrev_expand;
 
-    var begOfCur = this.getBeginningOfCurrentToken(me);
+    var begOfCur = this.getBeginningOfCurrentToken(cb);
     if(begOfCur === null){
       return;
     }
 
     // 現在入力途中の単語
-    var curTok = me.getText(begOfCur, me.getPoint());
+    var curTok = cb.getText(begOfCur, cb.getPoint());
 
     // 直前のキー入力が S-SPC
     //   → begOfCur, cts をそのまま使う（キャッシュを使う）
     // 直前のキー入力が S-SPC ではない
     //   → begOfCur, cts を作りなおす
-    var changed = (me.keyHistory[me.keyHistory.length - 2] !== 'S-SPC');
+    var changed = (cb.keyHistory[cb.keyHistory.length - 2] !== 'S-SPC');
     if(changed){
       fp.beg = begOfCur;
-      var searchRangeBefore = me.getText(0, begOfCur);
-      var searchRangeAfter = me.getText(me.getPoint(), me.$el.val().length);
+      var searchRangeBefore = cb.getText(0, begOfCur);
+      var searchRangeAfter = cb.getText(cb.getPoint(), cb.$el.val().length);
       fp.cts = this.prepareCandidateTokens(
         searchRangeBefore, searchRangeAfter, curTok);
       fp.i = 0;
@@ -139,11 +139,11 @@ features.dabbrev_expand = {
     }
     // 候補
     var cand = fp.cts[fp.i];
-    me.el.setSelectionRange(fp.beg, me.getPoint());
-    me.modifyRegion(function(sel){
+    cb.el.setSelectionRange(fp.beg, cb.getPoint());
+    cb.modifyRegion(function(sel){
       return cand;
     });
-    me.goto_char(begOfCur + cand.length);
+    cb.goto_char(begOfCur + cand.length);
     fp.i = next_i;
   }
 };
