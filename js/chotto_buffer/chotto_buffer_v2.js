@@ -2,23 +2,202 @@ function puts(){
   // console.log.apply(console, arguments);
 }
 
-var ChottoBuffer = (function(){
+////////////////////////////////
+// Utils
 
-  var features = {};
+const startsWith = (str, pat)=>{
+  return str.indexOf(pat) === 0;
+};
+
+////////////////////////////////
+// Features
+
+const features = {};
+
+features.dabbrev_expand = {
+  extractTokens: function(text, target){
+    var ts = [];
+    var tail = text;
+    var tok;
+    while(tail.length > 0){
+      if(tail.match(/^([a-zA-Z0-9_]+)/)){
+        tok = RegExp.$1;
+        tail = RegExp.rightContext;
+        if(startsWith(tok, target) && tok !== target){
+          ts.push(tok);
+        }
+      }else{
+        tail = tail.substring(1);
+      }
+    }
+    return ts;
+  }
+
+  ,prepareCandidateTokens: function(
+    searchRangeBefore, searchRangeAfter, curTok
+  ){
+    // 前方からトークンを抽出
+    var ts = this.extractTokens(searchRangeBefore, curTok);
+
+    var cts = [];
+    var _tok;
+
+    // 重複排除＋近い方から追加
+    for(var i=ts.length-1; i>=0; i--){
+      _tok = ts[i];
+      if(cts.indexOf(_tok) >= 0){
+        continue;
+      }
+      cts.push(_tok);
+    }
+
+    // 後方からトークンを抽出
+    ts = this.extractTokens(searchRangeAfter, curTok);
+
+    // 重複排除＋近い方から追加
+    var len = ts.length;
+    for(i=0; i<len; i++){
+      _tok = ts[i];
+      if(cts.indexOf(_tok) >= 0){
+        continue;
+      }
+      cts.push(_tok);
+    }
+
+    if(cts.length === 0){
+      return [];
+    }
+
+    cts.push(curTok);
+
+    return cts;
+  }
+
+  ,getBeginningOfCurrentToken: function(me){
+    var former = me.getText(0, me.getPoint());
+
+    // 現在入力途中の単語の最初
+    var begOfCur;
+    for(var i=me.getPoint() - 1; i>=0; i--){
+      if( ! me.isTokenElem(former.charAt(i))){
+        begOfCur = i + 1;
+        break;
+      }
+    }
+    if( ! begOfCur){
+      // テキスト先頭まで現在のトークン
+      return null;
+    }
+    if(begOfCur === me.getPoint()){
+      // 入力途中のトークンなし
+      return null;
+    }
+
+    return begOfCur;
+  }
+
+  ,exec: function(me){
+    if( ! me.featureParams.dabbrev_expand){
+      me.featureParams.dabbrev_expand = {
+        beg: null
+        ,cts: [] // candidate tokens
+        ,i: 0
+      };
+    }
+    // feature params
+    var fp = me.featureParams.dabbrev_expand;
+
+    var begOfCur = this.getBeginningOfCurrentToken(me);
+    if(begOfCur === null){
+      return;
+    }
+
+    // 現在入力途中の単語
+    var curTok = me.getText(begOfCur, me.getPoint());
+
+    // 直前のキー入力が S-SPC
+    //   → begOfCur, cts をそのまま使う（キャッシュを使う）
+    // 直前のキー入力が S-SPC ではない
+    //   → begOfCur, cts を作りなおす
+    var changed = (me.keyHistory[me.keyHistory.length - 2] !== 'S-SPC');
+    if(changed){
+      fp.beg = begOfCur;
+      var searchRangeBefore = me.getText(0, begOfCur);
+      var searchRangeAfter = me.getText(me.getPoint(), me.$el.val().length);
+      fp.cts = this.prepareCandidateTokens(
+        searchRangeBefore, searchRangeAfter, curTok);
+      fp.i = 0;
+    }
+    if(fp.cts.length === 0){
+      return;
+    }
+
+    var next_i = fp.i + 1;
+    if(next_i >= fp.cts.length){
+      next_i = 0;
+    }
+    // 候補
+    var cand = fp.cts[fp.i];
+    me.el.setSelectionRange(fp.beg, me.getPoint());
+    me.modifyRegion(function(sel){
+      return cand;
+    });
+    me.goto_char(begOfCur + cand.length);
+    fp.i = next_i;
+  }
+};
+
+class ChottoBuffer {
+
+  constructor($el){
+    this.$el = $el;
+    this.el = this.$el.get(0);
+    
+    this.cmd = "";
+    // this.killRing = [];
+    this.keyHistory = [];
+    this.featureParams = {};
+    
+    this.$el.on("keydown", this.dispatch.bind(this));
+
+    this.kyRotateCase_orig = "";
+    this.kyRotateCase_status = "original";
+
+    this.keyBind = {
+      "C-a"         : ()=>{ this.kyMoveBeginningOfLine(); }
+      ,"C-d"        : ()=>{ this.kyDelete             (); }
+      ,"C-e"        : ()=>{ this.move_end_of_line     (); }
+      ,"C-g"        : ()=>{ this.keyboard_quit        (); }
+      ,"C-h"        : ()=>{ this.backward_delete_char (); }
+      ,"C-k"        : ()=>{ this.kill_line            (); }
+      ,"M-l"        : ()=>{ this.kyRotateCase         (); }
+      ,"SPC"        : ()=>{ this.kySpace              (); }
+      ,"S-SPC"      : ()=>{ this.kyShiftSpace         (); }
+      ,"C-M-SPC"    : ()=>{ this.selectCurrentToken   (); }
+      ,"C-S-<up>"   : ()=>{ this.upcaseRegion         (); }
+      ,"C-S-<down>" : ()=>{ this.downcaseRegion       (); }
+    };
+  }
 
   // ----------------
   // Emacs commands
 
-  function keyboard_quit(me){
+  keyboard_quit(){
+    const me = this;
+
     me.cmd = "";
   }
 
-  function move_end_of_line(me){
+  move_end_of_line(){
+    const me = this;
+
     var to = me.getEndOfLine();
     me.goto_char(to);
   }
 
-  function backward_delete_char(me){
+  backward_delete_char(){
+    const me = this;
+
     var text = me.val();
     var pos = me.getPoint();
     var pre = text.substring(0, pos - 1);
@@ -27,7 +206,9 @@ var ChottoBuffer = (function(){
     me.goto_char(pos - 1);
   }
 
-  function kill_line(me){
+  kill_line(){
+    const me = this;
+
     var from = me.getPoint();
     var to = me.getEndOfLine();
     var val = me.val();
@@ -41,7 +222,9 @@ var ChottoBuffer = (function(){
   // ----------------
   // My commands
 
-  function kyMoveBeginningOfLine(me){
+  kyMoveBeginningOfLine(){
+    const me = this;
+
     var point = me.getPoint();
     var to = null;
 
@@ -54,13 +237,17 @@ var ChottoBuffer = (function(){
     me.goto_char(to);
   }
 
-  function selectCurrentToken(me){
+  selectCurrentToken(){
+    const me = this;
+
     var from = me.getBeginningOfToken();
     var to = me.getEndOfToken();
     me.el.setSelectionRange(from, to);
   }
 
-  function kyDelete(me){
+  kyDelete(){
+    const me = this;
+
     if(me.region_active_p()){
       me.deleteRegion();
     }else{
@@ -68,7 +255,9 @@ var ChottoBuffer = (function(){
     }
   }
 
-  function kySpace(me){
+  kySpace(){
+    const me = this;
+
     if(me.region_active_p()){
       me.modifyRegion(function(sel){
         return me.indent(sel, " ");
@@ -78,7 +267,9 @@ var ChottoBuffer = (function(){
     }
   }
 
-  function unindentRegionBySpace(me){
+  unindentRegionBySpace(){
+    const me = this;
+
     if( ! me.region_active_p()){
       return;
     }
@@ -87,15 +278,19 @@ var ChottoBuffer = (function(){
     });
   }
 
-  function kyShiftSpace(me){
+  kyShiftSpace(){
+    const me = this;
+
     if(me.region_active_p()){
-      unindentRegionBySpace(me);
+      this.unindentRegionBySpace(me);
     }else{
       me.dabbrev_expand();
     }
   }
 
-  function upcaseRegion(me){
+  upcaseRegion(){
+    const me = this;
+
     if( ! me.region_active_p()){
       return;
     }
@@ -104,7 +299,9 @@ var ChottoBuffer = (function(){
     });
   }
 
-  function downcaseRegion(me){
+  downcaseRegion(){
+    const me = this;
+
     if( ! me.region_active_p()){
       return;
     }
@@ -113,9 +310,8 @@ var ChottoBuffer = (function(){
     });
   }
 
-  var kyRotateCase_orig = "";
-  var kyRotateCase_status = "original";
-  function kyRotateCase(me){
+  kyRotateCase(){
+    const me = this;
 
     function capitalize(str){
       return str.substring(0, 1).toUpperCase()
@@ -124,26 +320,26 @@ var ChottoBuffer = (function(){
     }
 
     if( ! me.region_active_p()){
-      selectCurrentToken(me);
+      this.selectCurrentToken(me);
     }
-    me.modifyRegion(function(sel){
-      if(kyRotateCase_orig.toLowerCase() !== sel.toLowerCase()){
-        kyRotateCase_orig = sel;
-        kyRotateCase_status = "original";
+    me.modifyRegion((sel)=>{
+      if(this.kyRotateCase_orig.toLowerCase() !== sel.toLowerCase()){
+        this.kyRotateCase_orig = sel;
+        this.kyRotateCase_status = "original";
       }
 
-      if(kyRotateCase_status === "original"){
-        kyRotateCase_status = "up";
+      if(this.kyRotateCase_status === "original"){
+        this.kyRotateCase_status = "up";
         return sel.toUpperCase();
-      }else if(kyRotateCase_status === "up"){
-        kyRotateCase_status = "down";
+      }else if(this.kyRotateCase_status === "up"){
+        this.kyRotateCase_status = "down";
         return sel.toLowerCase();
-      }else if(kyRotateCase_status === "down"){
-        kyRotateCase_status = "capitalized";
-        return capitalize(kyRotateCase_orig);
-      }else if(kyRotateCase_status === "capitalized"){
-        kyRotateCase_status = "original";
-        return kyRotateCase_orig;
+      }else if(this.kyRotateCase_status === "down"){
+        this.kyRotateCase_status = "capitalized";
+        return capitalize(this.kyRotateCase_orig);
+      }else if(this.kyRotateCase_status === "capitalized"){
+        this.kyRotateCase_status = "original";
+        return this.kyRotateCase_orig;
       }else{
         throw new Error("invalid status");
       }
@@ -152,56 +348,7 @@ var ChottoBuffer = (function(){
 
   // ----------------
 
-  function ChottoBuffer($el){
-    this.$el = $el;
-    this.el = this.$el.get(0);
-    
-    this.cmd = "";
-    // this.killRing = [];
-    this.keyHistory = [];
-    this.featureParams = {};
-    
-    this.$el.on("keydown", this.dispatch.bind(this));
-  }
-  var __ = ChottoBuffer.prototype;
-
-  ChottoBuffer.keyCodeMap = {
-    9: "TAB"
-    ,13: "RET"
-    ,32: "SPC"
-    ,38: "<up>"
-    ,40: "<down>"
-    ,65: "a"
-    ,66: "b"
-    ,68: "d"
-    ,69: "e"
-    ,70: "f"
-    ,71: "g"
-    ,72: "h"
-    ,75: "k"
-    ,76: "l"
-    ,80: "p"
-    ,87: "w"
-    ,88: "x"
-    ,89: "y"
-  };
-
-  __.keyBind = {
-    "C-a": kyMoveBeginningOfLine
-    ,"C-d": kyDelete
-    ,"C-e": move_end_of_line
-    ,"C-g": keyboard_quit
-    ,"C-h": backward_delete_char
-    ,"C-k": kill_line
-    ,"M-l": kyRotateCase
-    ,"SPC": kySpace
-    ,"S-SPC": kyShiftSpace
-    ,"C-M-SPC": selectCurrentToken
-    ,"C-S-<up>": upcaseRegion
-    ,"C-S-<down>": downcaseRegion
-  };
-
-  __.dispatch = function(ev){
+  dispatch(ev){
     var me = this;
     puts(this, ev, ev.keyCode);
 
@@ -227,14 +374,14 @@ var ChottoBuffer = (function(){
       fn.apply(me, [me, ev]);
       me.cmd = "";
     }
-  };
+  }
 
   // ----------------
 
   /**
    * 選択範囲を加工する
    */
-  __.modifyRegion = function(fn){
+  modifyRegion(fn){
     var me = this;
     if( ! me.region_active_p()){
       return;
@@ -250,9 +397,9 @@ var ChottoBuffer = (function(){
     me.val(pre + modified + post);
     me.el.setSelectionRange(posStart, posStart + modified.length);
     me.focus();
-  };
+  }
 
-  __.delete_char = function(){
+  delete_char(){
     var me = this;
     var text = me.val();
     var pos = me.getPoint();
@@ -261,57 +408,53 @@ var ChottoBuffer = (function(){
     me.val(pre + post);
 
     me.goto_char(pos);
-  };
-
-  __.goto_char = function(point){
-    this.el.setSelectionRange(point, point);
-  };
-
-  __.region_active_p = function(){
-    return this.el.selectionStart != this.el.selectionEnd;
-  };
-
-  function startsWith(str, pat){
-    return str.indexOf(pat) === 0;
   }
 
-  __.dabbrev_expand = function(){
+  goto_char(point){
+    this.el.setSelectionRange(point, point);
+  }
+
+  region_active_p(){
+    return this.el.selectionStart != this.el.selectionEnd;
+  }
+
+  dabbrev_expand(){
     features.dabbrev_expand.exec(this);
-  };
+  }
 
   // ----------------
 
-  __.getPoint = function(){
+  getPoint(){
     return this.el.selectionEnd;
-  };
+  }
 
-  __.focus = function(){
+  focus(){
     this.el.focus();
-  };
+  }
 
-  __.val = function(){
+  val(){
     if(arguments.length > 0){
       this.el.value = arguments[0];
     }
     return this.el.value;
-  };
+  }
 
-  __.getText = function(from, to){
+  getText(from, to){
     return this.val().substring(from, to);
-  };
+  }
 
-  __.setKeybind = function(cmd, fn){
+  setKeybind(cmd, fn){
     this.keyBind[cmd] = fn;
-  };
+  }
 
-  __.isBeginningOfLine = function(point){
+  isBeginningOfLine(point){
     return (point === 0 || this.val().charAt(point - 1) === "\n");
-  };
+  }
 
   /**
    * @return 最も近い前方の改行の次、またはテキストの最初
    */
-  __.getBeginningOfLine = function(){
+  getBeginningOfLine(){
     var me = this;
     var text = me.val();
     var point = me.getPoint();
@@ -326,12 +469,12 @@ var ChottoBuffer = (function(){
       to = 0;
     }
     return to;
-  };
+  }
 
   /**
    * @return スペース・タブを無視した行頭の位置
    */
-  __.getBeginningOfLineIgnoreSpace = function(){
+  getBeginningOfLineIgnoreSpace(){
     var me = this;
     var text = me.val();
     var point = me.getPoint();
@@ -354,10 +497,10 @@ var ChottoBuffer = (function(){
       }
     }
     return to;
-  };
+  }
 
   // 改行またはテキストの最後
-  __.getEndOfLine = function(){
+  getEndOfLine(){
     var me = this;
     var point = me.getPoint();
     var text = me.val();
@@ -372,13 +515,13 @@ var ChottoBuffer = (function(){
       to = text.length;
     }
     return to;
-  };
+  }
 
-  __.isTokenElem = function(ch){
+  isTokenElem(ch){
     return /^[a-zA-Z0-9_]$/.test(ch);
-  };
+  }
 
-  __.getBeginningOfToken = function(){
+  getBeginningOfToken(){
     var me = this;
     var text = me.val();
     var point = me.getPoint();
@@ -394,9 +537,9 @@ var ChottoBuffer = (function(){
       to = 0;
     }
     return to;
-  };
+  }
 
-  __.getEndOfToken = function(){
+  getEndOfToken(){
     var me = this;
     var text = me.val();
     var point = me.getPoint();
@@ -411,9 +554,9 @@ var ChottoBuffer = (function(){
       to = text.length;
     }
     return to;
-  };
+  }
 
-  __.deleteRegion = function(){
+  deleteRegion(){
     var me = this;
 
     var beg = me.region_beginning();
@@ -423,9 +566,9 @@ var ChottoBuffer = (function(){
     });
 
     me.goto_char(beg);
-  };
+  }
 
-  __.insert = function(str){
+  insert(str){
     var me = this;
     var text = me.val();
     var pos = me.getPoint();
@@ -434,9 +577,9 @@ var ChottoBuffer = (function(){
     me.val(pre + str + post);
 
     me.goto_char(pos + str.length);
-  };
+  }
 
-  __.indent = function(text, indentStr){
+  indent(text, indentStr){
     var lines = text.split("\n");
     var len = lines.length;
 
@@ -447,9 +590,9 @@ var ChottoBuffer = (function(){
         return indentStr + line;
       }
     }).join("\n");
-  };
+  }
 
-  __.unindentSpace = function(text){
+  unindentSpace(text){
     var lines = text.split("\n");
 
     return lines.map(function(line){
@@ -464,153 +607,36 @@ var ChottoBuffer = (function(){
     }).map(function(line){
       return line.replace(/^ /, "");
     }).join("\n");
-  };
+  }
 
-  __.region_beginning = function(){
+  region_beginning(){
     return Math.min(this.el.selectionStart, this.el.selectionEnd);
-  };
+  }
 
-  __.region_end = function(){
+  region_end(){
     return Math.max(this.el.selectionStart, this.el.selectionEnd);
-  };
+  }
 
 
-  ////////////////////////////////
-  // Features
+}
 
-  features.dabbrev_expand = {
-    extractTokens: function(text, target){
-      var ts = [];
-      var tail = text;
-      var tok;
-      while(tail.length > 0){
-        if(tail.match(/^([a-zA-Z0-9_]+)/)){
-          tok = RegExp.$1;
-          tail = RegExp.rightContext;
-          if(startsWith(tok, target) && tok !== target){
-            ts.push(tok);
-          }
-        }else{
-          tail = tail.substring(1);
-        }
-      }
-      return ts;
-    }
-
-    ,prepareCandidateTokens: function(
-      searchRangeBefore, searchRangeAfter, curTok
-    ){
-      // 前方からトークンを抽出
-      var ts = this.extractTokens(searchRangeBefore, curTok);
-
-      var cts = [];
-      var _tok;
-
-      // 重複排除＋近い方から追加
-      for(var i=ts.length-1; i>=0; i--){
-        _tok = ts[i];
-        if(cts.indexOf(_tok) >= 0){
-          continue;
-        }
-        cts.push(_tok);
-      }
-
-      // 後方からトークンを抽出
-      ts = this.extractTokens(searchRangeAfter, curTok);
-
-      // 重複排除＋近い方から追加
-      var len = ts.length;
-      for(i=0; i<len; i++){
-        _tok = ts[i];
-        if(cts.indexOf(_tok) >= 0){
-          continue;
-        }
-        cts.push(_tok);
-      }
-
-      if(cts.length === 0){
-        return [];
-      }
-
-      cts.push(curTok);
-
-      return cts;
-    }
-
-    ,getBeginningOfCurrentToken: function(me){
-      var former = me.getText(0, me.getPoint());
-
-      // 現在入力途中の単語の最初
-      var begOfCur;
-      for(var i=me.getPoint() - 1; i>=0; i--){
-        if( ! me.isTokenElem(former.charAt(i))){
-          begOfCur = i + 1;
-          break;
-        }
-      }
-      if( ! begOfCur){
-        // テキスト先頭まで現在のトークン
-        return null;
-      }
-      if(begOfCur === me.getPoint()){
-        // 入力途中のトークンなし
-        return null;
-      }
-
-      return begOfCur;
-    }
-
-    ,exec: function(me){
-      if( ! me.featureParams.dabbrev_expand){
-        me.featureParams.dabbrev_expand = {
-          beg: null
-          ,cts: [] // candidate tokens
-          ,i: 0
-        };
-      }
-      // feature params
-      var fp = me.featureParams.dabbrev_expand;
-
-      var begOfCur = this.getBeginningOfCurrentToken(me);
-      if(begOfCur === null){
-        return;
-      }
-
-      // 現在入力途中の単語
-      var curTok = me.getText(begOfCur, me.getPoint());
-
-      // 直前のキー入力が S-SPC
-      //   → begOfCur, cts をそのまま使う（キャッシュを使う）
-      // 直前のキー入力が S-SPC ではない
-      //   → begOfCur, cts を作りなおす
-      var changed = (me.keyHistory[me.keyHistory.length - 2] !== 'S-SPC');
-      if(changed){
-        fp.beg = begOfCur;
-        var searchRangeBefore = me.getText(0, begOfCur);
-        var searchRangeAfter = me.getText(me.getPoint(), me.$el.val().length);
-        fp.cts = this.prepareCandidateTokens(
-          searchRangeBefore, searchRangeAfter, curTok);
-        fp.i = 0;
-      }
-      if(fp.cts.length === 0){
-        return;
-      }
-
-      var next_i = fp.i + 1;
-      if(next_i >= fp.cts.length){
-        next_i = 0;
-      }
-      // 候補
-      var cand = fp.cts[fp.i];
-      me.el.setSelectionRange(fp.beg, me.getPoint());
-      me.modifyRegion(function(sel){
-        return cand;
-      });
-      me.goto_char(begOfCur + cand.length);
-      fp.i = next_i;
-    }
-  };
-
-
-  return ChottoBuffer;
-})();
+ChottoBuffer.keyCodeMap = {
+  9: "TAB"
+  ,13: "RET"
+  ,32: "SPC"
+  ,38: "<up>"
+  ,40: "<down>"
+  ,65: "a"
+  ,66: "b"
+  ,68: "d"
+  ,69: "e"
+  ,70: "f"
+  ,71: "g"
+  ,72: "h"
+  ,75: "k"
+  ,76: "l"
+  ,80: "p"
+  ,87: "w"
+  ,88: "x"
+  ,89: "y"
+};
