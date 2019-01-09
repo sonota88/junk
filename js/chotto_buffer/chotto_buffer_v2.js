@@ -13,6 +13,7 @@ const startsWith = (str, pat)=>{
 // Features
 
 const features = {};
+const featureParams = {};
 
 features.dabbrev_expand = {
   extractTokens: function(text, target){
@@ -97,15 +98,15 @@ features.dabbrev_expand = {
   }
 
   ,exec: function(me){
-    if( ! me.featureParams.dabbrev_expand){
-      me.featureParams.dabbrev_expand = {
+    if( ! featureParams.dabbrev_expand){
+      featureParams.dabbrev_expand = {
         beg: null
         ,cts: [] // candidate tokens
         ,i: 0
       };
     }
     // feature params
-    var fp = me.featureParams.dabbrev_expand;
+    var fp = featureParams.dabbrev_expand;
 
     var begOfCur = this.getBeginningOfCurrentToken(me);
     if(begOfCur === null){
@@ -156,7 +157,6 @@ class ChottoBuffer {
     this.cmd = "";
     // this.killRing = [];
     this.keyHistory = [];
-    this.featureParams = {};
     
     this.$el.on("keydown", this.dispatch.bind(this));
 
