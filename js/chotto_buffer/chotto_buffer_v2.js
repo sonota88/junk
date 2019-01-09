@@ -1,12 +1,5 @@
-const puts = ()=>{
-  // console.log.apply(console, arguments);
-};
-
-////////////////////////////////
-// Utils
-
-const startsWith = (str, pat)=>{
-  return str.indexOf(pat) === 0;
+const puts = (...args)=>{
+  // console.log.apply(console, args);
 };
 
 ////////////////////////////////
@@ -17,17 +10,18 @@ const featureParams = {};
 
 features.dabbrev_expand = {
   extractTokens: (text, target)=>{
-    var ts = [];
-    var tail = text;
-    var tok;
-    while(tail.length > 0){
-      if(tail.match(/^([a-zA-Z0-9_]+)/)){
-        tok = RegExp.$1;
+    const ts = [];
+    let tail = text;
+
+    while (tail.length > 0) {
+      if (/^([a-zA-Z0-9_]+)/.test(tail)) {
+        tail.match(/^([a-zA-Z0-9_]+)/);
+        const tok = RegExp.$1;
         tail = RegExp.rightContext;
-        if(startsWith(tok, target) && tok !== target){
+        if (tok.startsWith(target) && tok !== target) {
           ts.push(tok);
         }
-      }else{
+      } else {
         tail = tail.substring(1);
       }
     }
@@ -40,15 +34,15 @@ features.dabbrev_expand = {
     const feat = features.dabbrev_expand;
 
     // 前方からトークンを抽出
-    var ts = feat.extractTokens(searchRangeBefore, curTok);
+    let ts = feat.extractTokens(searchRangeBefore, curTok);
 
-    var cts = [];
-    var _tok;
+    const cts = [];
+    let _tok;
 
     // 重複排除＋近い方から追加
-    for(var i=ts.length-1; i>=0; i--){
+    for (let i=ts.length-1; i>=0; i--) {
       _tok = ts[i];
-      if(cts.indexOf(_tok) >= 0){
+      if (cts.indexOf(_tok) >= 0) {
         continue;
       }
       cts.push(_tok);
@@ -58,16 +52,15 @@ features.dabbrev_expand = {
     ts = feat.extractTokens(searchRangeAfter, curTok);
 
     // 重複排除＋近い方から追加
-    var len = ts.length;
-    for(i=0; i<len; i++){
+    for (let i=0, len=ts.length; i<len; i++) {
       _tok = ts[i];
-      if(cts.indexOf(_tok) >= 0){
+      if (cts.indexOf(_tok) >= 0) {
         continue;
       }
       cts.push(_tok);
     }
 
-    if(cts.length === 0){
+    if (cts.length === 0) {
       return [];
     }
 
@@ -77,21 +70,21 @@ features.dabbrev_expand = {
   }
 
   ,getBeginningOfCurrentToken: (me)=>{
-    var former = me.getText(0, me.getPoint());
+    const former = me.getText(0, me.getPoint());
 
     // 現在入力途中の単語の最初
-    var begOfCur;
-    for(var i=me.getPoint() - 1; i>=0; i--){
-      if( ! me.isTokenElem(former.charAt(i))){
+    let begOfCur;
+    for (let i=me.getPoint() - 1; i>=0; i--) {
+      if (! me.isTokenElem(former.charAt(i))) {
         begOfCur = i + 1;
         break;
       }
     }
-    if( ! begOfCur){
+    if (! begOfCur) {
       // テキスト先頭まで現在のトークン
       return null;
     }
-    if(begOfCur === me.getPoint()){
+    if (begOfCur === me.getPoint()) {
       // 入力途中のトークンなし
       return null;
     }
@@ -102,7 +95,7 @@ features.dabbrev_expand = {
   ,exec: (cb)=>{
     const feat = features.dabbrev_expand;
 
-    if( ! featureParams.dabbrev_expand){
+    if (! featureParams.dabbrev_expand) {
       featureParams.dabbrev_expand = {
         beg: null
         ,cts: [] // candidate tokens
@@ -110,39 +103,39 @@ features.dabbrev_expand = {
       };
     }
     // feature params
-    var fp = featureParams.dabbrev_expand;
+    const fp = featureParams.dabbrev_expand;
 
-    var begOfCur = feat.getBeginningOfCurrentToken(cb);
-    if(begOfCur === null){
+    const begOfCur = feat.getBeginningOfCurrentToken(cb);
+    if (begOfCur === null) {
       return;
     }
 
     // 現在入力途中の単語
-    var curTok = cb.getText(begOfCur, cb.getPoint());
+    const curTok = cb.getText(begOfCur, cb.getPoint());
 
     // 直前のキー入力が S-SPC
     //   → begOfCur, cts をそのまま使う（キャッシュを使う）
     // 直前のキー入力が S-SPC ではない
     //   → begOfCur, cts を作りなおす
-    var changed = (cb.keyHistory[cb.keyHistory.length - 2] !== 'S-SPC');
-    if(changed){
+    const changed = (cb.keyHistory[cb.keyHistory.length - 2] !== 'S-SPC');
+    if (changed) {
       fp.beg = begOfCur;
-      var searchRangeBefore = cb.getText(0, begOfCur);
-      var searchRangeAfter = cb.getText(cb.getPoint(), cb.$el.val().length);
+      const searchRangeBefore = cb.getText(0, begOfCur);
+      const searchRangeAfter = cb.getText(cb.getPoint(), cb.$el.val().length);
       fp.cts = feat.prepareCandidateTokens(
         searchRangeBefore, searchRangeAfter, curTok);
       fp.i = 0;
     }
-    if(fp.cts.length === 0){
+    if (fp.cts.length === 0) {
       return;
     }
 
-    var next_i = fp.i + 1;
-    if(next_i >= fp.cts.length){
+    let next_i = fp.i + 1;
+    if (next_i >= fp.cts.length) {
       next_i = 0;
     }
     // 候補
-    var cand = fp.cts[fp.i];
+    const cand = fp.cts[fp.i];
     cb.el.setSelectionRange(fp.beg, cb.getPoint());
     cb.modifyRegion((sel)=>{
       return cand;
@@ -283,12 +276,10 @@ class ChottoBuffer {
   }
 
   kyShiftSpace(){
-    const me = this;
-
-    if(me.region_active_p()){
-      this.unindentRegionBySpace(me);
+    if(this.region_active_p()){
+      this.unindentRegionBySpace(this);
     }else{
-      me.dabbrev_expand();
+      this.dabbrev_expand();
     }
   }
 
@@ -353,30 +344,29 @@ class ChottoBuffer {
   // ----------------
 
   dispatch(ev){
-    var me = this;
     puts(this, ev, ev.keyCode);
 
-    if(me.cmd.length > 0){ me.cmd += " "; }
-    if(ev.ctrlKey ){ me.cmd += "C-"; }
-    if(ev.altKey  ){ me.cmd += "M-"; }
-    if(ev.shiftKey){ me.cmd += "S-"; }
+    if (this.cmd.length > 0) { this.cmd += " "; }
+    if (ev.ctrlKey ) { this.cmd += "C-"; }
+    if (ev.altKey  ) { this.cmd += "M-"; }
+    if (ev.shiftKey) { this.cmd += "S-"; }
 
-    if(ev.keyCode in ChottoBuffer.keyCodeMap){
-      me.cmd += ChottoBuffer.keyCodeMap[ev.keyCode];
-    }else{
-      me.cmd = "";
+    if (ev.keyCode in ChottoBuffer.keyCodeMap) {
+      this.cmd += ChottoBuffer.keyCodeMap[ev.keyCode];
+    } else {
+      this.cmd = "";
     }
 
-    me.keyHistory.push(me.cmd === "" ? null : me.cmd);
-    if(me.keyHistory.length > 4){
-      me.keyHistory.shift();
+    this.keyHistory.push(this.cmd === "" ? null : this.cmd);
+    if (this.keyHistory.length > 4) {
+      this.keyHistory.shift();
     }
 
-    var fn = me.keyBind[me.cmd];
-    if(fn){
+    var fn = this.keyBind[this.cmd];
+    if (fn) {
       ev.preventDefault();
-      fn.apply(me, [me, ev]);
-      me.cmd = "";
+      fn.apply(this, [this, ev]);
+      this.cmd = "";
     }
   }
 
