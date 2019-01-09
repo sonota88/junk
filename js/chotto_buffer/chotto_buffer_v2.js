@@ -1,5 +1,5 @@
-const puts = ()=>{
-  // console.log.apply(console, arguments);
+const puts = (...args)=>{
+  // console.log.apply(console, args);
 };
 
 ////////////////////////////////
