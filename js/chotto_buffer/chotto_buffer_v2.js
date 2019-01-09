@@ -276,12 +276,10 @@ class ChottoBuffer {
   }
 
   kyShiftSpace(){
-    const me = this;
-
-    if(me.region_active_p()){
-      this.unindentRegionBySpace(me);
+    if(this.region_active_p()){
+      this.unindentRegionBySpace(this);
     }else{
-      me.dabbrev_expand();
+      this.dabbrev_expand();
     }
   }
 
@@ -346,30 +344,29 @@ class ChottoBuffer {
   // ----------------
 
   dispatch(ev){
-    var me = this;
     puts(this, ev, ev.keyCode);
 
-    if(me.cmd.length > 0){ me.cmd += " "; }
-    if(ev.ctrlKey ){ me.cmd += "C-"; }
-    if(ev.altKey  ){ me.cmd += "M-"; }
-    if(ev.shiftKey){ me.cmd += "S-"; }
+    if(this.cmd.length > 0){ this.cmd += " "; }
+    if(ev.ctrlKey ){ this.cmd += "C-"; }
+    if(ev.altKey  ){ this.cmd += "M-"; }
+    if(ev.shiftKey){ this.cmd += "S-"; }
 
     if(ev.keyCode in ChottoBuffer.keyCodeMap){
-      me.cmd += ChottoBuffer.keyCodeMap[ev.keyCode];
+      this.cmd += ChottoBuffer.keyCodeMap[ev.keyCode];
     }else{
-      me.cmd = "";
+      this.cmd = "";
     }
 
-    me.keyHistory.push(me.cmd === "" ? null : me.cmd);
-    if(me.keyHistory.length > 4){
-      me.keyHistory.shift();
+    this.keyHistory.push(this.cmd === "" ? null : this.cmd);
+    if(this.keyHistory.length > 4){
+      this.keyHistory.shift();
     }
 
-    var fn = me.keyBind[me.cmd];
+    var fn = this.keyBind[this.cmd];
     if(fn){
       ev.preventDefault();
-      fn.apply(me, [me, ev]);
-      me.cmd = "";
+      fn.apply(this, [this, ev]);
+      this.cmd = "";
     }
   }
 
