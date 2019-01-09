@@ -1,0 +1,17 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Chotto Buffer Demo</title>
+  </head>
+  <body>
+    <textarea style="width: 100%; height: 10rem;"></textarea>
+  </body>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script type="text/javascript" src="chotto_buffer_v2.js"></script>
+  <script type="text/javascript">
+    $(function(){
+      var cb = new ChottoBuffer($("textarea"));
+      cb.focus();
+    });
+  </script>
+</html>
