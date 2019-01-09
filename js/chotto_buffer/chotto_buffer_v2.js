@@ -1,6 +1,6 @@
-function puts(){
+const puts = ()=>{
   // console.log.apply(console, arguments);
-}
+};
 
 ////////////////////////////////
 // Utils
@@ -16,7 +16,7 @@ const features = {};
 const featureParams = {};
 
 features.dabbrev_expand = {
-  extractTokens: function(text, target){
+  extractTokens: (text, target)=>{
     var ts = [];
     var tail = text;
     var tok;
@@ -34,9 +34,9 @@ features.dabbrev_expand = {
     return ts;
   }
 
-  ,prepareCandidateTokens: function(
+  ,prepareCandidateTokens: (
     searchRangeBefore, searchRangeAfter, curTok
-  ){
+  )=>{
     const feat = features.dabbrev_expand;
 
     // 前方からトークンを抽出
@@ -76,7 +76,7 @@ features.dabbrev_expand = {
     return cts;
   }
 
-  ,getBeginningOfCurrentToken: function(me){
+  ,getBeginningOfCurrentToken: (me)=>{
     var former = me.getText(0, me.getPoint());
 
     // 現在入力途中の単語の最初
@@ -99,7 +99,7 @@ features.dabbrev_expand = {
     return begOfCur;
   }
 
-  ,exec: function(cb){
+  ,exec: (cb)=>{
     const feat = features.dabbrev_expand;
 
     if( ! featureParams.dabbrev_expand){
@@ -144,7 +144,7 @@ features.dabbrev_expand = {
     // 候補
     var cand = fp.cts[fp.i];
     cb.el.setSelectionRange(fp.beg, cb.getPoint());
-    cb.modifyRegion(function(sel){
+    cb.modifyRegion((sel)=>{
       return cand;
     });
     cb.goto_char(begOfCur + cand.length);
@@ -263,7 +263,7 @@ class ChottoBuffer {
     const me = this;
 
     if(me.region_active_p()){
-      me.modifyRegion(function(sel){
+      me.modifyRegion((sel)=>{
         return me.indent(sel, " ");
       });
     }else{
@@ -277,7 +277,7 @@ class ChottoBuffer {
     if( ! me.region_active_p()){
       return;
     }
-    me.modifyRegion(function(sel){
+    me.modifyRegion((sel)=>{
       return me.unindentSpace(sel);
     });
   }
@@ -298,7 +298,7 @@ class ChottoBuffer {
     if( ! me.region_active_p()){
       return;
     }
-    me.modifyRegion(function(sel){
+    me.modifyRegion((sel)=>{
       return sel.toUpperCase();
     });
   }
@@ -309,7 +309,7 @@ class ChottoBuffer {
     if( ! me.region_active_p()){
       return;
     }
-    me.modifyRegion(function(sel){
+    me.modifyRegion((sel)=>{
       return sel.toLowerCase();
     });
   }
@@ -317,7 +317,7 @@ class ChottoBuffer {
   kyRotateCase(){
     const me = this;
 
-    function capitalize(str){
+    const capitalize = (str)=>{
       return str.substring(0, 1).toUpperCase()
           + str.substring(1).toLowerCase()
       ;
@@ -565,7 +565,7 @@ class ChottoBuffer {
 
     var beg = me.region_beginning();
 
-    me.modifyRegion(function(sel){
+    me.modifyRegion((sel)=>{
       return "";
     });
 
@@ -587,7 +587,7 @@ class ChottoBuffer {
     var lines = text.split("\n");
     var len = lines.length;
 
-    return lines.map(function(line, i){
+    return lines.map((line, i)=>{
       if( i === lines.length - 1 && line === "" ){
         return "";
       }else{
@@ -599,7 +599,7 @@ class ChottoBuffer {
   unindentSpace(text){
     var lines = text.split("\n");
 
-    return lines.map(function(line){
+    return lines.map((line)=>{
       if(line.match(/^\t/)){
         line.match(/^(\t+)(.*)$/);
         var tabs = RegExp.$1;
@@ -608,7 +608,7 @@ class ChottoBuffer {
       }else{
         return line;
       }
-    }).map(function(line){
+    }).map((line)=>{
       return line.replace(/^ /, "");
     }).join("\n");
   }
