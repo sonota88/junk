@@ -11,7 +11,7 @@ const featureParams = {};
 features.dabbrev_expand = {
   extractTokens: (text, target)=>{
     const ts = [];
-    var tail = text;
+    let tail = text;
 
     while(tail.length > 0){
       if(/^([a-zA-Z0-9_]+)/.test(tail)){
@@ -34,13 +34,13 @@ features.dabbrev_expand = {
     const feat = features.dabbrev_expand;
 
     // 前方からトークンを抽出
-    var ts = feat.extractTokens(searchRangeBefore, curTok);
+    let ts = feat.extractTokens(searchRangeBefore, curTok);
 
     const cts = [];
-    var _tok;
+    let _tok;
 
     // 重複排除＋近い方から追加
-    for(var i=ts.length-1; i>=0; i--){
+    for(let i=ts.length-1; i>=0; i--){
       _tok = ts[i];
       if(cts.indexOf(_tok) >= 0){
         continue;
@@ -53,7 +53,7 @@ features.dabbrev_expand = {
 
     // 重複排除＋近い方から追加
     const len = ts.length;
-    for(i=0; i<len; i++){
+    for(let i=0; i<len; i++){
       _tok = ts[i];
       if(cts.indexOf(_tok) >= 0){
         continue;
@@ -74,8 +74,8 @@ features.dabbrev_expand = {
     const former = me.getText(0, me.getPoint());
 
     // 現在入力途中の単語の最初
-    var begOfCur;
-    for(var i=me.getPoint() - 1; i>=0; i--){
+    let begOfCur;
+    for(let i=me.getPoint() - 1; i>=0; i--){
       if( ! me.isTokenElem(former.charAt(i))){
         begOfCur = i + 1;
         break;
@@ -131,7 +131,7 @@ features.dabbrev_expand = {
       return;
     }
 
-    var next_i = fp.i + 1;
+    let next_i = fp.i + 1;
     if(next_i >= fp.cts.length){
       next_i = 0;
     }
