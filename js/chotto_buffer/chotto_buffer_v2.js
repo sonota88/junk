@@ -3,13 +3,6 @@ const puts = (...args)=>{
 };
 
 ////////////////////////////////
-// Utils
-
-const startsWith = (str, pat)=>{
-  return str.indexOf(pat) === 0;
-};
-
-////////////////////////////////
 // Features
 
 const features = {};
@@ -25,7 +18,7 @@ features.dabbrev_expand = {
         tail.match(/^([a-zA-Z0-9_]+)/);
         tok = RegExp.$1;
         tail = RegExp.rightContext;
-        if(startsWith(tok, target) && tok !== target){
+        if(tok.startsWith(target) && tok !== target){
           ts.push(tok);
         }
       }else{
