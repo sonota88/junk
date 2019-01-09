@@ -21,7 +21,8 @@ features.dabbrev_expand = {
     var tail = text;
     var tok;
     while(tail.length > 0){
-      if(tail.match(/^([a-zA-Z0-9_]+)/)){
+      if(/^([a-zA-Z0-9_]+)/.test(tail)){
+        tail.match(/^([a-zA-Z0-9_]+)/);
         tok = RegExp.$1;
         tail = RegExp.rightContext;
         if(startsWith(tok, target) && tok !== target){
