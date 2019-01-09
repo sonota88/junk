@@ -52,8 +52,7 @@ features.dabbrev_expand = {
     ts = feat.extractTokens(searchRangeAfter, curTok);
 
     // 重複排除＋近い方から追加
-    const len = ts.length;
-    for(let i=0; i<len; i++){
+    for(let i=0, len=ts.length; i<len; i++){
       _tok = ts[i];
       if(cts.indexOf(_tok) >= 0){
         continue;
