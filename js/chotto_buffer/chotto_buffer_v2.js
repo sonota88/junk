@@ -13,15 +13,15 @@ features.dabbrev_expand = {
     const ts = [];
     let tail = text;
 
-    while(tail.length > 0){
-      if(/^([a-zA-Z0-9_]+)/.test(tail)){
+    while (tail.length > 0) {
+      if (/^([a-zA-Z0-9_]+)/.test(tail)) {
         tail.match(/^([a-zA-Z0-9_]+)/);
         const tok = RegExp.$1;
         tail = RegExp.rightContext;
-        if(tok.startsWith(target) && tok !== target){
+        if (tok.startsWith(target) && tok !== target) {
           ts.push(tok);
         }
-      }else{
+      } else {
         tail = tail.substring(1);
       }
     }
@@ -40,9 +40,9 @@ features.dabbrev_expand = {
     let _tok;
 
     // 重複排除＋近い方から追加
-    for(let i=ts.length-1; i>=0; i--){
+    for (let i=ts.length-1; i>=0; i--) {
       _tok = ts[i];
-      if(cts.indexOf(_tok) >= 0){
+      if (cts.indexOf(_tok) >= 0) {
         continue;
       }
       cts.push(_tok);
@@ -52,15 +52,15 @@ features.dabbrev_expand = {
     ts = feat.extractTokens(searchRangeAfter, curTok);
 
     // 重複排除＋近い方から追加
-    for(let i=0, len=ts.length; i<len; i++){
+    for (let i=0, len=ts.length; i<len; i++) {
       _tok = ts[i];
-      if(cts.indexOf(_tok) >= 0){
+      if (cts.indexOf(_tok) >= 0) {
         continue;
       }
       cts.push(_tok);
     }
 
-    if(cts.length === 0){
+    if (cts.length === 0) {
       return [];
     }
 
@@ -74,17 +74,17 @@ features.dabbrev_expand = {
 
     // 現在入力途中の単語の最初
     let begOfCur;
-    for(let i=me.getPoint() - 1; i>=0; i--){
-      if( ! me.isTokenElem(former.charAt(i))){
+    for (let i=me.getPoint() - 1; i>=0; i--) {
+      if (! me.isTokenElem(former.charAt(i))) {
         begOfCur = i + 1;
         break;
       }
     }
-    if( ! begOfCur){
+    if (! begOfCur) {
       // テキスト先頭まで現在のトークン
       return null;
     }
-    if(begOfCur === me.getPoint()){
+    if (begOfCur === me.getPoint()) {
       // 入力途中のトークンなし
       return null;
     }
@@ -95,7 +95,7 @@ features.dabbrev_expand = {
   ,exec: (cb)=>{
     const feat = features.dabbrev_expand;
 
-    if( ! featureParams.dabbrev_expand){
+    if (! featureParams.dabbrev_expand) {
       featureParams.dabbrev_expand = {
         beg: null
         ,cts: [] // candidate tokens
@@ -106,7 +106,7 @@ features.dabbrev_expand = {
     const fp = featureParams.dabbrev_expand;
 
     const begOfCur = feat.getBeginningOfCurrentToken(cb);
-    if(begOfCur === null){
+    if (begOfCur === null) {
       return;
     }
 
@@ -118,7 +118,7 @@ features.dabbrev_expand = {
     // 直前のキー入力が S-SPC ではない
     //   → begOfCur, cts を作りなおす
     const changed = (cb.keyHistory[cb.keyHistory.length - 2] !== 'S-SPC');
-    if(changed){
+    if (changed) {
       fp.beg = begOfCur;
       const searchRangeBefore = cb.getText(0, begOfCur);
       const searchRangeAfter = cb.getText(cb.getPoint(), cb.$el.val().length);
@@ -126,12 +126,12 @@ features.dabbrev_expand = {
         searchRangeBefore, searchRangeAfter, curTok);
       fp.i = 0;
     }
-    if(fp.cts.length === 0){
+    if (fp.cts.length === 0) {
       return;
     }
 
     let next_i = fp.i + 1;
-    if(next_i >= fp.cts.length){
+    if (next_i >= fp.cts.length) {
       next_i = 0;
     }
     // 候補
@@ -346,24 +346,24 @@ class ChottoBuffer {
   dispatch(ev){
     puts(this, ev, ev.keyCode);
 
-    if(this.cmd.length > 0){ this.cmd += " "; }
-    if(ev.ctrlKey ){ this.cmd += "C-"; }
-    if(ev.altKey  ){ this.cmd += "M-"; }
-    if(ev.shiftKey){ this.cmd += "S-"; }
+    if (this.cmd.length > 0) { this.cmd += " "; }
+    if (ev.ctrlKey ) { this.cmd += "C-"; }
+    if (ev.altKey  ) { this.cmd += "M-"; }
+    if (ev.shiftKey) { this.cmd += "S-"; }
 
-    if(ev.keyCode in ChottoBuffer.keyCodeMap){
+    if (ev.keyCode in ChottoBuffer.keyCodeMap) {
       this.cmd += ChottoBuffer.keyCodeMap[ev.keyCode];
-    }else{
+    } else {
       this.cmd = "";
     }
 
     this.keyHistory.push(this.cmd === "" ? null : this.cmd);
-    if(this.keyHistory.length > 4){
+    if (this.keyHistory.length > 4) {
       this.keyHistory.shift();
     }
 
     var fn = this.keyBind[this.cmd];
-    if(fn){
+    if (fn) {
       ev.preventDefault();
       fn.apply(this, [this, ev]);
       this.cmd = "";
