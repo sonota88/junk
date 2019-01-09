@@ -10,13 +10,13 @@ const featureParams = {};
 
 features.dabbrev_expand = {
   extractTokens: (text, target)=>{
-    var ts = [];
+    const ts = [];
     var tail = text;
-    var tok;
+
     while(tail.length > 0){
       if(/^([a-zA-Z0-9_]+)/.test(tail)){
         tail.match(/^([a-zA-Z0-9_]+)/);
-        tok = RegExp.$1;
+        const tok = RegExp.$1;
         tail = RegExp.rightContext;
         if(tok.startsWith(target) && tok !== target){
           ts.push(tok);
@@ -36,7 +36,7 @@ features.dabbrev_expand = {
     // 前方からトークンを抽出
     var ts = feat.extractTokens(searchRangeBefore, curTok);
 
-    var cts = [];
+    const cts = [];
     var _tok;
 
     // 重複排除＋近い方から追加
@@ -52,7 +52,7 @@ features.dabbrev_expand = {
     ts = feat.extractTokens(searchRangeAfter, curTok);
 
     // 重複排除＋近い方から追加
-    var len = ts.length;
+    const len = ts.length;
     for(i=0; i<len; i++){
       _tok = ts[i];
       if(cts.indexOf(_tok) >= 0){
@@ -71,7 +71,7 @@ features.dabbrev_expand = {
   }
 
   ,getBeginningOfCurrentToken: (me)=>{
-    var former = me.getText(0, me.getPoint());
+    const former = me.getText(0, me.getPoint());
 
     // 現在入力途中の単語の最初
     var begOfCur;
@@ -104,25 +104,25 @@ features.dabbrev_expand = {
       };
     }
     // feature params
-    var fp = featureParams.dabbrev_expand;
+    const fp = featureParams.dabbrev_expand;
 
-    var begOfCur = feat.getBeginningOfCurrentToken(cb);
+    const begOfCur = feat.getBeginningOfCurrentToken(cb);
     if(begOfCur === null){
       return;
     }
 
     // 現在入力途中の単語
-    var curTok = cb.getText(begOfCur, cb.getPoint());
+    const curTok = cb.getText(begOfCur, cb.getPoint());
 
     // 直前のキー入力が S-SPC
     //   → begOfCur, cts をそのまま使う（キャッシュを使う）
     // 直前のキー入力が S-SPC ではない
     //   → begOfCur, cts を作りなおす
-    var changed = (cb.keyHistory[cb.keyHistory.length - 2] !== 'S-SPC');
+    const changed = (cb.keyHistory[cb.keyHistory.length - 2] !== 'S-SPC');
     if(changed){
       fp.beg = begOfCur;
-      var searchRangeBefore = cb.getText(0, begOfCur);
-      var searchRangeAfter = cb.getText(cb.getPoint(), cb.$el.val().length);
+      const searchRangeBefore = cb.getText(0, begOfCur);
+      const searchRangeAfter = cb.getText(cb.getPoint(), cb.$el.val().length);
       fp.cts = feat.prepareCandidateTokens(
         searchRangeBefore, searchRangeAfter, curTok);
       fp.i = 0;
@@ -136,7 +136,7 @@ features.dabbrev_expand = {
       next_i = 0;
     }
     // 候補
-    var cand = fp.cts[fp.i];
+    const cand = fp.cts[fp.i];
     cb.el.setSelectionRange(fp.beg, cb.getPoint());
     cb.modifyRegion((sel)=>{
       return cand;
