@@ -113,11 +113,15 @@ features.dabbrev_expand = {
     // 現在入力途中の単語
     const curTok = cb.getText(begOfCur, cb.getPoint());
 
+    const keyHist = cb.keyHistory.filter((cmd)=>{
+      return cmd != null;
+    });
+
     // 直前のキー入力が S-SPC
     //   → begOfCur, cts をそのまま使う（キャッシュを使う）
     // 直前のキー入力が S-SPC ではない
     //   → begOfCur, cts を作りなおす
-    const changed = (cb.keyHistory[cb.keyHistory.length - 2] !== 'S-SPC');
+    const changed = (keyHist[keyHist.length - 2] !== 'S-SPC');
     if (changed) {
       fp.beg = begOfCur;
       const searchRangeBefore = cb.getText(0, begOfCur);
