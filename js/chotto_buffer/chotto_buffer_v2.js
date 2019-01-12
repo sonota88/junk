@@ -145,6 +145,29 @@ features.dabbrev_expand = {
   }
 };
 
+////////////////////////////////
+
+const keyCodeMap = {
+  9: "TAB"
+  ,13: "RET"
+  ,32: "SPC"
+  ,38: "<up>"
+  ,40: "<down>"
+  ,65: "a"
+  ,66: "b"
+  ,68: "d"
+  ,69: "e"
+  ,70: "f"
+  ,71: "g"
+  ,72: "h"
+  ,75: "k"
+  ,76: "l"
+  ,80: "p"
+  ,87: "w"
+  ,88: "x"
+  ,89: "y"
+};
+
 class ChottoBuffer {
 
   constructor($el){
@@ -351,8 +374,8 @@ class ChottoBuffer {
     if (ev.altKey  ) { this.cmd += "M-"; }
     if (ev.shiftKey) { this.cmd += "S-"; }
 
-    if (ev.keyCode in ChottoBuffer.keyCodeMap) {
-      this.cmd += ChottoBuffer.keyCodeMap[ev.keyCode];
+    if (ev.keyCode in keyCodeMap) {
+      this.cmd += keyCodeMap[ev.keyCode];
     } else {
       this.cmd = "";
     }
@@ -613,24 +636,3 @@ class ChottoBuffer {
 
 
 }
-
-ChottoBuffer.keyCodeMap = {
-  9: "TAB"
-  ,13: "RET"
-  ,32: "SPC"
-  ,38: "<up>"
-  ,40: "<down>"
-  ,65: "a"
-  ,66: "b"
-  ,68: "d"
-  ,69: "e"
-  ,70: "f"
-  ,71: "g"
-  ,72: "h"
-  ,75: "k"
-  ,76: "l"
-  ,80: "p"
-  ,87: "w"
-  ,88: "x"
-  ,89: "y"
-};
