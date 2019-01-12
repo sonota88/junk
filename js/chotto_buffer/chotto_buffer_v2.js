@@ -207,23 +207,23 @@ class ChottoBuffer {
   }
 
   move_end_of_line(){
-    var to = this.getEndOfLine();
+    const to = this.getEndOfLine();
     this.goto_char(to);
   }
 
   backward_delete_char(){
-    var text = this.val();
-    var pos = this.getPoint();
-    var pre = text.substring(0, pos - 1);
-    var post = text.substring(pos);
+    const text = this.val();
+    const pos = this.getPoint();
+    const pre = text.substring(0, pos - 1);
+    const post = text.substring(pos);
     this.val(pre + post);
     this.goto_char(pos - 1);
   }
 
   kill_line(){
-    var from = this.getPoint();
-    var to = this.getEndOfLine();
-    var val = this.val();
+    const from = this.getPoint();
+    const to = this.getEndOfLine();
+    const val = this.val();
     // this.killRing.push(val.substring(from, to));
     this.val(
       val.substring(0, from) + val.substring(to)
@@ -235,7 +235,7 @@ class ChottoBuffer {
   // My commands
 
   kyMoveBeginningOfLine(){
-    var point = this.getPoint();
+    const point = this.getPoint();
     var to = null;
 
     if(this.isBeginningOfLine(point)){
@@ -248,8 +248,8 @@ class ChottoBuffer {
   }
 
   selectCurrentToken(){
-    var from = this.getBeginningOfToken();
-    var to = this.getEndOfToken();
+    const from = this.getBeginningOfToken();
+    const to = this.getEndOfToken();
     this.el.setSelectionRange(from, to);
   }
 
@@ -361,7 +361,7 @@ class ChottoBuffer {
       this.keyHistory.shift();
     }
 
-    var fn = this.keyBind[this.cmd];
+    const fn = this.keyBind[this.cmd];
     if (fn) {
       ev.preventDefault();
       fn.apply(this, [this, ev]);
@@ -378,24 +378,24 @@ class ChottoBuffer {
     if( ! this.region_active_p()){
       return;
     }
-    var posStart = this.el.selectionStart;
-    var posEnd = this.el.selectionEnd;
+    const posStart = this.el.selectionStart;
+    const posEnd = this.el.selectionEnd;
 
-    var orig = this.val();
-    var pre = orig.substr(0, posStart);
-    var sel = orig.substring(posStart, posEnd);
-    var post = orig.substr(posEnd);
-    var modified = fn(sel);
+    const orig = this.val();
+    const pre = orig.substr(0, posStart);
+    const sel = orig.substring(posStart, posEnd);
+    const post = orig.substr(posEnd);
+    const modified = fn(sel);
     this.val(pre + modified + post);
     this.el.setSelectionRange(posStart, posStart + modified.length);
     this.focus();
   }
 
   delete_char(){
-    var text = this.val();
-    var pos = this.getPoint();
-    var pre = text.substring(0, pos);
-    var post = text.substring(pos + 1);
+    const text = this.val();
+    const pos = this.getPoint();
+    const pre = text.substring(0, pos);
+    const post = text.substring(pos + 1);
     this.val(pre + post);
 
     this.goto_char(pos);
@@ -446,8 +446,8 @@ class ChottoBuffer {
    * @return 最も近い前方の改行の次、またはテキストの最初
    */
   getBeginningOfLine(){
-    var text = this.val();
-    var point = this.getPoint();
+    const text = this.val();
+    const point = this.getPoint();
     var to = null;
     for(var i=point-1; i>=0; i--){
       if(text.charAt(i) === "\n"){
@@ -465,8 +465,8 @@ class ChottoBuffer {
    * @return スペース・タブを無視した行頭の位置
    */
   getBeginningOfLineIgnoreSpace(){
-    var text = this.val();
-    var point = this.getPoint();
+    const text = this.val();
+    const point = this.getPoint();
     var to = null;
     var ch;
     for(var i=point; i<=text.length; i++){
@@ -490,8 +490,8 @@ class ChottoBuffer {
 
   // 改行またはテキストの最後
   getEndOfLine(){
-    var point = this.getPoint();
-    var text = this.val();
+    const point = this.getPoint();
+    const text = this.val();
     var to = null;
     for(var i=point; i<=text.length; i++){
       if(text.charAt(i) === "\n"){
@@ -510,8 +510,8 @@ class ChottoBuffer {
   }
 
   getBeginningOfToken(){
-    var text = this.val();
-    var point = this.getPoint();
+    const text = this.val();
+    const point = this.getPoint();
     var to = null;
     var ch;
     for(var i=point-1; i>=0; i--){
@@ -527,8 +527,8 @@ class ChottoBuffer {
   }
 
   getEndOfToken(){
-    var text = this.val();
-    var point = this.getPoint();
+    const text = this.val();
+    const point = this.getPoint();
     var to = null;
     for(var i=point; i<=text.length; i++){
       if( ! this.isTokenElem(text.charAt(i))){
@@ -543,7 +543,7 @@ class ChottoBuffer {
   }
 
   deleteRegion(){
-    var beg = this.region_beginning();
+    const beg = this.region_beginning();
 
     this.modifyRegion((sel)=>{
       return "";
@@ -553,17 +553,17 @@ class ChottoBuffer {
   }
 
   insert(str){
-    var text = this.val();
-    var pos = this.getPoint();
-    var pre = text.substring(0, pos);
-    var post = text.substring(pos);
+    const text = this.val();
+    const pos = this.getPoint();
+    const pre = text.substring(0, pos);
+    const post = text.substring(pos);
     this.val(pre + str + post);
 
     this.goto_char(pos + str.length);
   }
 
   indent(text, indentStr){
-    var lines = text.split("\n");
+    const lines = text.split("\n");
     var len = lines.length;
 
     return lines.map((line, i)=>{
@@ -576,13 +576,13 @@ class ChottoBuffer {
   }
 
   unindentSpace(text){
-    var lines = text.split("\n");
+    const lines = text.split("\n");
 
     return lines.map((line)=>{
       if(line.match(/^\t/)){
         line.match(/^(\t+)(.*)$/);
-        var tabs = RegExp.$1;
-        var rightContext = RegExp.$2;
+        const tabs = RegExp.$1;
+        const rightContext = RegExp.$2;
         return tabs.replace(/\t/g, "        ") + rightContext;
       }else{
         return line;
