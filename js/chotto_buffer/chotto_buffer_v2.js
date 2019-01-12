@@ -449,7 +449,7 @@ class ChottoBuffer {
     const text = this.val();
     const point = this.getPoint();
     var to = null;
-    for(var i=point-1; i>=0; i--){
+    for(let i=point-1; i>=0; i--){
       if(text.charAt(i) === "\n"){
         to = i + 1;
         break;
@@ -469,7 +469,7 @@ class ChottoBuffer {
     const point = this.getPoint();
     var to = null;
     var ch;
-    for(var i=point; i<=text.length; i++){
+    for(let i=point; i<=text.length; i++){
       ch = text.charAt(i);
       if(ch === "\n"){
         break;
@@ -493,7 +493,7 @@ class ChottoBuffer {
     const point = this.getPoint();
     const text = this.val();
     var to = null;
-    for(var i=point; i<=text.length; i++){
+    for(let i=point; i<=text.length; i++){
       if(text.charAt(i) === "\n"){
         to = i;
         break;
@@ -514,7 +514,7 @@ class ChottoBuffer {
     const point = this.getPoint();
     var to = null;
     var ch;
-    for(var i=point-1; i>=0; i--){
+    for(let i=point-1; i>=0; i--){
       if( ! this.isTokenElem(text.charAt(i))){
         to = i+1;
         break;
@@ -530,7 +530,7 @@ class ChottoBuffer {
     const text = this.val();
     const point = this.getPoint();
     var to = null;
-    for(var i=point; i<=text.length; i++){
+    for(let i=point; i<=text.length; i++){
       if( ! this.isTokenElem(text.charAt(i))){
         to = i;
         break;
