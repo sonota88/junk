@@ -633,6 +633,4 @@ class ChottoBuffer {
   region_end(){
     return Math.max(this.el.selectionStart, this.el.selectionEnd);
   }
-
-
 }
