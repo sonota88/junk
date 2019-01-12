@@ -236,7 +236,7 @@ class ChottoBuffer {
 
   kyMoveBeginningOfLine(){
     const point = this.getPoint();
-    var to = null;
+    let to = null;
 
     if(this.isBeginningOfLine(point)){
       to = this.getBeginningOfLineIgnoreSpace();
@@ -448,7 +448,7 @@ class ChottoBuffer {
   getBeginningOfLine(){
     const text = this.val();
     const point = this.getPoint();
-    var to = null;
+    let to = null;
     for(let i=point-1; i>=0; i--){
       if(text.charAt(i) === "\n"){
         to = i + 1;
@@ -467,8 +467,8 @@ class ChottoBuffer {
   getBeginningOfLineIgnoreSpace(){
     const text = this.val();
     const point = this.getPoint();
-    var to = null;
-    var ch;
+    let to = null;
+    let ch;
     for(let i=point; i<=text.length; i++){
       ch = text.charAt(i);
       if(ch === "\n"){
@@ -492,7 +492,7 @@ class ChottoBuffer {
   getEndOfLine(){
     const point = this.getPoint();
     const text = this.val();
-    var to = null;
+    let to = null;
     for(let i=point; i<=text.length; i++){
       if(text.charAt(i) === "\n"){
         to = i;
@@ -512,8 +512,8 @@ class ChottoBuffer {
   getBeginningOfToken(){
     const text = this.val();
     const point = this.getPoint();
-    var to = null;
-    var ch;
+    let to = null;
+    let ch;
     for(let i=point-1; i>=0; i--){
       if( ! this.isTokenElem(text.charAt(i))){
         to = i+1;
@@ -529,7 +529,7 @@ class ChottoBuffer {
   getEndOfToken(){
     const text = this.val();
     const point = this.getPoint();
-    var to = null;
+    let to = null;
     for(let i=point; i<=text.length; i++){
       if( ! this.isTokenElem(text.charAt(i))){
         to = i;
