@@ -134,9 +134,9 @@ features.dabbrev_expand = {
       return;
     }
 
-    let next_i = fp.i + 1;
-    if (next_i >= fp.cts.length) {
-      next_i = 0;
+    let nextIndex = fp.i + 1;
+    if (nextIndex >= fp.cts.length) {
+      nextIndex = 0;
     }
     // 候補
     const cand = fp.cts[fp.i];
@@ -145,7 +145,7 @@ features.dabbrev_expand = {
       return cand;
     });
     cb.goto_char(begOfCur + cand.length);
-    fp.i = next_i;
+    fp.i = nextIndex;
   }
 };
 
