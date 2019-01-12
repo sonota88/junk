@@ -140,7 +140,7 @@ features.dabbrev_expand = {
     }
     // 候補
     const cand = fp.cts[fp.i];
-    cb.el.setSelectionRange(fp.beg, cb.getPoint());
+    cb.setRegion(fp.beg, cb.getPoint());
     cb.modifyRegion((sel)=>{
       return cand;
     });
@@ -444,6 +444,10 @@ class ChottoBuffer {
 
   isBeginningOfLine(point){
     return (point === 0 || this.val().charAt(point - 1) === "\n");
+  }
+
+  setRegion(from, to){
+    this.el.setSelectionRange(from, to);
   }
 
   /**
