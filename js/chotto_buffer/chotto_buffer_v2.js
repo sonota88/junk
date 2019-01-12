@@ -564,7 +564,6 @@ class ChottoBuffer {
 
   indent(text, indentStr){
     const lines = text.split("\n");
-    var len = lines.length;
 
     return lines.map((line, i)=>{
       if( i === lines.length - 1 && line === "" ){
