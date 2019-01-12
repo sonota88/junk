@@ -170,9 +170,9 @@ const keyCodeMap = {
 
 class ChottoBuffer {
 
-  constructor($el){
-    this.$el = $el;
-    this.el = this.$el.get(0);
+  constructor(el){
+    this.$el = $(el);
+    this.el = el;
     
     this.cmd = "";
     // this.killRing = [];
