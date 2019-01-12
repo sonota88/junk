@@ -69,13 +69,13 @@ features.dabbrev_expand = {
     return cts;
   }
 
-  ,getBeginningOfCurrentToken: (me)=>{
-    const former = me.getText(0, me.getPoint());
+  ,getBeginningOfCurrentToken: (cb)=>{
+    const former = cb.getText(0, cb.getPoint());
 
     // 現在入力途中の単語の最初
     let begOfCur;
-    for (let i=me.getPoint() - 1; i>=0; i--) {
-      if (! me.isTokenElem(former.charAt(i))) {
+    for (let i=cb.getPoint() - 1; i>=0; i--) {
+      if (! cb.isTokenElem(former.charAt(i))) {
         begOfCur = i + 1;
         break;
       }
@@ -84,7 +84,7 @@ features.dabbrev_expand = {
       // テキスト先頭まで現在のトークン
       return null;
     }
-    if (begOfCur === me.getPoint()) {
+    if (begOfCur === cb.getPoint()) {
       // 入力途中のトークンなし
       return null;
     }
