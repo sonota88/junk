@@ -25,6 +25,25 @@ features.dabbrev_expand = {
         tail = tail.substring(1);
       }
     }
+
+    return ts;
+  }
+
+  ,extractTokens_v2: (text, target)=>{
+    const ts = [];
+    let tail = text;
+
+    while (tail.length > 0) {
+      const m = tail.match(/^(.*?)([a-zA-Z0-9_]+)/m)
+      if (m == null) { break; }
+
+      const tok = m[2];
+      if (tok.startsWith(target) && tok !== target) {
+        ts.push(tok);
+      }
+      tail = tail.substring(m[0].length);
+    }
+
     return ts;
   }
 
@@ -34,7 +53,7 @@ features.dabbrev_expand = {
     const feat = features.dabbrev_expand;
 
     // 前方からトークンを抽出
-    let ts = feat.extractTokens(searchRangeBefore, curTok);
+    let ts = feat.extractTokens_v2(searchRangeBefore, curTok);
 
     const cts = [];
     let _tok;
@@ -49,7 +68,7 @@ features.dabbrev_expand = {
     }
 
     // 後方からトークンを抽出
-    ts = feat.extractTokens(searchRangeAfter, curTok);
+    ts = feat.extractTokens_v2(searchRangeAfter, curTok);
 
     // 重複排除＋近い方から追加
     for (let i=0, len=ts.length; i<len; i++) {
