@@ -25,6 +25,25 @@ features.dabbrev_expand = {
         tail = tail.substring(1);
       }
     }
+
+    return ts;
+  }
+
+  ,extractTokens_v2: (text, target)=>{
+    const ts = [];
+    let tail = text;
+
+    while (tail.length > 0) {
+      const m = tail.match(/^(.*?)([a-zA-Z0-9_]+)/m)
+      if (m == null) { break; }
+
+      const tok = m[2];
+      if (tok.startsWith(target) && tok !== target) {
+        ts.push(tok);
+      }
+      tail = tail.substring(m[0].length);
+    }
+
     return ts;
   }
 
@@ -34,7 +53,7 @@ features.dabbrev_expand = {
     const feat = features.dabbrev_expand;
 
     // 前方からトークンを抽出
-    let ts = feat.extractTokens(searchRangeBefore, curTok);
+    let ts = feat.extractTokens_v2(searchRangeBefore, curTok);
 
     const cts = [];
     let _tok;
@@ -49,7 +68,7 @@ features.dabbrev_expand = {
     }
 
     // 後方からトークンを抽出
-    ts = feat.extractTokens(searchRangeAfter, curTok);
+    ts = feat.extractTokens_v2(searchRangeAfter, curTok);
 
     // 重複排除＋近い方から追加
     for (let i=0, len=ts.length; i<len; i++) {
@@ -69,13 +88,13 @@ features.dabbrev_expand = {
     return cts;
   }
 
-  ,getBeginningOfCurrentToken: (me)=>{
-    const former = me.getText(0, me.getPoint());
+  ,getBeginningOfCurrentToken: (cb)=>{
+    const former = cb.getText(0, cb.getPoint());
 
     // 現在入力途中の単語の最初
     let begOfCur;
-    for (let i=me.getPoint() - 1; i>=0; i--) {
-      if (! me.isTokenElem(former.charAt(i))) {
+    for (let i=cb.getPoint() - 1; i>=0; i--) {
+      if (! cb.isTokenElem(former.charAt(i))) {
         begOfCur = i + 1;
         break;
       }
@@ -84,7 +103,7 @@ features.dabbrev_expand = {
       // テキスト先頭まで現在のトークン
       return null;
     }
-    if (begOfCur === me.getPoint()) {
+    if (begOfCur === cb.getPoint()) {
       // 入力途中のトークンなし
       return null;
     }
@@ -113,11 +132,15 @@ features.dabbrev_expand = {
     // 現在入力途中の単語
     const curTok = cb.getText(begOfCur, cb.getPoint());
 
+    const keyHist = cb.keyHistory.filter((cmd)=>{
+      return cmd != null;
+    });
+
     // 直前のキー入力が S-SPC
     //   → begOfCur, cts をそのまま使う（キャッシュを使う）
     // 直前のキー入力が S-SPC ではない
     //   → begOfCur, cts を作りなおす
-    const changed = (cb.keyHistory[cb.keyHistory.length - 2] !== 'S-SPC');
+    const changed = (keyHist[keyHist.length - 2] !== 'S-SPC');
     if (changed) {
       fp.beg = begOfCur;
       const searchRangeBefore = cb.getText(0, begOfCur);
@@ -130,26 +153,49 @@ features.dabbrev_expand = {
       return;
     }
 
-    let next_i = fp.i + 1;
-    if (next_i >= fp.cts.length) {
-      next_i = 0;
+    let nextIndex = fp.i + 1;
+    if (nextIndex >= fp.cts.length) {
+      nextIndex = 0;
     }
     // 候補
     const cand = fp.cts[fp.i];
-    cb.el.setSelectionRange(fp.beg, cb.getPoint());
+    cb.setRegion(fp.beg, cb.getPoint());
     cb.modifyRegion((sel)=>{
       return cand;
     });
     cb.goto_char(begOfCur + cand.length);
-    fp.i = next_i;
+    fp.i = nextIndex;
   }
+};
+
+////////////////////////////////
+
+const keyCodeMap = {
+  9: "TAB"
+  ,13: "RET"
+  ,32: "SPC"
+  ,38: "<up>"
+  ,40: "<down>"
+  ,65: "a"
+  ,66: "b"
+  ,68: "d"
+  ,69: "e"
+  ,70: "f"
+  ,71: "g"
+  ,72: "h"
+  ,75: "k"
+  ,76: "l"
+  ,80: "p"
+  ,87: "w"
+  ,88: "x"
+  ,89: "y"
 };
 
 class ChottoBuffer {
 
-  constructor($el){
-    this.$el = $el;
-    this.el = this.$el.get(0);
+  constructor(el){
+    this.$el = $(el);
+    this.el = el;
     
     this.cmd = "";
     // this.killRing = [];
@@ -180,98 +226,80 @@ class ChottoBuffer {
   // Emacs commands
 
   keyboard_quit(){
-    const me = this;
-
-    me.cmd = "";
+    this.cmd = "";
   }
 
   move_end_of_line(){
-    const me = this;
-
-    var to = me.getEndOfLine();
-    me.goto_char(to);
+    const to = this.getEndOfLine();
+    this.goto_char(to);
   }
 
   backward_delete_char(){
-    const me = this;
-
-    var text = me.val();
-    var pos = me.getPoint();
-    var pre = text.substring(0, pos - 1);
-    var post = text.substring(pos);
-    me.val(pre + post);
-    me.goto_char(pos - 1);
+    const text = this.val();
+    const pos = this.getPoint();
+    const pre = text.substring(0, pos - 1);
+    const post = text.substring(pos);
+    this.val(pre + post);
+    this.goto_char(pos - 1);
   }
 
   kill_line(){
-    const me = this;
-
-    var from = me.getPoint();
-    var to = me.getEndOfLine();
-    var val = me.val();
-    // me.killRing.push(val.substring(from, to));
-    me.val(
+    const from = this.getPoint();
+    const to = this.getEndOfLine();
+    const val = this.val();
+    // this.killRing.push(val.substring(from, to));
+    this.val(
       val.substring(0, from) + val.substring(to)
     );
-    me.goto_char(from);
+    this.goto_char(from);
   }
 
   // ----------------
   // My commands
 
   kyMoveBeginningOfLine(){
-    const me = this;
+    const point = this.getPoint();
+    let to = null;
 
-    var point = me.getPoint();
-    var to = null;
-
-    if(me.isBeginningOfLine(point)){
-      to = me.getBeginningOfLineIgnoreSpace();
+    if(this.isBeginningOfLine(point)){
+      to = this.getBeginningOfLineIgnoreSpace();
     }else{
-      to = me.getBeginningOfLine();
+      to = this.getBeginningOfLine();
     }
 
-    me.goto_char(to);
+    this.goto_char(to);
   }
 
   selectCurrentToken(){
-    const me = this;
-
-    var from = me.getBeginningOfToken();
-    var to = me.getEndOfToken();
-    me.el.setSelectionRange(from, to);
+    const from = this.getBeginningOfToken();
+    const to = this.getEndOfToken();
+    this.el.setSelectionRange(from, to);
   }
 
   kyDelete(){
-    const me = this;
-
-    if(me.region_active_p()){
-      me.deleteRegion();
+    if(this.region_active_p()){
+      this.deleteRegion();
     }else{
-      me.delete_char();
+      this.delete_char();
     }
   }
 
   kySpace(){
-    const me = this;
-
-    if(me.region_active_p()){
-      me.modifyRegion((sel)=>{
-        return me.indent(sel, " ");
+    if(this.region_active_p()){
+      this.modifyRegion((sel)=>{
+        return this.indent(sel, " ");
       });
     }else{
-      me.insert(" ");
+      this.insert(" ");
     }
   }
 
   unindentRegionBySpace(){
-    const me = this;
-
-    if( ! me.region_active_p()){
+    if( ! this.region_active_p()){
       return;
     }
-    me.modifyRegion((sel)=>{
-      return me.unindentSpace(sel);
+    this.modifyRegion((sel)=>{
+      return this.unindentSpace(sel);
     });
   }
 
@@ -284,40 +312,34 @@ class ChottoBuffer {
   }
 
   upcaseRegion(){
-    const me = this;
-
-    if( ! me.region_active_p()){
+    if( ! this.region_active_p()){
       return;
     }
-    me.modifyRegion((sel)=>{
+    this.modifyRegion((sel)=>{
       return sel.toUpperCase();
     });
   }
 
   downcaseRegion(){
-    const me = this;
-
-    if( ! me.region_active_p()){
+    if( ! this.region_active_p()){
       return;
     }
-    me.modifyRegion((sel)=>{
+    this.modifyRegion((sel)=>{
       return sel.toLowerCase();
     });
   }
 
   kyRotateCase(){
-    const me = this;
-
     const capitalize = (str)=>{
       return str.substring(0, 1).toUpperCase()
           + str.substring(1).toLowerCase()
       ;
     }
 
-    if( ! me.region_active_p()){
-      this.selectCurrentToken(me);
+    if( ! this.region_active_p()){
+      this.selectCurrentToken(this);
     }
-    me.modifyRegion((sel)=>{
+    this.modifyRegion((sel)=>{
       if(this.kyRotateCase_orig.toLowerCase() !== sel.toLowerCase()){
         this.kyRotateCase_orig = sel;
         this.kyRotateCase_status = "original";
@@ -351,8 +373,8 @@ class ChottoBuffer {
     if (ev.altKey  ) { this.cmd += "M-"; }
     if (ev.shiftKey) { this.cmd += "S-"; }
 
-    if (ev.keyCode in ChottoBuffer.keyCodeMap) {
-      this.cmd += ChottoBuffer.keyCodeMap[ev.keyCode];
+    if (ev.keyCode in keyCodeMap) {
+      this.cmd += keyCodeMap[ev.keyCode];
     } else {
       this.cmd = "";
     }
@@ -362,7 +384,7 @@ class ChottoBuffer {
       this.keyHistory.shift();
     }
 
-    var fn = this.keyBind[this.cmd];
+    const fn = this.keyBind[this.cmd];
     if (fn) {
       ev.preventDefault();
       fn.apply(this, [this, ev]);
@@ -376,32 +398,30 @@ class ChottoBuffer {
    * 選択範囲を加工する
    */
   modifyRegion(fn){
-    var me = this;
-    if( ! me.region_active_p()){
+    if( ! this.region_active_p()){
       return;
     }
-    var posStart = me.el.selectionStart;
-    var posEnd = me.el.selectionEnd;
+    const posStart = this.el.selectionStart;
+    const posEnd = this.el.selectionEnd;
 
-    var orig = me.val();
-    var pre = orig.substr(0, posStart);
-    var sel = orig.substring(posStart, posEnd);
-    var post = orig.substr(posEnd);
-    var modified = fn(sel);
-    me.val(pre + modified + post);
-    me.el.setSelectionRange(posStart, posStart + modified.length);
-    me.focus();
+    const orig = this.val();
+    const pre = orig.substr(0, posStart);
+    const sel = orig.substring(posStart, posEnd);
+    const post = orig.substr(posEnd);
+    const modified = fn(sel);
+    this.val(pre + modified + post);
+    this.el.setSelectionRange(posStart, posStart + modified.length);
+    this.focus();
   }
 
   delete_char(){
-    var me = this;
-    var text = me.val();
-    var pos = me.getPoint();
-    var pre = text.substring(0, pos);
-    var post = text.substring(pos + 1);
-    me.val(pre + post);
+    const text = this.val();
+    const pos = this.getPoint();
+    const pre = text.substring(0, pos);
+    const post = text.substring(pos + 1);
+    this.val(pre + post);
 
-    me.goto_char(pos);
+    this.goto_char(pos);
   }
 
   goto_char(point){
@@ -445,15 +465,18 @@ class ChottoBuffer {
     return (point === 0 || this.val().charAt(point - 1) === "\n");
   }
 
+  setRegion(from, to){
+    this.el.setSelectionRange(from, to);
+  }
+
   /**
    * @return 最も近い前方の改行の次、またはテキストの最初
    */
   getBeginningOfLine(){
-    var me = this;
-    var text = me.val();
-    var point = me.getPoint();
-    var to = null;
-    for(var i=point-1; i>=0; i--){
+    const text = this.val();
+    const point = this.getPoint();
+    let to = null;
+    for(let i=point-1; i>=0; i--){
       if(text.charAt(i) === "\n"){
         to = i + 1;
         break;
@@ -469,12 +492,11 @@ class ChottoBuffer {
    * @return スペース・タブを無視した行頭の位置
    */
   getBeginningOfLineIgnoreSpace(){
-    var me = this;
-    var text = me.val();
-    var point = me.getPoint();
-    var to = null;
-    var ch;
-    for(var i=point; i<=text.length; i++){
+    const text = this.val();
+    const point = this.getPoint();
+    let to = null;
+    let ch;
+    for(let i=point; i<=text.length; i++){
       ch = text.charAt(i);
       if(ch === "\n"){
         break;
@@ -495,11 +517,10 @@ class ChottoBuffer {
 
   // 改行またはテキストの最後
   getEndOfLine(){
-    var me = this;
-    var point = me.getPoint();
-    var text = me.val();
-    var to = null;
-    for(var i=point; i<=text.length; i++){
+    const point = this.getPoint();
+    const text = this.val();
+    let to = null;
+    for(let i=point; i<=text.length; i++){
       if(text.charAt(i) === "\n"){
         to = i;
         break;
@@ -516,13 +537,12 @@ class ChottoBuffer {
   }
 
   getBeginningOfToken(){
-    var me = this;
-    var text = me.val();
-    var point = me.getPoint();
-    var to = null;
-    var ch;
-    for(var i=point-1; i>=0; i--){
-      if( ! me.isTokenElem(text.charAt(i))){
+    const text = this.val();
+    const point = this.getPoint();
+    let to = null;
+    let ch;
+    for(let i=point-1; i>=0; i--){
+      if( ! this.isTokenElem(text.charAt(i))){
         to = i+1;
         break;
       }
@@ -534,12 +554,11 @@ class ChottoBuffer {
   }
 
   getEndOfToken(){
-    var me = this;
-    var text = me.val();
-    var point = me.getPoint();
-    var to = null;
-    for(var i=point; i<=text.length; i++){
-      if( ! me.isTokenElem(text.charAt(i))){
+    const text = this.val();
+    const point = this.getPoint();
+    let to = null;
+    for(let i=point; i<=text.length; i++){
+      if( ! this.isTokenElem(text.charAt(i))){
         to = i;
         break;
       }
@@ -551,31 +570,27 @@ class ChottoBuffer {
   }
 
   deleteRegion(){
-    var me = this;
+    const beg = this.region_beginning();
 
-    var beg = me.region_beginning();
-
-    me.modifyRegion((sel)=>{
+    this.modifyRegion((sel)=>{
       return "";
     });
 
-    me.goto_char(beg);
+    this.goto_char(beg);
   }
 
   insert(str){
-    var me = this;
-    var text = me.val();
-    var pos = me.getPoint();
-    var pre = text.substring(0, pos);
-    var post = text.substring(pos);
-    me.val(pre + str + post);
+    const text = this.val();
+    const pos = this.getPoint();
+    const pre = text.substring(0, pos);
+    const post = text.substring(pos);
+    this.val(pre + str + post);
 
-    me.goto_char(pos + str.length);
+    this.goto_char(pos + str.length);
   }
 
   indent(text, indentStr){
-    var lines = text.split("\n");
-    var len = lines.length;
+    const lines = text.split("\n");
 
     return lines.map((line, i)=>{
       if( i === lines.length - 1 && line === "" ){
@@ -587,13 +602,13 @@ class ChottoBuffer {
   }
 
   unindentSpace(text){
-    var lines = text.split("\n");
+    const lines = text.split("\n");
 
     return lines.map((line)=>{
       if(line.match(/^\t/)){
         line.match(/^(\t+)(.*)$/);
-        var tabs = RegExp.$1;
-        var rightContext = RegExp.$2;
+        const tabs = RegExp.$1;
+        const rightContext = RegExp.$2;
         return tabs.replace(/\t/g, "        ") + rightContext;
       }else{
         return line;
@@ -610,27 +625,4 @@ class ChottoBuffer {
   region_end(){
     return Math.max(this.el.selectionStart, this.el.selectionEnd);
   }
-
-
 }
-
-ChottoBuffer.keyCodeMap = {
-  9: "TAB"
-  ,13: "RET"
-  ,32: "SPC"
-  ,38: "<up>"
-  ,40: "<down>"
-  ,65: "a"
-  ,66: "b"
-  ,68: "d"
-  ,69: "e"
-  ,70: "f"
-  ,71: "g"
-  ,72: "h"
-  ,75: "k"
-  ,76: "l"
-  ,80: "p"
-  ,87: "w"
-  ,88: "x"
-  ,89: "y"
-};
