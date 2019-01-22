@@ -46,6 +46,13 @@
              nil
              '(("(\\|)\\|\\[\\|\\]\\|{\\|}" . 'my-paren-face)))))
 
+(add-hook 'js-mode-hook
+          (lambda ()
+            (font-lock-add-keywords
+             nil
+             '(("(\\|)\\|\\[\\|\\]\\|{\\|}" . 'my-paren-face)))))
+
+
 ;; --------------------------------
 
 (defun delete-char-or-region (dir)
