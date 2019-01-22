@@ -115,6 +115,17 @@
 
 (setq js-indent-level 2)
 
+(require 'compile)
+
+(add-hook
+ 'js-mode-hook
+ (lambda ()
+   ;; Webpack
+   (add-to-list
+    'compilation-error-regexp-alist ; need to (require 'compile)
+    '("^\\(.+?\\): line \\([0-9]+\\), col \\([0-9]+\\), .+$"
+      1 2 3))))
+
 
 ;; ----------------
 
