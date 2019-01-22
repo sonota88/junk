@@ -127,6 +127,16 @@
       1 2 3))))
 
 
+;; --------------------------------
+;; Compile
+
+(defface my-compilation-message-face
+  '((t (:background "#000")))
+  "my compilation message face")
+
+(setq compilation-message-face 'my-compilation-message-face)
+
+
 ;; ----------------
 
 (defun eval-by-ruby ()
