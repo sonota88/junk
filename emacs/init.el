@@ -46,6 +46,13 @@
              nil
              '(("(\\|)\\|\\[\\|\\]\\|{\\|}" . 'my-paren-face)))))
 
+(add-hook 'js-mode-hook
+          (lambda ()
+            (font-lock-add-keywords
+             nil
+             '(("(\\|)\\|\\[\\|\\]\\|{\\|}" . 'my-paren-face)))))
+
+
 ;; --------------------------------
 
 (defun delete-char-or-region (dir)
@@ -107,6 +114,27 @@
 ;; JavaScript
 
 (setq js-indent-level 2)
+
+(require 'compile)
+
+(add-hook
+ 'js-mode-hook
+ (lambda ()
+   ;; Webpack
+   (add-to-list
+    'compilation-error-regexp-alist ; need to (require 'compile)
+    '("^\\(.+?\\): line \\([0-9]+\\), col \\([0-9]+\\), .+$"
+      1 2 3))))
+
+
+;; --------------------------------
+;; Compile
+
+(defface my-compilation-message-face
+  '((t (:background "#000")))
+  "my compilation message face")
+
+(setq compilation-message-face 'my-compilation-message-face)
 
 
 ;; ----------------
