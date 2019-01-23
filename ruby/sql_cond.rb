@@ -1,7 +1,8 @@
 def indent(s)
   lines = s.split("\n", -1)
-  lines.map{|line| "    " + line }
-  .join("\n")
+  lines
+    .map{ |line| "    " + line }
+    .join("\n")
 end
 
 def _render_cond(cond, depth)
@@ -15,20 +16,19 @@ def _render_cond(cond, depth)
 
   when Array
     op, *rest = cond
-
     op_indent = "    "
-
     sql += "(\n"
+
     case op
     when :and
       sql += _render_cond(rest[0], depth + 1)
-      rest[1..-1].each{|_cond|
+      rest[1..-1].each{ |_cond|
         sql += "\n" + op_indent + "AND"
         sql += "\n" + _render_cond(_cond, depth + 1)
       }
     when :or
       sql += _render_cond(rest[0], depth + 1)
-      rest[1..-1].each{|_cond|
+      rest[1..-1].each{ |_cond|
         sql += "\n" + op_indent + "OR"
         sql += "\n" + _render_cond(_cond, depth + 1)
       }
@@ -39,7 +39,6 @@ def _render_cond(cond, depth)
       raise "invalid operator (#{cond.inspect})"
     end
     sql += "\n)"
-
   else
     raise
   end
