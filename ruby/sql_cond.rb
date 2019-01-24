@@ -1,12 +1,12 @@
 def indent(s)
-  lines = s.split("\n", -1)
-  lines
+  s
+    .split("\n", -1)
     .map{ |line| "    " + line }
     .join("\n")
 end
 
 def _render_cond(cond, depth)
-  $stderr.puts "(#{ cond.inspect })"
+  # $stderr.puts "(#{ cond.inspect })"
 
   sql = ""
 
@@ -22,16 +22,16 @@ def _render_cond(cond, depth)
     case op
     when :and
       sql += _render_cond(rest[0], depth + 1)
-      rest[1..-1].each{ |_cond|
+      rest[1..-1].each do |_cond|
         sql += "\n" + op_indent + "AND"
         sql += "\n" + _render_cond(_cond, depth + 1)
-      }
+      end
     when :or
       sql += _render_cond(rest[0], depth + 1)
-      rest[1..-1].each{ |_cond|
+      rest[1..-1].each do |_cond|
         sql += "\n" + op_indent + "OR"
         sql += "\n" + _render_cond(_cond, depth + 1)
-      }
+      end
     when :not
       sql += "\n" + op_indent + "NOT"
       sql += "\n" + _render_cond(rest[0], depth + 1)
@@ -57,7 +57,7 @@ def render_cond(cond)
   sql
 end
 
-cond =
+sample_cond =
   [:or,
     [:and,
       [:not,
@@ -78,5 +78,5 @@ puts <<EOB
 select a ,b
 from c
 where 1=1
-  #{ render_cond(cond) }
+  #{ render_cond(sample_cond) }
 EOB
