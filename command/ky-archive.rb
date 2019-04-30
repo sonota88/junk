@@ -1,3 +1,22 @@
+require 'shellwords'
+
+def _system(*args)
+  cmd =
+    if args.is_a?(Array)
+      Shellwords.shelljoin(args)
+    else
+      args
+    end
+
+  $stderr.puts "  | command=#{cmd}"
+  out = `#{cmd}`
+  status = $? # Process::Status
+  if not status.success?
+    raise "abnormal exit status (status=#{status.to_i} pid=#{status.pid})"
+  end
+  out
+end
+
 class Archive
   def initialize(path)
     @path = path
@@ -21,7 +40,7 @@ end
 
 class Tar < Archive
   def list_content
-    system %Q!tar -t -f "#{@path}"!
+    print _system("tar", "-t", "-f", @path)
   end
 end
 
@@ -34,7 +53,7 @@ class Gempkg < Tar
     tmp_tar = "#{tmp_dir}/#{bname}.tar"
     system %Q!mkdir "#{tmp_dir}"!
     system %Q!mkdir "#{tmp_dir}/data"!
-    system %Q!cp "#{@path}" "#{tmp_tar}"!
+    _system("cp", @path, tmp_tar)
 
     Dir.chdir(tmp_dir)
     system %Q!tar -x -f "#{tmp_tar}"!
@@ -43,7 +62,7 @@ class Gempkg < Tar
     # system %Q!ls -lRF "#{tmp_dir}/data"!
     system %Q!tree "#{tmp_dir}/data"!
 
-    system %Q!rm -rf "#{tmp_dir}"!
+    _system("rm", "-rf", tmp_dir)
   end
 end
 
