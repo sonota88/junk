@@ -38,6 +38,8 @@ class Archive
     case ext
     when ".gem"
       Gempkg.new(path)
+    when ".tar.xz"
+      TarXz.new(path)
     else
       raise "unsupported archive type (#{ext})"
     end
@@ -76,12 +78,29 @@ class Gempkg < Tar
   end
 end
 
+class TarXz < Tar
+  def expand
+    cmd = %(xz)
+    cmd << %( --decompress)
+    cmd << %( --stdout)
+    cmd << %( "#{@path}")
+    cmd << %( | tar xvf -)
+
+    # または tar xJf {file}
+
+    system(cmd)
+  end
+end
+
 if $0 == __FILE__
   if ARGV[0] == "list"
     arcfile = ARGV[1]
     arc = Archive.of(arcfile)
     arc.list_content
   else
-    raise "not yet impl"
+    arcfile = ARGV[0]
+    ext = _extname(arcfile)
+    arc = Archive.of(arcfile)
+    arc.expand
   end
 end
