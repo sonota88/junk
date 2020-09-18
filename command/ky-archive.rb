@@ -1,3 +1,5 @@
+# coding: utf-8
+
 require 'shellwords'
 
 def _system(*args)
@@ -37,7 +39,7 @@ class Archive
     when ".gem"
       Gempkg.new(path)
     else
-      raise "unsupported archive type"
+      raise "unsupported archive type (#{ext})"
     end
   end
 
@@ -48,7 +50,7 @@ end
 
 class Tar < Archive
   def list_content
-    print _system("tar", "-t", "-f", @path)
+    system("tar", "--list", "--file=" + @path)
   end
 end
 
