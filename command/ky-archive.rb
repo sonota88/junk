@@ -17,13 +17,21 @@ def _system(*args)
   out
 end
 
+def _extname(path)
+  if /.+(\.tar\.(.+?))$/ =~ path
+    $1
+  else
+    File.extname(path)
+  end
+end
+
 class Archive
   def initialize(path)
     @path = path
   end
 
   def self.of(path)
-    ext = File.extname(path)
+    ext = _extname(path)
 
     case ext
     when ".gem"
