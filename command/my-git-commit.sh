@@ -13,6 +13,7 @@ changed_files() {
 
   local size_limit=4
 
+  local files=
   if [ $size -gt $size_limit ]; then
     files="$(
       echo "$all_files" | head -${size_limit}
@@ -32,7 +33,7 @@ changed_files() {
 tmpfile=/tmp/my_git_commit_template.txt
 
 {
-  echo "__wip $(date "+%F %T") ($(changed_files))"
+  echo "__wip $(date "+%F %T") ($(changed_files))."
   printf "\n"
 } > $tmpfile
 
