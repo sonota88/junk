@@ -82,6 +82,9 @@ __setup__:
 
   PROJECT_DIR="$(_print_project_dir)"
 
+  set -o errexit
+  set -o nounset
+
 sample:
   # desc: Sample task
   # cd ${PROJECT_DIR}/foo/bar
