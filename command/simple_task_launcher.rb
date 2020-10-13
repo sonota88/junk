@@ -128,6 +128,17 @@ when "--print-sample"
 when "--help"
   print_help
 else
+  if ARGV.empty?
+    $stderr.puts <<~MSG
+      Task name is required.
+      Run as following:
+        simple_task_launcher.rb {task_name}
+      or
+        simple_task_launcher.rb --help
+    MSG
+    exit 1
+  end
+
   tasks = read_tasks()
   exec_task(tasks, ARGV[0])
 end
