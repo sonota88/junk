@@ -82,10 +82,10 @@ __setup__:
 
   PROJECT_DIR="$(_print_project_dir)"
 
-build:
-  # desc: Build app
-  cd ${PROJECT_DIR}/foo/bar
-  build_command
+sample:
+  # desc: Sample task
+  # cd ${PROJECT_DIR}/foo/bar
+  echo "Hi"
   EOB
 end
 
