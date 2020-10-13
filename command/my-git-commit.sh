@@ -32,7 +32,12 @@ changed_files() {
 tmpfile=/tmp/my_git_commit_template.txt
 
 {
-  echo "__wip $(date "+%F %T") ($(changed_files))"
+  cat <<..MSG
+__wip
+ $(date "+%F %T")
+ ($(changed_files))
+..MSG
+
   printf "\n"
 } > $tmpfile
 
