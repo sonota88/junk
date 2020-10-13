@@ -102,6 +102,17 @@ def print_help
 end
 
 def read_tasks
+  unless File.exist?(DEFAULT_TASK_FILE)
+    $stderr.puts <<~MSG
+      Task file (#{DEFAULT_TASK_FILE}) not found.
+      Run the following command:
+        simple_task_launcher.rb --print-sample > tasks.txt
+      or
+        simple_task_launcher.rb --help
+    MSG
+    exit 1
+  end
+
   src = File.read(DEFAULT_TASK_FILE)
   parse(src)
 end
