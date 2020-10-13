@@ -1,5 +1,7 @@
 #!/usr/bin/env ruby
 
+DEFAULT_TASK_FILE = "tasks.txt"
+
 class Task
   attr_accessor :name, :lines, :desc
 
@@ -100,7 +102,7 @@ def print_help
 end
 
 def read_tasks
-  src = File.read("tasks.txt")
+  src = File.read(DEFAULT_TASK_FILE)
   parse(src)
 end
 
