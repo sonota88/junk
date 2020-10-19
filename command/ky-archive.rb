@@ -1,4 +1,5 @@
 require 'shellwords'
+require 'fileutils'
 
 def _system(*args)
   cmd =
@@ -20,6 +21,7 @@ end
 class Archive
   def initialize(path)
     @path = path
+    @fullpath = File.expand_path(@path)
   end
 
   def self.of(path)
@@ -41,8 +43,31 @@ class Archive
 end
 
 class Zip < Archive
+  def initialize(path)
+    super
+    @ext = ".zip"
+  end
+
   def list_content
     print _system("unzip", "-l", @path)
+  end
+
+  def extract
+    temp_dir = "ky_archive_temp_" + Time.now.strftime("%Y%m%d_%H%M%S")
+    dir = File.basename(@path, @ext).gsub(" ", "_")
+
+    begin
+      Dir.mkdir temp_dir
+      Dir.chdir(temp_dir){ |path|
+        print _system("unzip", @fullpath)
+      }
+
+      FileUtils.mv temp_dir, dir
+    rescue
+      if Dir.exist?(temp_dir)
+        FileUtils.rm_rf temp_dir
+      end
+    end
   end
 end
 
@@ -80,6 +105,12 @@ if $0 == __FILE__
     arc = Archive.of(arcfile)
     arc.list_content
   else
-    raise "not yet impl"
+    path = ARGV[0]
+    if File.directory?(path)
+      raise "TODO archive"
+    else
+      arc = Archive.of(path)
+      arc.extract
+    end
   end
 end
