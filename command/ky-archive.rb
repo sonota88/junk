@@ -28,6 +28,8 @@ class Archive
     case ext
     when ".gem"
       Gempkg.new(path)
+    when ".zip"
+      Zip.new(path)
     else
       raise "unsupported archive type"
     end
@@ -35,6 +37,12 @@ class Archive
 
   def list_content
     raise "do not call"
+  end
+end
+
+class Zip < Archive
+  def list_content
+    print _system("unzip", "-l", @path)
   end
 end
 
