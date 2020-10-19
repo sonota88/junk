@@ -51,7 +51,7 @@ def list_tasks(tasks)
   }
 end
 
-def exec_task(tasks, task_name)
+def exec_task(tasks, task_name, args)
   task_setup = tasks.find{ |t| t.name == "__setup__"}
   task = tasks.find{ |t| t.name == task_name}
 
@@ -66,7 +66,7 @@ def exec_task(tasks, task_name)
   }
 
   # system "cat", tmp_sh
-  system "bash", tmp_sh
+  system "bash", tmp_sh, *args
   exit $?.to_i
 end
 
@@ -143,5 +143,6 @@ else
   end
 
   tasks = read_tasks()
-  exec_task(tasks, ARGV[0])
+  task_name = ARGV.shift
+  exec_task(tasks, task_name, ARGV)
 end
