@@ -3,6 +3,10 @@
 set -o errexit
 
 changed_files() {
+  # egrep -v '^ '
+  #   ステージング領域にあるものだけに限定
+  # awk '{ print $NF }'
+  #   最後のフィールドを抽出
   local all_files="$(
     git status --porcelain --untracked-file=no \
       | egrep -v '^ ' \
