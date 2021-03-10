@@ -55,6 +55,14 @@ def exec_task(tasks, task_name, args)
   task_setup = tasks.find{ |t| t.name == "__setup__"}
   task = tasks.find{ |t| t.name == task_name}
 
+  if task.nil?
+    $stderr.puts "no such task: #{task_name}"
+    $stderr.puts ""
+    $stderr.puts "available tasks:"
+    list_tasks(tasks)
+    exit 1
+  end
+
   tmp_sh = "./z_tmp.sh"
   open(tmp_sh, "wb"){ |f|
     task_setup.lines.each{ |line|
