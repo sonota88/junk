@@ -22,6 +22,24 @@ def _system(*args)
   out
 end
 
+def get_root_dir(dir)
+  list = []
+  Dir.open(dir).each do |path|
+    next if path == "."
+    next if path == ".."
+    list << path
+  end
+  puts list
+
+  if list.size == 1
+    if FileTest.directory?(File.join(dir, list[0]))
+      return list.first
+    end
+  end
+
+  nil
+end
+
 class Archive
   def initialize(path)
     @path = path
