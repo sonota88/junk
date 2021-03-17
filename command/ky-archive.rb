@@ -1,6 +1,10 @@
 require 'shellwords'
 require 'fileutils'
 
+def p_kv(k, v)
+  puts "#{k} (#{v.inspect})"
+end
+
 def _system(*args)
   cmd =
     if args.is_a?(Array)
