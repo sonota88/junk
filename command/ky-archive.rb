@@ -97,6 +97,42 @@ class Tar < Archive
   def list_content
     print _system("tar", "-t", "-f", @path)
   end
+
+  def extract
+    temp_dir = "ky_archive_temp_" + Time.now.strftime("%Y%m%d_%H%M%S")
+    dir = File.basename(@path, @ext).gsub(" ", "_")
+
+    begin
+      Dir.mkdir temp_dir
+      Dir.chdir(temp_dir){ |path|
+        print _system("tar", "-x", "-f", @fullpath)
+      }
+
+      root_dir = get_root_dir(temp_dir)
+      p_kv "root_dir", root_dir
+
+      src_dir =
+        if root_dir
+          if Dir.exist?(root_dir)
+            $stderr.puts "directory #{root_dir} already exists"
+            exit 1
+          else
+            File.join(temp_dir, root_dir)
+          end
+        else
+          temp_dir
+        end
+
+      p_kv("src_dir", src_dir)
+      p_kv("dest_dir", dir)
+
+      FileUtils.mv src_dir, dir
+    ensure
+      if Dir.exist?(temp_dir)
+        FileUtils.rm_rf temp_dir
+      end
+    end
+  end
 end
 
 class Gempkg < Tar
