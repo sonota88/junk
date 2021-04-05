@@ -1,5 +1,3 @@
-# coding: utf-8
-
 =begin
 class Method (Ruby 2.7.0 リファレンスマニュアル)
 https://docs.ruby-lang.org/ja/latest/class/Method.html

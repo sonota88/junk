@@ -1,5 +1,3 @@
-# coding: utf-8
-
 # Ruby: systemで終了ステータスをチェックして例外を投げる - memo88
 # https://memo88.hatenablog.com/entry/20150818/1439849007
 
@@ -22,7 +20,7 @@ def _system(cmd)
   out
 end
 
-require 'shellwords'
+require "shellwords"
 
 def _system(args)
   cmd = Shellwords.shelljoin(args)

@@ -47,7 +47,7 @@ def _render_cond(cond, depth)
 end
 
 def render_cond(cond)
-  if cond.nil? or cond.empty?
+  if cond.nil? || cond.empty?
     return ""
   end
 
