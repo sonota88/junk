@@ -48,7 +48,7 @@ class Archive
 
   def self.of(path)
     ext =
-      if m = path.match(/\.tar\.(xz)$/)
+      if m = path.match(/\.tar\.(gz|xz)$/)
         m[0]
       else
         File.extname(path)
@@ -57,6 +57,8 @@ class Archive
     case ext
     when ".gem"
       Gempkg.new(path)
+    when ".tar.gz"
+      TarGz.new(path)
     when ".tar.xz"
       TarXz.new(path)
     when ".zip"
@@ -139,6 +141,13 @@ class Tar < Archive
         FileUtils.rm_rf temp_dir
       end
     end
+  end
+end
+
+class TarGz < Tar
+  def initialize(path)
+    super
+    @ext = ".tar.gz"
   end
 end
 
