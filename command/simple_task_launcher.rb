@@ -21,7 +21,7 @@ def parse(src)
 
   task = Task.new
 
-  src.each_line{ |line|
+  src.each_line { |line|
     # p line
     if /^([a-zA-Z_].*):/ =~ line
       name = $1
@@ -52,7 +52,7 @@ def list_tasks(tasks)
 end
 
 def exec_task(tasks, task_name, args)
-  task_setup = tasks.find{ |t| t.name == "__setup__"}
+  task_setup = tasks.find { |t| t.name == "__setup__"}
   task = tasks.find{ |t| t.name == task_name}
 
   if task.nil?
@@ -64,7 +64,7 @@ def exec_task(tasks, task_name, args)
   end
 
   tmp_sh = "./z_tmp.sh"
-  open(tmp_sh, "wb"){ |f|
+  File.open(tmp_sh, "wb"){ |f|
     task_setup.lines.each{ |line|
       f.print line
     }
