@@ -1,5 +1,5 @@
-require 'shellwords'
-require 'fileutils'
+require "shellwords"
+require "fileutils"
 
 def p_kv(k, v)
   puts "#{k} (#{v.inspect})"

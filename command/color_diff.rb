@@ -1,5 +1,4 @@
 #!/bin/env ruby
-# coding: utf-8
 
 =begin
 diff の出力に色を付ける。
