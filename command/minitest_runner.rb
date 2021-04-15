@@ -2,12 +2,12 @@ def select_item(name, items)
   puts "----"
   puts "#{name}:"
 
-  items.each_with_index do |item, i|
-    puts "  (#{i}) #{item} (#{i})"
-  end
+  items
+    .map { |item| item.gsub("/", " / ") }
+    .each_with_index { |item, i| puts "  (#{i}) #{item} (#{i})" }
 
   puts ""
-  print "Select item (Press enter to select all): "
+  print "Select item: "
   input = $stdin.gets
 
   if /\d+/ =~ input
@@ -18,39 +18,31 @@ def select_item(name, items)
   end
 end
 
-# --------------------------------
+def select_file(idx)
+  test_files =
+    Dir.glob("./**/test_*.rb").to_a
+      .reject { |path| path.start_with?("./vendor/bundle/") }
+      .sort
 
-file_idx = ARGV.shift
-
-test_files = Dir.glob("./**/test_*.rb").to_a.sort!
-
-selected_file =
-  if file_idx
-    test_files[file_idx.to_i]
+  if idx
+    test_files[idx.to_i]
   else
     select_item("files", test_files)
   end
+end
 
-puts "file: #{selected_file}"
+def select_method(file, idx)
+  case_lines =
+    File.read(file).each_line
+      .select { |line| /def (test_.+)/ =~ line }
+      .map { |line| line.sub(/def /, "").strip }
 
-# --------------------------------
-
-case_idx = ARGV.shift
-
-case_lines =
-  File.read(selected_file).each_line
-    .select do |line|
-      /def (test_.+)/ =~ line
-    end
-    .map { |line| line.sub(/def /, "").strip }
-
-selected_case =
-  if case_idx == "_"
+  if idx == "_"
     nil
   else
     selected_case_line =
-      if case_idx
-        case_lines[case_idx.to_i]
+      if idx
+        case_lines[idx.to_i]
       else
         select_item("cases", case_lines)
       end
@@ -64,17 +56,23 @@ selected_case =
       nil
     end
   end
+end
 
 # --------------------------------
 
+selected_file = select_file(ARGV.shift)
+puts "file: #{selected_file}"
+
+selected_method = select_method(selected_file, ARGV.shift)
+
 cmd = ""
 if File.exist?("./Gemfile")
-  cmd += "bundle exec "
+  cmd << "bundle exec "
 end
-cmd += %(ruby "#{selected_file}")
+cmd << %(ruby "#{selected_file}")
 
-if selected_case
-  cmd << " -n #{selected_case}"
+if selected_method
+  cmd << " -n #{selected_method}"
 end
 
 puts "----"
