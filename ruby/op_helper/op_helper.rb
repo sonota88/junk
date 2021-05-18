@@ -63,27 +63,31 @@ def cp_btn
   ].join(LF)
 end
 
-def main(src)
-  tas = []
-  ta_id = 0
-
-  lines = src.each_line.to_a
+def preproc(lines)
   lines2 = []
+  tas = []
 
   i = 0
   while i < lines.size
     line = lines[i]
     if /^textarea:/ =~ line
       size, ta_content = consume_ta(lines, i)
-      tas[ta_id] = ta_content
-      lines2 << line.chomp + ":#{ta_id}\n"
-      ta_id += 1
+      tas << ta_content
+      ta_idx = tas.size - 1
+      lines2 << line.chomp + ":#{ta_idx}\n"
       i += size
     else
       lines2 << line
       i += 1
     end
   end
+
+  [lines2, tas]
+end
+
+def main(src)
+  lines = src.each_line.to_a
+  lines2, tas = preproc(lines)
 
   body = []
 
@@ -98,10 +102,10 @@ def main(src)
       body << %(<br />)
     when /^textarea:(.+?):(\d+)/
       label = $1
-      ta_id = $2.to_i
+      ta_idx = $2.to_i
       body << cbox()
       body << %(#{label}<br />)
-      body << %(<textarea onfocus="this.select();">#{ tas[ta_id] }</textarea>)
+      body << %(<textarea onfocus="this.select();">#{ tas[ta_idx] }</textarea>)
       body << %(<br />)
       body << cp_btn()
       body << %(<br />)
@@ -116,6 +120,7 @@ def main(src)
     when %r{^----*}
       body << %(<hr />)
     else
+      body << cbox() unless line.chomp.empty?
       body << line
       body << %(<br />)
     end
