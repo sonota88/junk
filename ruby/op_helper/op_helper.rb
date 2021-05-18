@@ -1,3 +1,5 @@
+LF = "\n"
+
 src = <<~DATA
 http://...
 を開く
@@ -26,6 +28,25 @@ hogejrlej
 greuitu58
 DATA
 
+HTML_TEMPLATE = <<~HTML
+<html>
+<head>
+<style>
+  * {
+    font-family: monospace;
+    line-height: 150%;
+  }
+  input[type=checkbox] {
+    font-size: 2rem;
+    width: 2rem;
+    height: 2rem;
+    display: inline-block;
+  }
+</style>
+</head>
+<body>
+HTML
+
 def consume_ta(lines, start_i)
   i = start_i + 1
   lines2 = []
@@ -43,12 +64,14 @@ def consume_ta(lines, start_i)
 end
 
 def cbox
-  puts %(<input type="checkbox"></input>)
+  %(<input type="checkbox"></input>)
 end
 
 def cp_btn
-  puts %(<button>copy</button>)
-  puts %(<br />)
+  [
+    %(<button>copy</button>),
+    %(<br />)
+  ].join(LF)
 end
 
 def main(src)
@@ -73,57 +96,42 @@ def main(src)
     end
   end
 
-  puts <<EOB
-<html>
-<head>
-<style>
-  * {
-    font-family: monospace;
-    line-height: 150%;
-  }
-  input[type=checkbox] {
-    font-size: 2rem;
-    width: 2rem;
-    height: 2rem;
-    display: inline-block;
-  }
-</style>
-</head>
-<body>
-EOB
+  body = []
 
   lines2.each { |line|
     case line
     when /^input:(.+?): (.*)/
       label = $1
       value = $2
-      cbox()
-      puts %(#{label} <input value="#{value}" onfocus="this.select();"></input>)
-      cp_btn()
-      puts %(<br />)
+      body << cbox()
+      body << %(#{label} <input value="#{value}" onfocus="this.select();"></input>)
+      body << cp_btn()
+      body << %(<br />)
     when /^textarea:(.+?):(\d+)/
       label = $1
       ta_id = $2.to_i
-      cbox()
-      puts %(#{label}<br />)
-      puts %(<textarea onfocus="this.select();">#{ tas[ta_id] }</textarea>)
-      cp_btn()
-      puts %(<br />)
+      body << cbox()
+      body << %(#{label}<br />)
+      body << %(<textarea onfocus="this.select();">#{ tas[ta_id] }</textarea>)
+      body << cp_btn()
+      body << %(<br />)
     when %r{^(checkbox|radio):}
-      cbox()
-      puts line
-      puts %(<br />)
+      body << cbox()
+      body << line
+      body << %(<br />)
     when %r{^(https?://.+)}
       url = $1
-      puts %(<a href="#{url}">#{ url }</a>)
-      puts %(<br />)
+      body << %(<a href="#{url}">#{ url }</a>)
+      body << %(<br />)
     when %r{^----*}
-      puts %(<hr />)
+      body << %(<hr />)
     else
-      puts line
-      puts %(<br />)
+      body << line
+      body << %(<br />)
     end
   }
+
+  puts HTML_TEMPLATE + body.join(LF)
 end
 
 main(src)
