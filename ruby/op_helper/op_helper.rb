@@ -1,33 +1,5 @@
 LF = "\n"
 
-src = <<~DATA
-http://...
-を開く
-
-input:id: john doe
-input:pw: abc123
-
-「ログイン」押す
-
-〜画面に遷移する
-
----
-
-checkbox:hoge種別: aa と bb
-
-radio:〜項目: cc
-
-textarea:備考欄
->>
-fdsa
-gfds
-<<
-
-複数行のメモ
-hogejrlej
-greuitu58
-DATA
-
 HTML_TEMPLATE = <<~HTML
 <!DOCTYPE html>
 <html>
@@ -152,4 +124,4 @@ def main(src)
   puts HTML_TEMPLATE.sub("{BODY}", body.join(LF))
 end
 
-main(src)
+main(ARGF.read)
