@@ -29,22 +29,39 @@ greuitu58
 DATA
 
 HTML_TEMPLATE = <<~HTML
+<!DOCTYPE html>
 <html>
 <head>
-<style>
-  * {
-    font-family: monospace;
-    line-height: 150%;
-  }
-  input[type=checkbox] {
-    font-size: 2rem;
-    width: 2rem;
-    height: 2rem;
-    display: inline-block;
-  }
-</style>
+  <meta charset="utf-8" />
+  <title>op helper</title>
+  <style>
+* {
+  font-family: monospace;
+  line-height: 150%;
+}
+
+body {
+  padding: 1rem 5%;
+}
+
+input, textarea {
+  width: 80%;
+}
+
+input[type=checkbox] {
+  font-size: 2rem;
+  width: 2rem;
+  height: 2rem;
+  display: inline-block;
+}
+  </style>
 </head>
+
 <body>
+  {BODY}
+</body>
+
+</html>
 HTML
 
 def consume_ta(lines, start_i)
@@ -113,6 +130,7 @@ def main(src)
       body << cbox()
       body << %(#{label}<br />)
       body << %(<textarea onfocus="this.select();">#{ tas[ta_id] }</textarea>)
+      body << %(<br />)
       body << cp_btn()
       body << %(<br />)
     when %r{^(checkbox|radio):}
@@ -131,7 +149,7 @@ def main(src)
     end
   }
 
-  puts HTML_TEMPLATE + body.join(LF)
+  puts HTML_TEMPLATE.sub("{BODY}", body.join(LF))
 end
 
 main(src)
