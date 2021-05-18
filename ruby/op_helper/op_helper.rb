@@ -14,6 +14,7 @@ HTML_TEMPLATE = <<~HTML
 
 body {
   padding: 1rem 5%;
+  background: #fcfcfc;
 }
 
 input, textarea {
@@ -23,8 +24,24 @@ input, textarea {
 input[type=checkbox] {
   font-size: 2rem;
   width: 2rem;
-  height: 2rem;
+  height: 1.5rem;
   display: inline-block;
+}
+
+.block {
+  border-top: solid 0.1rem #ccc;
+  margin: 0.5rem 0;
+  padding: 0.5rem;
+}
+.block_checkbox {
+  vertical-align: top;
+}
+.block_content {
+  /margin-left: 2rem;
+  display: inline-block;
+  vertical-align: top;
+  border-left: solid 0.1rem #ccc;
+  padding-left: 0.5rem;
 }
   </style>
 </head>
@@ -53,7 +70,7 @@ def consume_ta(lines, start_i)
 end
 
 def cbox
-  %(<input type="checkbox"></input>)
+  %(<input type="checkbox" class="block_checkbox"></input>)
 end
 
 def cp_btn
@@ -85,45 +102,69 @@ def preproc(lines)
   [lines2, tas]
 end
 
+def to_blocks(lines)
+  prev = lines[0]
+  bls = []
+  buf = []
+  lines.each { |line|
+    buf << line
+    if line.chomp.empty?
+      bls << buf
+      buf = []
+    end
+
+    prev = line
+  }
+
+  unless buf.empty?
+    bls << buf
+  end
+
+  bls
+end
+
 def main(src)
   lines = src.each_line.to_a
   lines2, tas = preproc(lines)
+  blocks = to_blocks(lines2)
 
   body = []
 
-  lines2.each { |line|
-    case line
-    when /^input:(.+?): (.*)/
-      label = $1
-      value = $2
-      body << cbox()
-      body << %(#{label} <input value="#{value}" onfocus="this.select();"></input>)
-      body << cp_btn()
+  blocks.each { |lines|
+    body << %(<div class="block">)
+    body << cbox()
+    # body << %(<br />)
+    body << %(<div class="block_content">)
+
+    lines.each { |line|
+
+      case line
+      when /^input:(.+?): (.*)/
+        label = $1
+        value = $2
+        body << %(#{label} <input value="#{value}" onfocus="this.select();"></input>)
+        # body << cp_btn()
+      when /^textarea:(.+?):(\d+)/
+        label = $1
+        ta_idx = $2.to_i
+        body << %(#{label}<br />)
+        body << %(<textarea onfocus="this.select();">#{ tas[ta_idx] }</textarea>)
+        # body << cp_btn()
+        # body << %(<br />)
+      when %r{^(checkbox|radio):}
+        body << line
+      when %r{^(https?://.+)}
+        url = $1
+        body << %(<a href="#{url}">#{ url }</a>)
+      when %r{^----*}
+        body << %(<hr />)
+      else
+        body << line
+      end
       body << %(<br />)
-    when /^textarea:(.+?):(\d+)/
-      label = $1
-      ta_idx = $2.to_i
-      body << cbox()
-      body << %(#{label}<br />)
-      body << %(<textarea onfocus="this.select();">#{ tas[ta_idx] }</textarea>)
-      body << %(<br />)
-      body << cp_btn()
-      body << %(<br />)
-    when %r{^(checkbox|radio):}
-      body << cbox()
-      body << line
-      body << %(<br />)
-    when %r{^(https?://.+)}
-      url = $1
-      body << %(<a href="#{url}">#{ url }</a>)
-      body << %(<br />)
-    when %r{^----*}
-      body << %(<hr />)
-    else
-      body << cbox() unless line.chomp.empty?
-      body << line
-      body << %(<br />)
-    end
+    }
+    body << %(</div>)
+    body << %(</div>)
   }
 
   puts HTML_TEMPLATE.sub("{BODY}", body.join(LF))
