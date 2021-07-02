@@ -2,6 +2,7 @@
 ;; 基本
 
 (tool-bar-mode 0) ; ツールバーを表示しない（v24）
+(setq column-number-mode t) ; 桁を表示
 
 (setq inhibit-startup-message t) ; 起動時にメッセージを出さない
 (setq initial-scratch-message nil)
