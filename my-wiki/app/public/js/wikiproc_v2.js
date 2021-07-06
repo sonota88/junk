@@ -861,11 +861,6 @@ function OutlineParser(){
         level: RegExp.$1.length
         , content: RegExp.$2
       };
-    }else if(line.match(/^(■+)([^■].*?)$/)){
-      return {
-        level: 4 - RegExp.$1.length
-        , content: RegExp.$2
-      };
     }else{
       return null;
     }
