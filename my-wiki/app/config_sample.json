@@ -1,0 +1,9 @@
+{
+  "app_root": "/path/to/jjsiki/app"
+  , "data_root": "/path/to/jjsiki/data"
+  , "auth_id": "user"
+  , "auth_pass": "pass"
+  , "update_password": "update_password"
+  , "vcs": "zipBackup"
+  , "vcs_bin": "/usr/bin/git"
+}
