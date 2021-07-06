@@ -12,7 +12,7 @@ class Page
   end
 
   def load
-    src = File.read(File.join(DATA_DIR, "page/#{@id}.txt"))
+    src = File.read(File.join(DATA_ROOT, "page/#{@id}.txt"))
     title_line, _, body = src.partition("\n\n")
 
     /^title: (.+)/ =~ title_line
@@ -22,7 +22,7 @@ class Page
   end
 
   def save
-    path = File.join(DATA_DIR, "page/#{@id}.txt")
+    path = File.join(DATA_ROOT, "page/#{@id}.txt")
     formatted_src = Wiki.format(@src)
 
     open(path, "wb") { |f|
@@ -75,7 +75,7 @@ end
 
 class Searcher
   def _grep_count(id, q)
-    path = "#{DATA_DIR}/page/#{id}.txt"
+    path = "#{DATA_ROOT}/page/#{id}.txt"
 
     num_matched = 0
 
@@ -90,7 +90,7 @@ class Searcher
   end
 
   def _grep(q)
-    paths = Dir.glob("#{DATA_DIR}/page/*.txt").to_a
+    paths = Dir.glob("#{DATA_ROOT}/page/*.txt").to_a
               .select { |path| %r{/\d+\.txt$} =~ path }
 
     list = []
@@ -110,7 +110,7 @@ class Searcher
   end
 
   def _grep_file(id, q)
-    src = File.read("#{DATA_DIR}/page/#{id}.txt")
+    src = File.read("#{DATA_ROOT}/page/#{id}.txt")
 
     lines = []
 
