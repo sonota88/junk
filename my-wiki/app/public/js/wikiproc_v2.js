@@ -918,9 +918,9 @@ function OutlineParser() {
       html += ` (ln0=${block.ln0}) `;
       html += ' <a href="#' + hid + '">&para;</a>';
 
-      var lineRange = block.lineFrom + "," + block.lineTo;
-      const href = `/page/${pageId}/edit?range=${lineRange}`;
-      html += ` <a class="edit_section" href="${href}">edit(${lineRange})</a>`;
+      //20210707 var lineRange = block.lineFrom + "," + block.lineTo;
+      //20210707 const href = `/page/${pageId}/edit?range=${lineRange}`;
+      //20210707 html += ` <a class="edit_section" href="${href}">edit(${lineRange})</a>`;
 
       const lineRange2 = block.getLinenoMin() + "," + block.getLinenoMax();
       const href2 = `/page/${pageId}/edit?range=${lineRange2}`;
