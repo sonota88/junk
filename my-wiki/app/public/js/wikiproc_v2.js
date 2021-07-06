@@ -638,6 +638,7 @@ class Outline {
       }
     });
 
+    // TODO Use Math.min
     let min = lns[0];
     lns.forEach((ln)=>{
       if (ln < min) {
@@ -661,6 +662,7 @@ class Outline {
       }
     });
 
+    // TODO Use Math.max
     let max = lns[0];
     lns.forEach((ln)=>{
       if (max < ln) {
