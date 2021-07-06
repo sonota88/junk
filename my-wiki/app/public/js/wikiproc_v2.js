@@ -470,54 +470,6 @@ function Parser(){
     return list.slice(1, list.length);
   }
 
-//--  this.procPRE_v1 = function(lines){
-//--    function isIndented(line){
-//--      return /^\s/.test(line);
-//--    }
-//--
-//--    var indent = 0; // トップレベルは0
-//--    var temp = [];
-//--
-//--    while(lines.length > 0){
-//--      var nextLine = lines[0];
-//--
-//--      if( ! isIndented(nextLine) ){
-//--        break;
-//--      }
-//--
-//--      var line = lines.shift();
-//--      temp.push(line);
-//--    }
-//--
-//--    var _class = "indentBlock";
-//--    if( /^\s+## src ##$/.test(temp[0]) ){
-//--      temp = cdr(temp);
-//--    }else if( temp[0].match(/^\s+## src:(.+) ##$/) ){
-//--      temp = cdr(temp);
-//--      _class += " prettyprint lang-" + RegExp.$1;
-//--    }else{
-//--      ;
-//--    }
-//--    var content;
-//--    if(temp.length > 0){
-//--      content = this.eliminateHeadSpaces(temp).join("\n");
-//--    }else{
-//--      content = "";
-//--    }
-//--    var elem = new Elem(
-//--      "pre"
-//--      ,content
-//--    );
-//--    elem.attr = {
-//--      "class": _class
-//--    };
-//--
-//--    return {
-//--      elem: elem
-//--      , lines: lines
-//--    };
-//--  };
-
   this.procPRE = function(slines, sli){
     puts("-->> procPRE", slines, sli);
 
@@ -614,50 +566,6 @@ function Parser(){
     };
   }
 
-//--  this.parseMain_v1 = function(lines){
-//--    var node = { list: [] };
-//--    var result = [];
-//--
-//--    var l = null;
-//--    while(lines.length > 0){
-//--      l = lines.shift();
-//--
-//--      if( ! l ){
-//--        var elem = new Elem();
-//--        elem.content = null;
-//--        node.list.push(elem);
-//--
-//--      }else if( /^\s+## src(:.+)? ##$/.test(l) ){
-//--        var x = this.procPRE(unshift(l, lines));
-//--        var elem = x.elem;
-//--        lines = x.lines;
-//--        node.list.push(elem);
-//--      }else if( /^```mermaid/.test(l) ){
-//--        var x = procMermaid( unshift(l, lines) );
-//--        var elem = x.elem;
-//--        lines = x.lines;
-//--        node.list.push(elem);
-//--      }else if( /^t\{-*$/.test(l) ){
-//--        var x = procTABLE( unshift(l, lines) );
-//--        var elem = x.elem;
-//--        lines = x.lines;
-//--        node.list.push(elem);
-//--      }else if( /^b\{-*$/.test(l) ){
-//--        node.list.push( new Elem(null, '<div class="box">') );
-//--      }else if( /^\}b-*$/.test(l) ){
-//--        node.list.push( new Elem(null, "</div>") );
-//--      }else if( /^q\{-*$/.test(l) ){
-//--        node.list.push( new Elem(null, "<blockquote>") );
-//--      }else if( /^\}q-*$/.test(l) ){
-//--        node.list.push( new Elem(null, "</blockquote>") );
-//--      }else{
-//--        node.list.push( line2elem(l) );
-//--      }
-//--    }
-//--
-//--    return { node: node };
-//--  };
-
   this.parseMain = (slines)=>{
     var node = { list: [] };
 
@@ -693,13 +601,6 @@ function Parser(){
     return { node: node };
   };
 
-//--  this.parse_v1 = function(text){
-//--    var lines = text.split( "\n" ) ;
-//--
-//--    var result = this.parseMain( lines );
-//--    return result.node;
-//--  };
-
   this.parse = function(slines){
     // var lines = slines.map(sline => sline.text);
 
@@ -708,22 +609,6 @@ function Parser(){
   };
 }
 
-
-//--var Outline = (function(){
-//--  function Outline(parent){
-//--    this.isRoot = (parent == null);
-//--    this.level = this.isRoot ? 0 : parent.level + 1;
-//--    this.kids = [];
-//--    if( ! this.isRoot ){
-//--      parent.kids.push(this);
-//--    }
-//--
-//--    this.title = null;
-//--    this.lineno = 1;
-//--  }
-//--
-//--  return Outline;
-//--})();
 
 class Outline {
   constructor(parent, ln0) {
@@ -823,111 +708,6 @@ function OutlineParser(){
   this.getBlockShowInToc = function(content){
     return ! /^\[notoc\] (.+)/.test(content);
   };
-
-//--  /**
-//--   * pre はインデントされているため、
-//--   * 行頭を見ていけば見出しとそれ以外を区別できる。
-//--   */
-//--  this.parse_v1 = function(src){
-//--    var lines = src.split("\n");
-//--    var level = 0;
-//--    var index = 1;
-//--
-//--    var root = new Outline();
-//--    var current = root;
-//--
-//--    var stack = [];
-//--    var buf = [];
-//--    var linenos = [];
-//--    var lineno = 0;
-//--    while(lines.length > 0){
-//--      lineno++;
-//--      var line = lines.shift();
-//--
-//--      if(
-//--           line.match(/^(=+)([^=].*?)=*$/)
-//--        || line.match(/^(■+)([^■].*?)$/)
-//--      ){
-//--        if(buf.length > 0){
-//--          current.kids.push(buf.join("\n"));
-//--          buf = [];
-//--        }
-//--
-//--        var head = this.procHn(line);
-//--        head.lineno = lineno;
-//--        var delta = head.level - current.level;
-//--
-//--        if(0 < delta){
-//--          for(var a=0; a<delta; a++){
-//--            stack.push(current);
-//--            current = new Outline(current);
-//--          }
-//--        }else if(delta < 0){
-//--          for(var a=0; a<-delta; a++){
-//--            stack.pop();
-//--          }
-//--          current = new Outline(_last(stack));
-//--        }else{
-//--          current = new Outline(_last(stack));
-//--        }
-//--
-//--        current.index = index; index++;
-//--        current.lineno = head.lineno;
-//--        current.showInToc = this.getBlockShowInToc(head.content);
-//--        current.title = this.getBlockTitle(head.content);
-//--
-//--        linenos.push({ lv: head.level, from: lineno, idx: current.index});
-//--
-//--      }else{
-//--        buf.push(line);
-//--      }
-//--    }
-//--    var linenoMax = lineno;
-//--
-//--    if(buf.length > 0){
-//--      current.kids.push(buf.join("\n"));
-//--    }
-//--
-//--    linenos.forEach(function(ln1, i){
-//--      ln1.to = null;
-//--
-//--      var nextHead = linenos.filter(function(ln2, i2){
-//--        return i2 > i && ln2.lv <= ln1.lv;
-//--      })[0];
-//--
-//--      if(nextHead){
-//--        ln1.to = nextHead.from - 1;
-//--      }else{
-//--        ln1.to = linenoMax;
-//--      }
-//--    });
-//--
-//--    function find(idx){
-//--      for(var i=0,len=linenos.length; i<len; i++){
-//--        var ln = linenos[i];
-//--        if(ln.idx === idx){
-//--          return ln;
-//--        }
-//--      }
-//--      return null;
-//--    }
-//--
-//--    function addLineRange(sec){
-//--      var ln = find(sec.index);
-//--      if(ln){
-//--        sec.lineFrom = ln.from;
-//--        sec.lineTo = ln.to;
-//--      }
-//--      sec.kids.forEach(function(kid){
-//--        if(typeof kid !== "string"){
-//--          addLineRange(kid);
-//--        }
-//--      });
-//--    }
-//--    addLineRange(root);
-//--
-//--    return root;
-//--  };
 
   this.parse_toSemLines = (src)=>{
     const semLines = [];
