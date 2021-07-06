@@ -763,7 +763,7 @@ function OutlineParser(){
         sec.lineFrom = ln.from;
         sec.lineTo = ln.to;
       }
-      puts("799", sec);
+      // puts("799", sec);
 
       sec.kids.forEach((kid)=>{
         // if(typeof kid !== "string"){
@@ -848,9 +848,9 @@ function OutlineParser(){
 
     this.__addLineRange(root, linenos);
 
-    puts(
-      JSON.stringify(root.toPlain(), null, "  ")
-    );
+    // puts(
+    //   JSON.stringify(root.toPlain(), null, "  ")
+    // );
 
     return root;
   }
