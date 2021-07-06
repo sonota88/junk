@@ -1,0 +1,39 @@
+<!DOCTYPE>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <title>{title}</title>
+
+    <link rel="shortcut icon" href="/favicon_v02.png" type="image/png" />
+    <!--
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+    -->
+
+    <script src="/js_ext/jquery.js"></script>
+    <script src="/js/common.js"></script>
+    <script src="/js/common_component.js"></script>
+    <script src="/js/tree_builder.js"></script>
+
+    <script>
+     function __onclick_new(){
+       const ok_p = window.confirm("ページを新規に作成します");
+       if (! ok_p) {
+         return;
+       }
+       location.href = "/page/new";
+     }
+    </script>
+
+    <link rel="stylesheet" href="/css/base.css" type="text/css" />
+    <link rel="stylesheet" href="/css/default.css" type="text/css" />
+    <link rel="stylesheet" href="/css/my_prettify.css" type="text/css" />
+  </head>
+
+  <body>
+
+    <a href="/">Top</a>
+    | <a href="/search">検索</a>
+    | <a href="/recent_changes">最近</a>
+    | <button onclick="__onclick_new();">新規作成</button>
+
+    <hr />
