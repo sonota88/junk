@@ -134,7 +134,7 @@ function makeEMIndex(formatted) {
 // utils
 
 
-// function puts(){ console.log(arguments); }
+// function puts() { console.log(arguments); }
 
 
 function xtag(elem, tagName) {
@@ -177,7 +177,7 @@ function expandTabs(str) {
 
 
 function formatDate(date) {
-  function fmt(n){
+  function fmt(n) {
     return "" + (n<10 ? "0" + n : n);
   }
 
@@ -193,11 +193,11 @@ function formatDate(date) {
 
 
 var jsonTable = (function(){
-  function toHtml(plain){
+  function toHtml(plain) {
     return (""+plain).replace(/\n/g, "<br />");
   }
 
-  function jsonToTableForArray(rows){
+  function jsonToTableForArray(rows) {
     // var table = createElement(null, "table", {"class": "from_json"});
     var html = "<table class='from_json'>";
     for(var a=0, lenA=rows.length; a<lenA; a++){
@@ -214,7 +214,7 @@ var jsonTable = (function(){
     return html + "</table>";
   }
 
-  function jsonToTableForObject(rows){
+  function jsonToTableForObject(rows) {
     var table = "<table class='from_json'>";
     var colNames = rows[0];
 
@@ -240,7 +240,7 @@ var jsonTable = (function(){
   }
 
 
-  function jsonToTable(json){
+  function jsonToTable(json) {
     var rows = JSON.parse(json);
     var isArray = (rows[1] instanceof Array);
 
@@ -421,7 +421,7 @@ function lineToHtml(line) {
 };
 
 
-function Parser(){
+function Parser() {
 
   var line2elem = function(line){
     var elem = new Elem();
@@ -466,7 +466,7 @@ function Parser(){
            });
   };
 
-  function cdr(list){
+  function cdr(list) {
     return list.slice(1, list.length);
   }
 
@@ -515,7 +515,7 @@ function Parser(){
     };
   };
 
-  function procTABLE(lines){
+  function procTABLE(lines) {
     lines.shift();
 
     var _lines = [];
@@ -541,7 +541,7 @@ function Parser(){
     };
   }
 
-  function procMermaid(lines){
+  function procMermaid(lines) {
     lines.shift();
 
     var _lines = [];
@@ -692,7 +692,7 @@ class Outline {
 }
 
 
-function OutlineParser(){
+function OutlineParser() {
 
   this.getBlockTitle = function(content){
     var rawTitle = strip(content);
@@ -1012,10 +1012,10 @@ function printOutline(ol) {
   for(var i=0; i<(ol.level+1) * 3; i++){
     ind1 += " ";
   }
-  function p0(x){
+  function p0(x) {
     puts(ind0 + x);
   }
-  function p(x){
+  function p(x) {
     puts(ind1 + x);
   }
   p0("{");
