@@ -45,7 +45,7 @@ class TreeBuilder {
   }
 
   static build(fn){
-    return fn(TreeBuilder._build.bind(TreeBuilder));
+    return fn(TreeBuilder.h);
   }
 
   /**
@@ -57,3 +57,5 @@ class TreeBuilder {
     return el.childNodes;
   }
 }
+
+TreeBuilder.h = TreeBuilder._build.bind(TreeBuilder);

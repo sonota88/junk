@@ -1,7 +1,8 @@
+const h = TreeBuilder.h;
+
 class CodeEditor {
   static render(state) {
-    return TreeBuilder.build(h =>
-      h("div", {
+    return h("div", {
           style: {
             position: "relative"
           , zIndex: 1000
@@ -31,7 +32,6 @@ class CodeEditor {
           }
         , state.codeEditor.code
         )
-      )
     );
   }
 
@@ -105,8 +105,7 @@ class CodeEditor {
 
 class View {
   static render(state){
-    return TreeBuilder.build(h =>
-      h("div", {}
+    return h("div", {}
       , h("h1", {}, `「${ state.title }」の編集`)
       , h("a", { href: `/page/${__p.getPageId()}` }, "戻る")
       , h("hr")
@@ -166,7 +165,6 @@ class View {
           }
         , h("pre", { id: "preview_body" })
         )
-      )
     );
   }
 }

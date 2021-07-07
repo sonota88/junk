@@ -1,7 +1,8 @@
+const h = TreeBuilder.h;
+
 class View {
   static render(state){
-    return TreeBuilder.build(h =>
-      h("div", {}
+    return h("div", {}
       , h("h1", {}, state.title)
       , h("a", { href: `/page/${__p.getPageId()}/edit` }, "編集")
       , h("hr")
@@ -23,7 +24,6 @@ class View {
             )
           )
         )
-      )
     );
   }
 }
