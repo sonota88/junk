@@ -38,14 +38,14 @@ var WikiProc = {
   }
 };
 
-function makeHeadingId(htitle){
+function makeHeadingId(htitle) {
   // MediaWiki style
   return encodeURIComponent(htitle.replace(/ /g, "_"))
     .replace(/%/g, ".");
 }
 
 
-function Elem(type, content){
+function Elem(type, content) {
   this.type = type;
   this.list = [];
   this.content = content; // html
@@ -89,16 +89,16 @@ Elem.prototype = {
 };
 
 
-function isundef(it){
+function isundef(it) {
   return typeof it === "undefined";
 }
 
-function _last(xs){
+function _last(xs) {
   return xs[xs.length - 1];
 }
 
 
-function makeEMIndex(formatted){
+function makeEMIndex(formatted) {
   // Index of emphatic text
   var emReference = "";
   var emphasis = xtag(formatted, "em");
@@ -137,16 +137,16 @@ function makeEMIndex(formatted){
 // function puts(){ console.log(arguments); }
 
 
-function xtag( elem, tagName ){
+function xtag(elem, tagName) {
   return elem.getElementsByTagName( tagName );
 }
 
-function insertAsFirstChild(parent, child){
+function insertAsFirstChild(parent, child) {
   parent.insertBefore(child, parent.firstChild);
 }
 
 
-function unshift(first, arr){
+function unshift(first, arr) {
   var xs = [ first ];
   for(var a=0,len=arr.length; a<len; a++){
     xs.push(arr[a]);
@@ -155,7 +155,7 @@ function unshift(first, arr){
 }
 
 
-function strip(str){
+function strip(str) {
   if(!str){
     return null;
   }
@@ -163,12 +163,12 @@ function strip(str){
 }
 
 
-function mkStr(str, n){
+function mkStr(str, n) {
   return new Array(n+1).join(str);
 }
 
 
-function expandTabs(str){
+function expandTabs(str) {
   return str.replace(
       /\t/g
     , mkStr(" ", 8)
@@ -176,7 +176,7 @@ function expandTabs(str){
 }
 
 
-function formatDate(date){
+function formatDate(date) {
   function fmt(n){
     return "" + (n<10 ? "0" + n : n);
   }
@@ -263,7 +263,7 @@ var jsonTable = (function(){
 /**
  * String.prototype.indexOf() のように開始位置を指定して検索する。
  */
-function searchFrom(str, re, fromIndex){
+function searchFrom(str, re, fromIndex) {
   var idx = str.substring(fromIndex).search(re);
   if(idx < 0){
     return idx;
@@ -272,7 +272,7 @@ function searchFrom(str, re, fromIndex){
   }
 }
 
-function makePageLink(content){
+function makePageLink(content) {
   var pageId, title;
 
   if(content.match( /^(\d+):(.+)$/ )){
@@ -302,7 +302,7 @@ function makePageLink(content){
       + '</a>';
 }
 
-function procInline(line){
+function procInline(line) {
 
   var work = line;
   var els = [];
@@ -391,7 +391,7 @@ function procInline(line){
 }
 
 
-function lineToHtml(line){
+function lineToHtml(line) {
 
   if( line.match( /^(https?|file):\/\// ) ){
     var content = line;
@@ -1168,7 +1168,7 @@ function OutlineParser(){
 }
 
 
-function splitPreamble(src){
+function splitPreamble(src) {
   var lines = src.split("\n");
   var info = {};
   var preamble_range = 20;
@@ -1199,7 +1199,7 @@ function splitPreamble(src){
 }
 
 
-function makePreamble(info){
+function makePreamble(info) {
   var lines = [];
   info.by && lines.push( "by: " + info.by);
   info.date && lines.push( "date: " + info.date );
@@ -1215,7 +1215,7 @@ function makePreamble(info){
 }
 
 
-function getTitle(info){
+function getTitle(info) {
   var title = "untitled";
   if(info.title){
     title = info.title;
@@ -1228,7 +1228,7 @@ function getTitle(info){
 
 ////////////////////////////////
 
-function printOutline(ol){
+function printOutline(ol) {
   var ind0 = "";
   var ind1 = "";
   for(var i=0; i<ol.level * 3; i++){
@@ -1259,7 +1259,7 @@ function printOutline(ol){
   p0("}");
 }
 
-function toHTML(pageId, src, idTitleMap, opts){
+function toHTML(pageId, src, idTitleMap, opts) {
   WikiProc.idTitleMap = idTitleMap;
 
   opts = opts || {};
