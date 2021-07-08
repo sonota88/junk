@@ -1,8 +1,8 @@
 *~
 .bundle/
 vendor/
-app/public/js_ext/
-app/public/css_ext/
+app/public/js_ext/*.js
+app/public/css_ext/*.css
 
 /tmp/
 *.log
