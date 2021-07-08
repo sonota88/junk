@@ -6,5 +6,7 @@ app/public/css_ext/*.css
 
 /tmp/
 *.log
+*.ttf
+*.woff
 z_*
 config.json
