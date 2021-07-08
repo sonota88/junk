@@ -6,7 +6,9 @@
 * {
   line-height: 150%;
   box-sizing: border-box;
-  font-family: vl_gothic, monospace;
+  font-family: vl_gothic, monospace,
+    Courier /* monospace for Mac */
+  ;
 }
 
 body {
