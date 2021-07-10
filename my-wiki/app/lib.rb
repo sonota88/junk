@@ -145,3 +145,9 @@ module Utils
     end
   end
 end
+
+def read_json(path)
+  JSON.parse(
+    File.read(path)
+  )
+end

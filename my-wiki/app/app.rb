@@ -170,12 +170,6 @@ def _api_v2(params)
   })
 end
 
-def read_json(path)
-  JSON.parse(
-    File.read(path)
-  )
-end
-
 # --------------------------------
 
 class Wiki
