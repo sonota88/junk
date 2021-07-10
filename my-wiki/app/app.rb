@@ -20,10 +20,9 @@ VCS = VcsGit.new
 also_reload "lib.rb"
 also_reload "lib/vcs_git.rb"
 
-CONFIG =
-  JSON.parse(
-    File.read(
-      File.expand_path("config.json", __dir__)))
+CONFIG = read_json(
+  File.expand_path("config.json", __dir__)
+)
 
 DATA_ROOT = CONFIG["data_root"]
 APP_ROOT = CONFIG["app_root"]
