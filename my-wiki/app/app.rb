@@ -10,11 +10,11 @@ set :method_override, true
 require "pp"
 require "json"
 
-require "./lib/erb_context"
-require "./lib/myhash"
-require "./lib"
+require_relative "lib/erb_context"
+require_relative "lib/myhash"
+require_relative "lib"
 
-require "./lib/vcs_git"
+require_relative "lib/vcs_git"
 VCS = VcsGit.new
 
 also_reload "lib.rb"
