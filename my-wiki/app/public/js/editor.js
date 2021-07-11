@@ -67,6 +67,9 @@ class Editor {
     this.textarea.focus();
   }
 
+  setSelectionRange(from, to){
+    this.textarea.setSelectionRange(from, to);
+  }
   _setCursorPos(textarea, pos){
     textarea.setSelectionRange(pos, pos);
   }
