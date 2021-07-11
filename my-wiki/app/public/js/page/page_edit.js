@@ -413,9 +413,15 @@ class Page {
     this.state.codeEditor = {
       pre, code, post, cursorPos
     };
-    this.render();
-    __g.guard();
-    $(this._codeEditor_getTextArea()).focus();
+
+    ed().focus();
+    ed().setSelectionRange(posBegin, posEnd);
+
+    setTimeout(()=>{
+      this.render();
+      __g.guard();
+      $(this._codeEditor_getTextArea()).focus();
+    }, 500);
   }
 
   onclick_codeEditor_update() {
