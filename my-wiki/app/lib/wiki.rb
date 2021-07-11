@@ -75,4 +75,22 @@ class Wiki
 
     lines.join("")
   end
+
+  def id_title_map
+    read_json(data_path("page_info.json"))
+  end
+
+  def id_title_map_put(page_id, title)
+    map = id_title_map
+    map[page_id.to_s] = title
+
+    open(data_path("page_info.json"), "wb") { |f|
+      f.puts JSON.pretty_generate(map)
+    }
+  end
+
+  def max_page_id
+    id_title_map.keys.map(&:to_i).max
+  end
 end
+
