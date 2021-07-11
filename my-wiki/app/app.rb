@@ -260,7 +260,6 @@ get "/page/new" do
 
   wiki.id_title_map_put(new_id, new_title)
 
-  # TODO recent_changes に追加
   add_to_recent_changes(page.id, page.title, "create")
 
   redirect to("/page/#{new_id}")
