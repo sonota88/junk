@@ -131,6 +131,11 @@ class View {
           }, "date time"
         )
       , h("button", {
+            onclick: ()=>{ __p.onclick_insertZenkakuSpace(); }
+          }, "全角空白"
+        )
+
+      , h("button", {
             onclick: ()=>{ __p.onclick_codeEditor_open(); }
           }, "edit code"
         )
@@ -364,6 +369,10 @@ class Page {
       ;
     
     this.editor().insertText(dtstr);
+  }
+
+  onclick_insertZenkakuSpace() {
+    this.editor().insertText("　");
   }
 
   // --------------------------------
