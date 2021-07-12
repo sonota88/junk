@@ -1,0 +1,2 @@
+class VcsBase
+end
