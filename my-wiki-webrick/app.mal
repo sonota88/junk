@@ -1,0 +1,104 @@
+;; (load "/home/user/backup/config/elisp/clojure-mode/clojure-mode.el")
+
+(def! each
+  (fn* [fn xs]
+       (if (empty? xs)
+           nil
+         (do
+             (fn (first xs))
+             (each fn (rest xs))
+             ))))
+
+(def! l#index
+  (fn* [self target]
+       (let*
+           [
+            iter (fn* [xs x i]
+                      (if (empty? xs)
+                          nil
+                        (if (= (first xs) x)
+                            i
+                          (iter (rest xs) x (+ i 1)))))
+                 ]
+         (iter self target 0))))
+
+;; --------------------------------
+
+(def! s#chars
+  (fn* [str]
+       (if (nil? str)
+           (list)
+         (cons (s#first str)
+               (s#chars (s#rest str)))
+         )))
+
+(def! s#index
+  (fn* [self char]
+       (l#index (s#chars self) char)))
+
+(def! s#first-line
+  (fn* [self]
+       (let* [
+              lf-idx (s#index self "\n")
+                     ]
+         (if (nil? lf-idx)
+             self
+           (s#take self
+                   (+ lf-idx 1))
+           ))))
+
+(def! s#rest-lines
+  (fn* [self]
+       (let* [
+              lf-idx (s#index self "\n")
+                     ]
+         (if (nil? lf-idx)
+             self
+           (s#drop self
+                   (+ lf-idx 1))))))
+
+(def! s#lines
+  (fn* [self]
+       (let* [
+              lf-idx (s#index self "\n")
+                     ]
+         (if (nil? lf-idx)
+             (if (= self "")
+                 []
+               [self])
+           (cons
+            (s#first-line self)
+            (s#lines (s#rest-lines self)))))))
+
+;; --------------------------------
+
+(def! data-path
+  (fn* [tail]
+       (str DATA-ROOT "/" tail)))
+
+;; --------------------------------
+;; Page
+
+(def! page.path
+  (fn* [page-id]
+       (data-path
+        (str "page/" (str page-id) ".txt"))))
+
+(def! page.load
+  (fn* [page-id]
+  (let* [
+         content (slurp (page.path page-id))
+         parts (s#partition content "\n\n")
+         ]
+    (hash-map
+     'id    page-id
+     'title (s#sub (nth parts 0) "title: " "")
+     'body  (nth parts 2)))))
+
+(def! page.get-title
+  (fn* [page]
+       (get page 'title)))
+
+(def! page.get-src
+  (fn* [page]
+       (get page 'body)))

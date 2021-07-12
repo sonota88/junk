@@ -24,11 +24,15 @@ class Page
     path = File.join(DATA_ROOT, "page/#{@id}.txt")
     formatted_src = Wiki.format(@src)
 
-    open(path, "wb") { |f|
-      f.print "title: " + @title
-      f.print "\n\n"
-      f.print formatted_src
-    }
+    Mal.eval_v2(
+      mal_env(
+        "path" => path,
+        "content" => "title: " + @title + "\n\n" + formatted_src
+      ),
+      <<~'MAL'
+        (file.write path content)
+      MAL
+    )
   end
 
   def src_for_range(range)
@@ -70,41 +74,28 @@ class Page
   end
 
   def self.get_title(id)
-    Mal.eval(
+    Mal.eval_v2(
       mal_env(
         "page-id" => id
       ),
       <<~'MAL'
-        (do
-          ;; TODO app.mal をキャッシュしておくとよさそう
-          (eval (read-string
-                  (str "(do "
-                       (slurp "app.mal")
-                       ")")))
-          (let*
-            [page (page.load page-id)]
-            (page.get-title page)
-          )
+        (let*
+          [page (page.load page-id)]
+          (page.get-title page)
         )
       MAL
     )
   end
 
   def self.get_src(id)
-    Mal.eval(
+    Mal.eval_v2(
       mal_env(
         "page-id" => id
       ),
       <<~'MAL'
-        (do
-          (eval (read-string
-                  (str "(do "
-                       (slurp "app.mal")
-                       ")")))
-          (let*
-            [page (page.load page-id)]
-            (page.get-src page)
-          )
+        (let*
+          [page (page.load page-id)]
+          (page.get-src page)
         )
       MAL
     )
