@@ -92,5 +92,35 @@ class Wiki
   def max_page_id
     id_title_map.keys.map(&:to_i).max
   end
+
+  def add_to_recent_changes(id, title, type)
+    path = data_path("recent_changes.json")
+
+    unless File.exist?(path)
+      open(path, "wb"){|f| f.puts "[]" }
+    end
+
+    changes = read_json(path)
+    d = Time.now
+
+    changes2 = changes.select do |change|
+      change["id"] != id
+    end
+
+    changes2.unshift(
+      {
+        "id"         => id,
+        "title"      => title,
+        "timestamp"  => d.strftime("%s_%F_%T"),
+        "type"       => type
+      }
+    )
+
+    if changes2.size > 200
+      changes2.pop()
+    end
+
+    open(path, "wb") { |f| f.puts JSON.pretty_generate(changes2) }
+  end
 end
 
