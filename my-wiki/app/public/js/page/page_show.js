@@ -132,6 +132,7 @@ class Page {
           }
         })
         .filter(id => id != null)
+        .filter(id => _parseInt(id) != changedPageId)
         ;
 
       __g.api_v2(
