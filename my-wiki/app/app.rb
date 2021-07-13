@@ -427,6 +427,7 @@ patch "/api/page/:id/links" do
 
   _api_v2(params) do |_params|
     p_e [488, page_id, _params]
+    wiki = Wiki.new
 
     path = data_path("page_link.json")
     path_inv = data_path("page_link_inverted.json")
@@ -437,14 +438,7 @@ patch "/api/page/:id/links" do
     File.open(path, "wb") { |f| f.print JSON.generate(link_map) }
 
     # 転置インデックスを更新
-    link_map_inv = {}
-    link_map.each { |src, dest_ids|
-      src_id = src.to_i
-      dest_ids.each { |dest_id|
-        link_map_inv[dest_id] ||= []
-        link_map_inv[dest_id] << src_id
-      }
-    }
+    link_map_inv = wiki.invert_link_map(link_map)
 
     File.open(path_inv, "wb") { |f| f.print JSON.generate(link_map_inv) }
 

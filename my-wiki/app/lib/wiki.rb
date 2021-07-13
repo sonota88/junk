@@ -122,5 +122,19 @@ class Wiki
 
     open(path, "wb") { |f| f.puts JSON.pretty_generate(changes2) }
   end
+
+  def invert_link_map(link_map)
+    link_map_inv = {}
+
+    link_map.each { |src, dest_ids|
+      src_id = src.to_i
+      dest_ids.each { |dest_id|
+        link_map_inv[dest_id] ||= []
+        link_map_inv[dest_id] << src_id
+      }
+    }
+
+    link_map_inv
+  end
 end
 
