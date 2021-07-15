@@ -1,7 +1,6 @@
 require_relative "helper"
-require_relative "../mal"
 
-class MalTest < Minitest::Test
+class MalStringTest < Minitest::Test
   # (first (list)) => nil に合わせること
   def test_s_first_01
     act =
@@ -189,6 +188,30 @@ class MalTest < Minitest::Test
         MAL
       )
     assert_equal(["as\n", "df"], act)
+  end
+
+  # --------------------------------
+
+  def test_start_with_01
+    act =
+      Mal.eval_v2(
+        {},
+        <<~MAL
+        (s#start-with? "fdsa" "fd")
+        MAL
+      )
+    assert_equal(true, act)
+  end
+
+  def test_start_with_02
+    act =
+      Mal.eval_v2(
+        {},
+        <<~MAL
+        (s#start-with? "fdsa" "sa")
+        MAL
+      )
+    assert_equal(false, act)
   end
 
 end

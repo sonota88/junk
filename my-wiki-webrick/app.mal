@@ -1,4 +1,51 @@
-;; (load "/home/user/backup/config/elisp/clojure-mode/clojure-mode.el")
+;; -*- mode: emacs-lisp -*-
+
+(def! gen-seq
+  (fn* [size]
+       (let* [
+              iter (fn* [size i]
+                        (if (<= size i) '()
+                          (cons i (iter size (+ i 1)))))
+                   ]
+         (iter size 0))))
+
+(def! and
+  (fn* [e1 e2]
+       (if e1
+           (if e2
+               true
+             false)
+         false)))
+
+(def! or
+  (fn* [e1 e2]
+       (if e1
+           (if e2
+               true
+             false)
+         true)))
+
+;; How do we do both left and right folds in Clojure? - Stack Overflow
+;; https://stackoverflow.com/questions/16800255
+
+(def! l.foldl
+  (fn* [f acc xs]
+       (if (empty? xs) acc
+         (l.foldl f
+                (f acc (first xs))
+                (rest xs)))))
+
+(def! l.foldr
+  (fn* [f acc xs]
+       (if (empty? xs) acc
+         (f (l.foldr f acc (rest xs))
+            (first xs)))))
+
+(def! l#reverse
+  (fn* [self]
+       (l.foldl (fn* [acc x] (cons x acc))
+                '()
+                self)))
 
 (def! each
   (fn* [fn xs]
@@ -22,12 +69,58 @@
                  ]
          (iter self target 0))))
 
+(def! l#uniq
+  (fn* [self]
+       (let* [
+              _map (l.foldl
+                    (fn* [acc x]
+                         ;; add x => nil
+                         (assoc acc x nil)
+                         )
+                    {}
+                    self
+                    )
+                   ]
+         (keys _map))))
+
+(def! l.select
+  (fn* [pred xs]
+       (l.foldr (fn* [acc x]
+                      (if (pred x)
+                          (cons x acc)
+                        acc))
+                '()
+                xs)))
+
+(def! l#start-with?
+  (fn* [self target]
+       (let* [
+             target-size (count target)
+                         ]
+         (if (< (count self) target-size) false
+             ;; target と同じ長さにして比較
+             (= target
+                (l#take self target-size))))))
+
+(def! l.zip
+  (fn* [xs-a xs-b]
+       (if (not (= (count xs-a)
+                   (count xs-b)))
+           (throw "must be same size") ; TODO 要確認
+         (l.foldr
+          (fn* [acc i]
+               (cons (list (nth xs-a i)
+                           (nth xs-b i))
+                     acc))
+          '()
+          (gen-seq (count xs-a))))))
+
 ;; --------------------------------
 
 (def! s#chars
   (fn* [str]
        (if (nil? str)
-           (list)
+           '()
          (cons (s#first str)
                (s#chars (s#rest str)))
          )))
@@ -63,12 +156,45 @@
               lf-idx (s#index self "\n")
                      ]
          (if (nil? lf-idx)
-             (if (= self "")
-                 []
-               [self])
+             (if (= self "") '()
+               (list self))
            (cons
             (s#first-line self)
             (s#lines (s#rest-lines self)))))))
+
+(def! s#start-with?
+  (fn* [self target]
+       (l#start-with? (s#chars self)
+                      (s#chars target))))
+
+;; --------------------------------
+
+(def! map-to-alist
+  (fn* [_map]
+       (let*
+           [
+            iter (fn* [_map keys]
+                      (if (empty? keys) '()
+                        (let*
+                            [
+                             key (first keys)
+                                 ]
+                          (cons
+                           (list key (get _map key))
+                           (iter _map (rest keys))))))
+                 ]
+         (iter _map (keys _map)))))
+
+(def! alist-to-map
+  (fn* [alist]
+       (if (empty? alist)
+           {}
+         (let* [
+                pair (first alist)
+                ]
+           (assoc (alist-to-map (rest alist))
+                  (nth pair 0)
+                  (nth pair 1))))))
 
 ;; --------------------------------
 
@@ -102,3 +228,123 @@
 (def! page.get-src
   (fn* [page]
        (get page 'body)))
+
+;; --------------------------------
+;; Wiki
+
+(def! invert-link-map
+  (fn* [_map]
+       (let* [
+              to-flat-list-head (fn* [al-head]
+                     (let* [
+                           src-id   (nth al-head 0)
+                           dest-ids (nth al-head 1)
+                           ]
+                       (map (fn* [dest-id] (list src-id dest-id))
+                            dest-ids)))
+
+              to-flat-list (fn* [al]
+                     (if (empty? al) '()
+                       (concat (to-flat-list-head (first al))
+                               (to-flat-list      (rest al)))))
+
+              al (map-to-alist _map)
+              flat-list (to-flat-list al)
+              uniq-dest-ids (l#uniq
+                             (map (fn* [pairs] (nth pairs 1)) flat-list))
+
+              mk-inv-el (fn* [dest-id flat-list2]
+                           (let* [
+                                  selected-pairs
+                                  (l.select
+                                   (fn* [pair]
+                                        (= (nth pair 1) dest-id)
+                                        )
+                                   flat-list2)
+                                  ]
+                             (list dest-id
+                                   (map
+                                    (fn* [pair] (nth pair 0))
+                                    selected-pairs)
+                                   )))
+
+              al-inv (map
+                      (fn* [dest-id] (mk-inv-el dest-id flat-list))
+                      uniq-dest-ids)
+                 ]
+         (alist-to-map al-inv)
+         )
+       )
+  )
+
+(def! wiki.to-slines
+  (fn* [src]
+       (let* [iter-retval
+              (l.foldl
+               (fn* [acc line]
+                    (let* [
+                           slines     (nth acc 0)
+                           in-src (nth acc 1)
+                           ln     (nth acc 2)
+                           src-mark-p (s#start-with? line "```")
+                           type (cond 
+                                  in-src "src"
+                                  src-mark-p "src"
+                                  (s#start-with? line "=") "heading"
+                                  "else" "plain"
+                                  )
+                           new-sline (cons
+                                {
+                                "type" type
+                                "ln"   ln
+                                "text" line
+                                }
+                                slines)
+                           ]
+                      (list
+                       new-sline
+                       (if src-mark-p
+                           (not in-src)
+                         in-src)
+                       (+ ln 1))))
+               '(() false 1)
+               (s#lines src)
+               )
+              ]
+         (l#reverse (nth iter-retval 0)))))
+
+(def! WikiLine#get-text
+  (fn* [self] (get self "text")))
+
+(def! WikiLine#get-type
+  (fn* [self] (get self "type")))
+
+;; c: current
+;; p: previous
+(def! wiki.format
+  (fn* [src]
+       (let* [
+              wlines-c (wiki.to-slines src)
+              wlines-p (cons { "text" "FIRST-LINE\n" }
+                                (l#take wlines-c (- (count wlines-c) 1)))
+              zipped (l.zip wlines-c wlines-p)
+              dup-p (fn* [wline-c wline-p]
+                         (and (= (WikiLine#get-type wline-c) "heading")
+                              (not (= (WikiLine#get-text wline-p) "\n"))
+                              ))
+              new-wlines (l.foldl
+                          (fn* [acc wlc-wlp]
+                               (let* [
+                                      wline-c (nth wlc-wlp 0)
+                                      wline-p (nth wlc-wlp 1)
+                                      ]
+                                 (if (dup-p wline-c wline-p)
+                                     (cons wline-c
+                                           (cons { "text" "\n" }
+                                                 acc))
+                                   (cons wline-c acc))))
+                          '()
+                          zipped)
+              ]
+         (apply str (l#reverse
+                     (map WikiLine#get-text new-wlines))))))

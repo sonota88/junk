@@ -1,5 +1,4 @@
 require_relative "common"
-require_relative "lib/wiki"
 
 class Page
 
@@ -20,9 +19,15 @@ class Page
     @src = body
   end
 
+  def self.load(id)
+    page = Page.new(id)
+    page.load()
+    page
+  end
+
   def save
     path = File.join(DATA_ROOT, "page/#{@id}.txt")
-    formatted_src = Wiki.format(@src)
+    formatted_src = Wiki.format_v2(@src)
 
     Mal.eval_v2(
       mal_env(

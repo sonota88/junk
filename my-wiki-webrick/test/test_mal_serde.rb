@@ -1,5 +1,4 @@
 require_relative "helper"
-require_relative "../mal"
 
 class MalTest < Minitest::Test
   def test_deser_class_01

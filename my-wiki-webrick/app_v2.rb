@@ -1,5 +1,6 @@
 load "./lib.rb"
-load "./mal.rb"
+load "./lib/wiki.rb"
+load "./lib/mal.rb"
 
 load "./lib/vcs_git.rb"
 $vcs = VcsGit.new
@@ -147,38 +148,6 @@ def to_api_triple(json)
 end
 
 # --------------------------------
-
-def add_to_recent_changes(id, title, type)
-  path = data_path("recent_changes.json")
-
-  unless File.exist?(path)
-    open(path, "wb"){|f| f.puts "[]" }
-  end
-
-  changes = read_json(path)
-  d = Time.now
-
-  changes2 = changes.select do |change|
-    change["id"] != id
-  end
-
-  changes2.unshift(
-    {
-      "id"         => id,
-      "title"      => title,
-      "timestamp"  => d.strftime("%s_%F_%T"),
-      "type"       => type
-    }
-  )
-
-  if changes2.size > 200
-    changes2.pop()
-  end
-
-  open(path, "wb") { |f| f.puts JSON.pretty_generate(changes2) }
-end
-
-# --------------------------------
 # create page
 
 get "/page/new" do |req, params|
@@ -194,7 +163,7 @@ get "/page/new" do |req, params|
 
   wiki.id_title_map_put(new_id, new_title)
 
-  add_to_recent_changes(page.id, page.title, "create")
+  wiki.add_to_recent_changes(page.id, page.title, "create")
 
   [
     200,
@@ -299,8 +268,7 @@ get "/api/page/:id/edit" do |req, params|
         label: "178"
       )
 
-      page = Page.new(page_id)
-      page.load()
+      page = Page.load(page_id)
 
       {
         title: Page.get_title(page_id),
@@ -331,8 +299,7 @@ patch "/api/page/:id" do |req, params|
 
       src = _params[:src].gsub("\r\n", "\n")
 
-      page = Page.new(page_id)
-      page.load()
+      page = Page.load(page_id)
 
       page.title = _params[:title]
       page.merge_edited!(range, src)
@@ -354,7 +321,7 @@ patch "/api/page/:id" do |req, params|
         }
       )
 
-      add_to_recent_changes(page_id, _params[:title], "update")
+      wiki.add_to_recent_changes(page_id, _params[:title], "update")
 
       {}
     end
@@ -472,8 +439,12 @@ patch "/api/page/:id/links" do |req, params|
     _api_v2(params) do |_params|
       p_e [488, page_id, _params]
 
+      wiki = Wiki.new
+
       path = data_path("page_link.json")
+      path_mal = data_path("page_link.mal")
       path_inv = data_path("page_link_inverted.json")
+      path_inv_mal = data_path("page_link_inverted.mal")
 
       link_map =
         if File.exist?(path)
@@ -485,18 +456,21 @@ patch "/api/page/:id/links" do |req, params|
       link_map[page_id.to_s] = _params[:dest_ids]
 
       File.open(path, "wb") { |f| f.print JSON.generate(link_map) }
-
-      # 転置インデックスを更新
-      link_map_inv = {}
-      link_map.each { |src, dest_ids|
-        src_id = src.to_i
-        dest_ids.each { |dest_id|
-          link_map_inv[dest_id] ||= []
-          link_map_inv[dest_id] << src_id
-        }
+      File.open(path_mal, "wb") { |f|
+        # キーを Integer に変換
+        link_map2 = link_map.to_a.map { |k, v| [k.to_i, v] }.to_h
+        f.print Mal.to_sexp(link_map2)
       }
 
+      # 転置インデックスを更新
+      link_map_inv = wiki.invert_link_map_v2(link_map)
+
       File.open(path_inv, "wb") { |f| f.print JSON.generate(link_map_inv) }
+      File.open(path_inv_mal, "wb") { |f|
+        # キーを Integer に変換
+        link_map_inv2 = link_map_inv.to_a.map { |k, v| [k.to_i, v] }.to_h
+        f.print Mal.to_sexp(link_map_inv2)
+      }
 
       {}
     end
@@ -550,6 +524,7 @@ def do_get(req, res)
 end
 
 def get_method(req)
+  # TODO Consider Hash#fetch
   if req.query.key?("_method")
     req.query["_method"]
   else
@@ -557,9 +532,9 @@ def get_method(req)
   end 
 end
 
-def invalid_req
+def bad_req
   [
-    500, # TODO クライアントのせいなので 500 ではない
+    400, # bad request
     { "Content-Type" => "text/plain" },
     "invalid req"
   ]
@@ -582,11 +557,7 @@ def do_post(req, res)
       route, params = $routing.match(method, req.path)
       $routing.dispatch(route, req, params)
     else
-      [
-        404, # TODO 適切なものにする
-        { "Content-Type" => "text/plain" },
-        "not found #{req.path}"
-      ]
+      bad_req()
     end
 
   set_res(res, triple)
