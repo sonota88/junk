@@ -6,17 +6,17 @@ require_relative "lib/myhash"
 
 CRLF = "\r\n"
 
-def read_json(path)
-  JSON.parse(
-    File.read(path)
-  )
+def read_json(path, default: nil)
+  if File.exist?(path)
+    JSON.parse(
+      File.read(path)
+    )
+  else
+    default
+  end
 end
 
 CONFIG = read_json("config.json")
-
-# JJSIKI_DIR = File.expand_path("~/__raid-01/dev/jjsiki/junk/my-wiki/")
-# # DATA_ROOT = File.expand_path("~/__raid-01/dev/jjsiki/data/")
-# DATA_ROOT = File.expand_path("~/__raid-01/dev-ruby/simple-http-server/z_data/")
 
 JJSIKI_DIR = File.expand_path(CONFIG["jjsiki_dir"])
 DATA_ROOT = File.expand_path(CONFIG["data_root"])
@@ -159,14 +159,4 @@ def mal_env(hash)
   {
     "DATA-ROOT" => DATA_ROOT,
   }.merge(hash)
-end
-
-def read_page_link_interted
-  path = data_path("page_link_inverted.json")
-  if File.exist?(path)
-    read_json(path)
-  else
-    # 初回
-    {}
-  end
 end

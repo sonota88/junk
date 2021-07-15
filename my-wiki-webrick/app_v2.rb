@@ -67,7 +67,6 @@ class Routing
 
   def dispatch(route, req, params)
     params = params.merge(to_params(req))
-
     route[:block].call(req, params)
   end
 end
@@ -148,6 +147,42 @@ def to_api_triple(json)
 end
 
 # --------------------------------
+
+get "/" do |req, params|
+  [
+    200,
+    { "Content-Type" => "text/html" },
+    redirect_to("/page/0")
+  ]
+end
+
+# --------------------------------
+
+patch "/api/page/:id/links" do |req, params|
+  wiki = Wiki.new
+  page_id = params["id"].to_i
+
+  json =
+    _api_v2(params) do |_params|
+      p_e [488, page_id, _params]
+
+      link_map = wiki.link_map_load()
+
+      link_map[page_id.to_s] = _params[:dest_ids]
+
+      wiki.link_map_save(link_map)
+
+      # 転置インデックスを更新
+      link_map_inv = wiki.invert_link_map_v2(link_map)
+      wiki.link_map_inv_save(link_map_inv)
+
+      {}
+    end
+
+  to_api_triple(json)
+end
+
+# --------------------------------
 # create page
 
 get "/page/new" do |req, params|
@@ -162,7 +197,6 @@ get "/page/new" do |req, params|
   page.save()
 
   wiki.id_title_map_put(new_id, new_title)
-
   wiki.add_to_recent_changes(page.id, page.title, "create")
 
   [
@@ -175,12 +209,10 @@ end
 # --------------------------------
 
 get "/page/:id" do |req, params|
-  body = render("page/show")
-
   [
     200,
     { "Content-Type" => "text/html" },
-    body
+    render("page/show")
   ]
 end
 
@@ -196,10 +228,10 @@ get "/api/page/:id" do |req, params|
 
   page_id = params["id"].to_i
 
-  link_map_inv = read_page_link_interted()
-
   json =
     _api_v2(params) do |_params|
+      link_map_inv = wiki.link_map_inv_load()
+
       {
         title: Page.get_title(page_id),
         src: Page.get_src(page_id),
@@ -218,12 +250,10 @@ get "/page/:id/edit" do |req, params|
   page_id = params["id"].to_i
   file_path = data_path("page/#{page_id}.txt")
 
-  body = render("page/edit")
-
   [
     200,
     { "Content-Type" => "text/html" },
-    body
+    render("page/edit")
   ]
 end
 
@@ -258,10 +288,10 @@ get "/api/page/:id/edit" do |req, params|
 
   page_id = params["id"].to_i
 
-  link_map_inv = read_page_link_interted()
-
   json =
     _api_v2(params) do |_params|
+      link_map_inv = wiki.link_map_inv_load()
+
       range = get_range_from_params(_params)
       print_stderr(
         "range (#{range.inspect})",
@@ -333,6 +363,7 @@ end
 
 get "/search" do |req, params|
   html = _render_nofile("search", "/page_search", {})
+
   [
     200,
     { "Content-Type" => "text/html" },
@@ -360,7 +391,7 @@ get "/api/search_grep" do |req, params|
     _api_v2(params) do |_params|
       pages = Searcher.grep(_params[:q])
 
-      pages.each{|page|
+      pages.each { |page|
         page[:title] = wiki.id_title_map[page[:id].to_s]
       }
 
@@ -416,6 +447,7 @@ get "/api/recent_changes" do |req, params|
   #   ,changes: changes
   # }));
 
+  # TODO change to sexp file
   changes = read_json(
     data_path("recent_changes.json")
   )
@@ -432,70 +464,21 @@ end
 
 # --------------------------------
 
-patch "/api/page/:id/links" do |req, params|
-  page_id = params["id"].to_i
-
-  json =
-    _api_v2(params) do |_params|
-      p_e [488, page_id, _params]
-
-      wiki = Wiki.new
-
-      path = data_path("page_link.json")
-      path_mal = data_path("page_link.mal")
-      path_inv = data_path("page_link_inverted.json")
-      path_inv_mal = data_path("page_link_inverted.mal")
-
-      link_map =
-        if File.exist?(path)
-          read_json(path)
-        else
-          {} # 初回
-        end
-
-      link_map[page_id.to_s] = _params[:dest_ids]
-
-      File.open(path, "wb") { |f| f.print JSON.generate(link_map) }
-      File.open(path_mal, "wb") { |f|
-        # キーを Integer に変換
-        link_map2 = link_map.to_a.map { |k, v| [k.to_i, v] }.to_h
-        f.print Mal.to_sexp(link_map2)
-      }
-
-      # 転置インデックスを更新
-      link_map_inv = wiki.invert_link_map_v2(link_map)
-
-      File.open(path_inv, "wb") { |f| f.print JSON.generate(link_map_inv) }
-      File.open(path_inv_mal, "wb") { |f|
-        # キーを Integer に変換
-        link_map_inv2 = link_map_inv.to_a.map { |k, v| [k.to_i, v] }.to_h
-        f.print Mal.to_sexp(link_map_inv2)
-      }
-
-      {}
-    end
-
-  to_api_triple(json)
-end
-
-# --------------------------------
-
 def set_res(res, triple)
   st, info, body = triple
   res.status = st
+
   if info.key?("Content-Type")
     res.content_type = info["Content-Type"]
   end
+
   res.body = body
 end
 
 def send_file(req)
-  pub_dir = 
-    File.join(
-      CONFIG["jjsiki_dir"],
-      "app/public"
-    )
+  pub_dir = File.join(JJSIKI_DIR, "app/public")
   path = File.join(pub_dir, req.path)
+
   if File.exist?(path)
     [
       200,
@@ -524,12 +507,7 @@ def do_get(req, res)
 end
 
 def get_method(req)
-  # TODO Consider Hash#fetch
-  if req.query.key?("_method")
-    req.query["_method"]
-  else
-    "POST"
-  end 
+  req.query.fetch("_method", "POST")
 end
 
 def bad_req
