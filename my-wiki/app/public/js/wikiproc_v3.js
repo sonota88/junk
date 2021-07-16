@@ -23,7 +23,7 @@
 
   // --------------------------------
 
-var WikiProc = {
+const WikiProc = {
   idTitleMap: null
   ,getTitleByPageId: function(pageId){
     return this.idTitleMap["" + pageId];
@@ -59,7 +59,7 @@ Elem.prototype = {
     var attr = "";
     if(this.attr){
       for(var k in this.attr){
-        var v = this.attr[k];
+        const v = this.attr[k];
         attr += " " + k + '="' + v + '"';
       }
     }
@@ -147,7 +147,7 @@ function insertAsFirstChild(parent, child) {
 
 
 function unshift(first, arr) {
-  var xs = [ first ];
+  const xs = [ first ];
   for (var a=0,len=arr.length; a<len; a++) {
     xs.push(arr[a]);
   }
@@ -194,7 +194,7 @@ function formatDate(date) {
  * String.prototype.indexOf() のように開始位置を指定して検索する。
  */
 function searchFrom(str, re, fromIndex) {
-  var idx = str.substring(fromIndex).search(re);
+  const idx = str.substring(fromIndex).search(re);
   if (idx < 0) {
     return idx;
   } else {
@@ -235,7 +235,7 @@ function makePageLink(content) {
 function procInline(line) {
 
   var work = line;
-  var els = [];
+  const els = [];
 
   // 行頭の処理
   if (     /^\*(.+?)\*( |$)/    .test(work)
@@ -332,12 +332,12 @@ function lineToHtml(line) {
     }
     return '<a href="' + line + '">' + content + '</a>';
   } else if (line.match( /^link: (.+)/ )) {
-    var href = RegExp.$1;
+    const href = RegExp.$1;
     return '<a href="' + href + '">' + href + '</a>';
   }else if (line.match( /^youtube: ((https?|file):\/\/.+$)/ )) {
-    var url = RegExp.$1;
+    const url = RegExp.$1;
     url.match(/v=([^&]+)/);
-    var ytid = RegExp.$1;
+    const ytid = RegExp.$1;
     return ''
         +'<div class="youtube">'
         +'<iframe width="560" height="315" src="//www.youtube.com/embed/' + ytid + '" frameborder="0" allowfullscreen></iframe>'
@@ -353,8 +353,8 @@ function lineToHtml(line) {
 
 function Parser() {
 
-  var line2elem = function(line){
-    var elem = new Elem();
+  const line2elem = function(line){
+    const elem = new Elem();
 
     if (line.match( /^----/ )) {
       elem.type = "hr";
@@ -368,7 +368,7 @@ function Parser() {
 
 
   this.getMinHeadSpacesSize = function(lines){
-    var firstLine = expandTabs(lines[0]);
+    const firstLine = expandTabs(lines[0]);
     firstLine.match(/^( +)/);
     var minSpaces = RegExp.$1.length;
 
@@ -386,9 +386,9 @@ function Parser() {
 
 
   this.eliminateHeadSpaces = function(lines){
-    var minSpacesLength = this.getMinHeadSpacesSize(lines);
-    var headSpaces = mkStr(" ", minSpacesLength);
-    var headSpacesRE = new RegExp("^" + headSpaces);
+    const minSpacesLength = this.getMinHeadSpacesSize(lines);
+    const headSpaces = mkStr(" ", minSpacesLength);
+    const headSpacesRE = new RegExp("^" + headSpaces);
     return lines
       .map(function(line){
              return expandTabs(line)
@@ -448,7 +448,7 @@ function Parser() {
   function procMermaid(lines) {
     lines.shift();
 
-    var _lines = [];
+    const _lines = [];
 
     var line;
     while (lines.length > 0) {
@@ -460,8 +460,8 @@ function Parser() {
       }
     }
 
-    var src = _lines.join("\n");
-    var elem = new Elem("div", src);
+    const src = _lines.join("\n");
+    const elem = new Elem("div", src);
     elem.attr = { "class": "mermaid"};
 
     return {
@@ -471,7 +471,7 @@ function Parser() {
   }
 
   this.parseMain = (slines)=>{
-    var node = { list: [] };
+    const node = { list: [] };
 
     let sli = 0; // slines index
 
@@ -508,7 +508,7 @@ function Parser() {
   this.parse = function(slines){
     // var lines = slines.map(sline => sline.text);
 
-    var result = this.parseMain( slines );
+    const result = this.parseMain( slines );
     return result.node;
   };
 }
@@ -601,7 +601,7 @@ class Outline {
 function OutlineParser() {
 
   this.getBlockTitle = function(content){
-    var rawTitle = strip(content);
+    const rawTitle = strip(content);
     var title;
     if (rawTitle.match( /^\[notoc\] (.+)/ )) {
       title = strip(RegExp.$1);
@@ -663,7 +663,7 @@ function OutlineParser() {
     };
 
   this.__addLineRange = (sec, linenos)=>{
-      var ln = this.__find(sec.index, linenos);
+      const ln = this.__find(sec.index, linenos);
 
       if (ln) {
         sec.lineFrom = ln.from;
@@ -702,9 +702,9 @@ function OutlineParser() {
           buf = [];
         }
 
-        var head = this.procHn(sline.text);
+        const head = this.procHn(sline.text);
         head.lineno = lineno;
-        var delta = head.level - current.level;
+        const delta = head.level - current.level;
 
         if (0 < delta) {
           for (var a=0; a<delta; a++) {
@@ -732,7 +732,7 @@ function OutlineParser() {
       }
     });
 
-    var linenoMax = lineno;
+    const linenoMax = lineno;
 
     if (buf.length > 0) {
       current.kids.push(buf);
@@ -741,7 +741,7 @@ function OutlineParser() {
     linenos.forEach(function(ln1, i){
       ln1.to = null;
 
-      var nextHead = linenos.filter((ln2, i2)=>{
+      const nextHead = linenos.filter((ln2, i2)=>{
         return i2 > i && ln2.lv <= ln1.lv;
       })[0];
 
@@ -774,7 +774,7 @@ function OutlineParser() {
 
   this.markup = function(doc){
     var result = "";
-    var list = doc.list;
+    const list = doc.list;
 
     var elem, nextElem, temp;
     for (var a=0,len=list.length; a<len; a++) {
@@ -799,9 +799,9 @@ function OutlineParser() {
   };
 
   this.toHTMLElementLeaf = function(block){
-    var src = block;
-    var parser = new Parser();
-    var parsed = parser.parse(src);
+    const src = block;
+    const parser = new Parser();
+    const parsed = parser.parse(src);
     return '<div class="outline">' + this.markup(parsed) + '</div>';
   };
 
@@ -817,7 +817,7 @@ function OutlineParser() {
       if (! block.showInToc) {
         klass = 'class="notoc"';
       }
-      var hid = makeHeadingId(block.title);
+      const hid = makeHeadingId(block.title);
       html += '<h' + block.level + ' id="' + hid + '\" ' + klass + ">";
 
       html += block.title;
@@ -836,7 +836,7 @@ function OutlineParser() {
     }
 
     for (var a=0,len=block.kids.length; a<len; a++) {
-      var kid = block.kids[a];
+      const kid = block.kids[a];
       if(this.isNode(kid)){
         html += this.toHTMLElement(kid, pageId);
       } else {
@@ -850,9 +850,9 @@ function OutlineParser() {
 
 
 function splitPreamble(src) {
-  var lines = src.split("\n");
-  var info = {};
-  var preamble_range = 20;
+  const lines = src.split("\n");
+  const info = {};
+  const preamble_range = 20;
     for (var a=0; a<preamble_range; a++) {
       if (!lines[a]) { continue; }
       if (lines[a].match(/^title:(.+)/)) {
@@ -867,9 +867,9 @@ function splitPreamble(src) {
       }
     }
 
-  var _lines = [];
+  const _lines = [];
   for (var a=0,len=lines.length; a<len; a++) {
-    var line = lines[a];
+    const line = lines[a];
     typeof line !== "undefined" && _lines.push(line);
   }
 
@@ -881,7 +881,7 @@ function splitPreamble(src) {
 
 
 function makePreamble(info) {
-  var lines = [];
+  const lines = [];
   info.by && lines.push( "by: " + info.by);
   info.date && lines.push( "date: " + info.date );
   lines.push( "last modified: " + formatDate(new Date(document.lastModified)) );
@@ -948,12 +948,12 @@ function toHTML(pageId, src, idTitleMap, opts) {
     WikiProc.opts.pagePathType = opts.pagePathType;
   }
 
-  var olParser = new OutlineParser();
-  var outline = olParser.parse(src);
+  const olParser = new OutlineParser();
+  const outline = olParser.parse(src);
   // puts(">>================================");
   // printOutline(outline);
   // puts("<<================================");
-  var wikiPage = {
+  const wikiPage = {
     mainContent: olParser.toHTMLElement(outline, pageId)
   };
 
