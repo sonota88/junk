@@ -58,7 +58,7 @@ Elem.prototype = {
 
     var attr = "";
     if(this.attr){
-      for(var k in this.attr){
+      for (var k in this.attr) {
         const v = this.attr[k];
         attr += " " + k + '="' + v + '"';
       }
@@ -104,7 +104,7 @@ function makeEMIndex(formatted) {
   var emphasis = xtag(formatted, "em");
   var emRefElem = null;
   if (emphasis.length > 0) {
-    for(var a=0,len=emphasis.length; a<len; a++){
+    for (var a=0,len=emphasis.length; a<len; a++) {
       var id = "emphasis_" + a;
       emphasis[a].id = id;
       emReference += '<li><a href="#' + id + '">' + emphasis[a].innerHTML + '</a></li>\n';
