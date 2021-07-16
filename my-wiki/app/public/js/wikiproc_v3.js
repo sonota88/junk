@@ -188,77 +188,7 @@ function formatDate(date) {
     + ":" + fmt(date.getMinutes());
 }
 
-
 // --------------------------------
-
-
-var jsonTable = (function(){
-  function toHtml(plain) {
-    return (""+plain).replace(/\n/g, "<br />");
-  }
-
-  function jsonToTableForArray(rows) {
-    // var table = createElement(null, "table", {"class": "from_json"});
-    var html = "<table class='from_json'>";
-    for (var a=0, lenA=rows.length; a < lenA; a++) {
-      var row = rows[a];
-      // var tr = createElement(table, "tr");
-      html += "<tr>";
-      for(var b=0, lenB=row.length; b<lenB; b++){
-        var col = row[b];
-        html += "<td>" + toHtml(col);
-        html += "</td>";
-      }
-      html += "</tr>";
-    }
-    return html + "</table>";
-  }
-
-  function jsonToTableForObject(rows) {
-    var table = "<table class='from_json'>";
-    var colNames = rows[0];
-
-    table += "<tr>";
-    for (var a=0, lenA=colNames.length; a<lenA; a++) {
-      var colName = colNames[a];
-      table += "<td>" + toHtml(colName) + "</td>";
-    }
-    table += "</tr>";
-
-    var row;
-    for (var b=1, lenB=rows.length; b<lenB; b++) {
-      row = rows[b];
-      table += "<tr>";
-      for (var c=0, lenC=colNames.length; c<lenC; c++) {
-        var colName = colNames[c];
-        var col = row[colName];
-        table += "<td>" + toHtml(col) + "</td>";
-      }
-      table += "</tr>";
-    }
-    return table + "</table>";
-  }
-
-
-  function jsonToTable(json) {
-    var rows = JSON.parse(json);
-    var isArray = (rows[1] instanceof Array);
-
-    if(isArray){
-      return jsonToTableForArray(rows);
-    } else {
-      return jsonToTableForObject(rows);
-    }
-  }
-
-  return {
-    jsonToTable: jsonToTable
-  };
-})();
-
-
-// --------------------------------
-
 
 /**
  * String.prototype.indexOf() のように開始位置を指定して検索する。
@@ -514,32 +444,6 @@ function Parser() {
       , numLines: slinesPre.length
     };
   };
-
-  function procTABLE(lines) {
-    lines.shift();
-
-    var _lines = [];
-
-    var line;
-    while (lines.length > 0) {
-      line = lines.shift();
-      if (line.match(/^\}t-*$/)) {
-        break;
-      } else {
-        _lines.push(line);
-      }
-    }
-
-    var json = _lines.join("\n");
-    var table = jsonTable.jsonToTable(json);
-    // var elem = new Elem("div", table.outerHTML );
-    var elem = new Elem("div", table);
-
-    return {
-      elem: elem
-      , lines: lines
-    };
-  }
 
   function procMermaid(lines) {
     lines.shift();
