@@ -853,19 +853,20 @@ function splitPreamble(src) {
   const lines = src.split("\n");
   const info = {};
   const preamble_range = 20;
-    for (var a=0; a<preamble_range; a++) {
-      if (!lines[a]) { continue; }
-      if (lines[a].match(/^title:(.+)/)) {
-        info.title = RegExp.$1;
-        delete lines[a];
-      } else if (lines[a].match(/^by:(.+)/)) {
-        info.by = RegExp.$1;
-        delete lines[a];
-      } else if (lines[a].match(/^date:(.+)/)) {
-        info.date = RegExp.$1;
-        delete lines[a];
-      }
+
+  for (var a=0; a<preamble_range; a++) {
+    if (!lines[a]) { continue; }
+    if (lines[a].match(/^title:(.+)/)) {
+      info.title = RegExp.$1;
+      delete lines[a];
+    } else if (lines[a].match(/^by:(.+)/)) {
+      info.by = RegExp.$1;
+      delete lines[a];
+    } else if (lines[a].match(/^date:(.+)/)) {
+      info.date = RegExp.$1;
+      delete lines[a];
     }
+  }
 
   const _lines = [];
   for (var a=0,len=lines.length; a<len; a++) {
