@@ -58,7 +58,7 @@ Elem.prototype = {
 
     var attr = "";
     if(this.attr){
-      for (var k in this.attr) {
+      for (let k in this.attr) {
         const v = this.attr[k];
         attr += " " + k + '="' + v + '"';
       }
@@ -104,7 +104,7 @@ function makeEMIndex(formatted) {
   var emphasis = xtag(formatted, "em");
   var emRefElem = null;
   if (emphasis.length > 0) {
-    for (var a=0,len=emphasis.length; a<len; a++) {
+    for (let a=0,len=emphasis.length; a<len; a++) {
       var id = "emphasis_" + a;
       emphasis[a].id = id;
       emReference += '<li><a href="#' + id + '">' + emphasis[a].innerHTML + '</a></li>\n';
@@ -148,7 +148,7 @@ function insertAsFirstChild(parent, child) {
 
 function unshift(first, arr) {
   const xs = [ first ];
-  for (var a=0,len=arr.length; a<len; a++) {
+  for (let a=0,len=arr.length; a<len; a++) {
     xs.push(arr[a]);
   }
   return xs;
@@ -372,7 +372,7 @@ function Parser() {
     firstLine.match(/^( +)/);
     var minSpaces = RegExp.$1.length;
 
-    for (var a=0,len=lines.length; a<len; a++) {
+    for (let a=0,len=lines.length; a<len; a++) {
       var line = expandTabs(lines[a]);
       if(line.match(/^(\s*)/)){
         var length = RegExp.$1.length;
@@ -653,7 +653,7 @@ function OutlineParser() {
   };
 
   this.__find = (idx, linenos)=>{
-      for (var i=0,len=linenos.length; i<len; i++) {
+      for (let i=0,len=linenos.length; i<len; i++) {
         var ln = linenos[i];
         if(ln.idx === idx){
           return ln;
@@ -707,12 +707,12 @@ function OutlineParser() {
         const delta = head.level - current.level;
 
         if (0 < delta) {
-          for (var a=0; a<delta; a++) {
+          for (let a=0; a<delta; a++) {
             stack.push(current);
             current = new Outline(current, lineno);
           }
         } else if (delta < 0) {
-          for (var a=0; a<-delta; a++) {
+          for (let a=0; a<-delta; a++) {
             stack.pop();
           }
           current = new Outline(_last(stack), lineno);
@@ -777,7 +777,7 @@ function OutlineParser() {
     const list = doc.list;
 
     var elem, nextElem, temp;
-    for (var a=0,len=list.length; a<len; a++) {
+    for (let a=0,len=list.length; a<len; a++) {
       elem = list[a];
       nextElem = list[a+1];
       temp = elem.toHtml();
@@ -835,7 +835,7 @@ function OutlineParser() {
       html += "</h" + block.level + ">";
     }
 
-    for (var a=0,len=block.kids.length; a<len; a++) {
+    for (let a=0,len=block.kids.length; a<len; a++) {
       const kid = block.kids[a];
       if(this.isNode(kid)){
         html += this.toHTMLElement(kid, pageId);
@@ -854,7 +854,7 @@ function splitPreamble(src) {
   const info = {};
   const preamble_range = 20;
 
-  for (var a=0; a<preamble_range; a++) {
+  for (let a=0; a<preamble_range; a++) {
     if (!lines[a]) { continue; }
     if (lines[a].match(/^title:(.+)/)) {
       info.title = RegExp.$1;
@@ -869,7 +869,7 @@ function splitPreamble(src) {
   }
 
   const _lines = [];
-  for (var a=0,len=lines.length; a<len; a++) {
+  for (let a=0,len=lines.length; a<len; a++) {
     const line = lines[a];
     typeof line !== "undefined" && _lines.push(line);
   }
@@ -913,10 +913,10 @@ function getTitle(info) {
 function printOutline(ol) {
   var ind0 = "";
   var ind1 = "";
-  for (var i=0; i<ol.level * 3; i++) {
+  for (let i=0; i<ol.level * 3; i++) {
     ind0 += " ";
   }
-  for (var i=0; i<(ol.level+1) * 3; i++) {
+  for (let i=0; i<(ol.level+1) * 3; i++) {
     ind1 += " ";
   }
   function p0(x) {
