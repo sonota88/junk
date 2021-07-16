@@ -12,7 +12,7 @@
       return src
         .replace(/&/g, "&amp;")
         .replace(/[\&<>]/g, function(m) {
-          if(m === "&"){
+          if (m === "&") {
             return "&amp;";
           } else {
             return util.HTML_ESCAPE_MAP[m];
@@ -65,7 +65,7 @@ Elem.prototype = {
     }
 
     var innerHTML;
-    if(this.type === "pre"){
+    if (this.type === "pre") {
       if(this.attr["class"] === "ul"){
         innerHTML = this.content;
       } else {
@@ -76,7 +76,7 @@ Elem.prototype = {
       innerHTML = this.content;
     }
 
-    if(this.type === "hr"){
+    if (this.type === "hr") {
       return "<" + this.type + " />";
     } else {
       return "<" + this.type + " "
@@ -103,7 +103,7 @@ function makeEMIndex(formatted) {
   var emReference = "";
   var emphasis = xtag(formatted, "em");
   var emRefElem = null;
-  if(emphasis.length > 0){
+  if (emphasis.length > 0) {
     for(var a=0,len=emphasis.length; a<len; a++){
       var id = "emphasis_" + a;
       emphasis[a].id = id;
@@ -148,7 +148,7 @@ function insertAsFirstChild(parent, child) {
 
 function unshift(first, arr) {
   var xs = [ first ];
-  for(var a=0,len=arr.length; a<len; a++){
+  for (var a=0,len=arr.length; a<len; a++) {
     xs.push(arr[a]);
   }
   return xs;
@@ -156,7 +156,7 @@ function unshift(first, arr) {
 
 
 function strip(str) {
-  if(!str){
+  if (!str) {
     return null;
   }
   return str.replace( /^[\s\t\n\r\n]+/, "" ).replace( /[\s\t\r\n]+$/, "" );
@@ -164,7 +164,7 @@ function strip(str) {
 
 
 function mkStr(str, n) {
-  return new Array(n+1).join(str);
+  return new Array(n + 1).join(str);
 }
 
 
@@ -200,7 +200,7 @@ var jsonTable = (function(){
   function jsonToTableForArray(rows) {
     // var table = createElement(null, "table", {"class": "from_json"});
     var html = "<table class='from_json'>";
-    for(var a=0, lenA=rows.length; a<lenA; a++){
+    for (var a=0, lenA=rows.length; a < lenA; a++) {
       var row = rows[a];
       // var tr = createElement(table, "tr");
       html += "<tr>";
@@ -219,17 +219,17 @@ var jsonTable = (function(){
     var colNames = rows[0];
 
     table += "<tr>";
-    for(var a=0, lenA=colNames.length; a<lenA; a++){
+    for (var a=0, lenA=colNames.length; a<lenA; a++) {
       var colName = colNames[a];
       table += "<td>" + toHtml(colName) + "</td>";
     }
     table += "</tr>";
 
     var row;
-    for(var b=1, lenB=rows.length; b<lenB; b++){
+    for (var b=1, lenB=rows.length; b<lenB; b++) {
       row = rows[b];
       table += "<tr>";
-      for(var c=0, lenC=colNames.length; c<lenC; c++){
+      for (var c=0, lenC=colNames.length; c<lenC; c++) {
         var colName = colNames[c];
         var col = row[colName];
         table += "<td>" + toHtml(col) + "</td>";
@@ -265,7 +265,7 @@ var jsonTable = (function(){
  */
 function searchFrom(str, re, fromIndex) {
   var idx = str.substring(fromIndex).search(re);
-  if(idx < 0){
+  if (idx < 0) {
     return idx;
   } else {
     return idx + fromIndex;
@@ -275,7 +275,7 @@ function searchFrom(str, re, fromIndex) {
 function makePageLink(content) {
   var pageId, title;
 
-  if(content.match( /^(\d+):(.+)$/ )){
+  if (content.match( /^(\d+):(.+)$/ )) {
     pageId = parseInt(RegExp.$1, 10);
     title = RegExp.$2;
   } else {
@@ -322,16 +322,16 @@ function procInline(line) {
 
     var pos = work.search( /( \*| _| `| \[\[)/ );
 
-    if(pos >= 0){
+    if (pos >= 0) {
       els.push( work.substring(0, pos) ); // left context
       work = work.substring(pos);
 
-      if(/^ \*/.test(work)){
+      if (/^ \*/.test(work)) {
 
         ws = 2; // " *"
         we = 2; // "* "
         var posEnd = searchFrom(work, /\*( |$)/, ws);
-        if(posEnd < 0){
+        if (posEnd < 0) {
           els.push(" *");
           work = work.substring(ws);
         } else {
@@ -344,7 +344,7 @@ function procInline(line) {
         ws = 2; // " _"
         we = 2; // "_ "
         var posEnd = searchFrom(work, /_( |$)/, ws);
-        if(posEnd < 0){
+        if (posEnd < 0) {
           els.push(" _");
           work = work.substring(ws);
         } else {
@@ -352,12 +352,12 @@ function procInline(line) {
           work = work.substring(posEnd + we);
         }
 
-      } else if (/^ `/.test(work)){
+      } else if (/^ `/.test(work)) {
 
         ws = 2; // " `"
         we = 2; // "` "
         var posEnd = searchFrom(work, /`( |$)/, ws);
-        if(posEnd < 0){
+        if (posEnd < 0) { 
           els.push(" `");
           work = work.substring(ws);
         } else {
@@ -365,12 +365,12 @@ function procInline(line) {
           work = work.substring(posEnd + we);
         }
 
-      } else if (/^ \[\[/.test(work)){
+      } else if (/^ \[\[/.test(work)) {
 
         ws = 3; // " [["
         we = 3; // "]] "
         var posEnd = searchFrom(work, /\]\]( |$)/, ws);
-        if(posEnd < 0){
+        if (posEnd < 0) {
           els.push(" [[");
           work = work.substring(ws);
         } else {
@@ -401,7 +401,7 @@ function lineToHtml(line) {
       ;
     }
     return '<a href="' + line + '">' + content + '</a>';
-  }else if (line.match( /^link: (.+)/ )) {
+  } else if (line.match( /^link: (.+)/ )) {
     var href = RegExp.$1;
     return '<a href="' + href + '">' + href + '</a>';
   }else if (line.match( /^youtube: ((https?|file):\/\/.+$)/ )) {
@@ -413,7 +413,7 @@ function lineToHtml(line) {
         +'<iframe width="560" height="315" src="//www.youtube.com/embed/' + ytid + '" frameborder="0" allowfullscreen></iframe>'
         + '<br /><a href="' + url + '">' + url + '</a>'
         + '</div>';
-  } else if (line.match( /^img: (.+)$/ )){
+  } else if (line.match( /^img: (.+)$/ )) {
     return '<img src="' + RegExp.$1 + '" />';
   } else {
     return procInline(line).join("");
@@ -426,7 +426,7 @@ function Parser() {
   var line2elem = function(line){
     var elem = new Elem();
 
-    if(line.match( /^----/ )){
+    if (line.match( /^----/ )) {
       elem.type = "hr";
       elem.content = "";
     } else {
@@ -442,11 +442,11 @@ function Parser() {
     firstLine.match(/^( +)/);
     var minSpaces = RegExp.$1.length;
 
-    for(var a=0,len=lines.length; a<len; a++){
+    for (var a=0,len=lines.length; a<len; a++) {
       var line = expandTabs(lines[a]);
       if(line.match(/^(\s*)/)){
         var length = RegExp.$1.length;
-        if(length < minSpaces){
+        if (length < minSpaces) {
           minSpaces = length;
         }
       }
@@ -521,7 +521,7 @@ function Parser() {
     var _lines = [];
 
     var line;
-    while(lines.length > 0){
+    while (lines.length > 0) {
       line = lines.shift();
       if (line.match(/^\}t-*$/)) {
         break;
@@ -547,7 +547,7 @@ function Parser() {
     var _lines = [];
 
     var line;
-    while(lines.length > 0){
+    while (lines.length > 0) {
       line = lines.shift();
       if (line.match(/^```/)) {
         break;
@@ -580,16 +580,16 @@ function Parser() {
         const elem = ret.elem;
         sli += ret.numLines;
         node.list.push(elem);
-      }else if (/^b\{-*$/.test(sline.text)) {
+      } else if (/^b\{-*$/.test(sline.text)) {
         node.list.push( new Elem(null, '<div class="box">') );
         sli++;
-      }else if (/^\}b-*$/.test(sline.text)) {
+      } else if (/^\}b-*$/.test(sline.text)) {
         node.list.push( new Elem(null, "</div>") );
         sli++;
-      }else if (/^q\{-*$/.test(sline.text)) {
+      } else if (/^q\{-*$/.test(sline.text)) {
         node.list.push( new Elem(null, "<blockquote>") );
         sli++;
-      }else if (/^\}q-*$/.test(sline.text)) {
+      } else if (/^\}q-*$/.test(sline.text)) {
         node.list.push( new Elem(null, "</blockquote>") );
         sli++;
       } else {
@@ -699,7 +699,7 @@ function OutlineParser() {
   this.getBlockTitle = function(content){
     var rawTitle = strip(content);
     var title;
-    if(rawTitle.match( /^\[notoc\] (.+)/ )){
+    if (rawTitle.match( /^\[notoc\] (.+)/ )) {
       title = strip(RegExp.$1);
     } else {
       title = rawTitle;
@@ -749,7 +749,7 @@ function OutlineParser() {
   };
 
   this.__find = (idx, linenos)=>{
-      for(var i=0,len=linenos.length; i<len; i++){
+      for (var i=0,len=linenos.length; i<len; i++) {
         var ln = linenos[i];
         if(ln.idx === idx){
           return ln;
@@ -830,7 +830,7 @@ function OutlineParser() {
 
     var linenoMax = lineno;
 
-    if(buf.length > 0){
+    if (buf.length > 0) {
       current.kids.push(buf);
     }
 
@@ -841,7 +841,7 @@ function OutlineParser() {
         return i2 > i && ln2.lv <= ln1.lv;
       })[0];
 
-      if(nextHead){
+      if (nextHead) {
         ln1.to = nextHead.from - 1;
       } else {
         ln1.to = linenoMax;
@@ -858,7 +858,7 @@ function OutlineParser() {
   }
 
   this.procHn = function(line){
-    if(line.match(/^(=+)([^=].*?)=*$/)){
+    if (line.match(/^(=+)([^=].*?)=*$/)) {
       return {
         level: RegExp.$1.length
         , content: RegExp.$2
@@ -873,7 +873,7 @@ function OutlineParser() {
     var list = doc.list;
 
     var elem, nextElem, temp;
-    for(var a=0,len=list.length; a<len; a++){
+    for (var a=0,len=list.length; a<len; a++) {
       elem = list[a];
       nextElem = list[a+1];
       temp = elem.toHtml();
@@ -931,7 +931,7 @@ function OutlineParser() {
       html += "</h" + block.level + ">";
     }
 
-    for( var a=0,len=block.kids.length; a<len; a++) {
+    for (var a=0,len=block.kids.length; a<len; a++) {
       var kid = block.kids[a];
       if(this.isNode(kid)){
         html += this.toHTMLElement(kid, pageId);
@@ -949,9 +949,9 @@ function splitPreamble(src) {
   var lines = src.split("\n");
   var info = {};
   var preamble_range = 20;
-    for(var a=0; a<preamble_range; a++){
+    for (var a=0; a<preamble_range; a++) {
       if (!lines[a]) { continue; }
-      if(lines[a].match(/^title:(.+)/) ){
+      if (lines[a].match(/^title:(.+)/)) {
         info.title = RegExp.$1;
         delete lines[a];
       } else if (lines[a].match(/^by:(.+)/)) {
@@ -964,7 +964,7 @@ function splitPreamble(src) {
     }
 
   var _lines = [];
-  for(var a=0,len=lines.length; a<len; a++){
+  for (var a=0,len=lines.length; a<len; a++) {
     var line = lines[a];
     typeof line !== "undefined" && _lines.push(line);
   }
@@ -994,7 +994,7 @@ function makePreamble(info) {
 
 function getTitle(info) {
   var title = "untitled";
-  if(info.title){
+  if (info.title) {
     title = info.title;
     info.by && (title += " by " + info.by);
     info.date && (title += " (" + info.date + ")");
@@ -1008,10 +1008,10 @@ function getTitle(info) {
 function printOutline(ol) {
   var ind0 = "";
   var ind1 = "";
-  for(var i=0; i<ol.level * 3; i++){
+  for (var i=0; i<ol.level * 3; i++) {
     ind0 += " ";
   }
-  for(var i=0; i<(ol.level+1) * 3; i++){
+  for (var i=0; i<(ol.level+1) * 3; i++) {
     ind1 += " ";
   }
   function p0(x) {
@@ -1027,7 +1027,7 @@ function printOutline(ol) {
   p("## " + ol.lineFrom + "--" + ol.lineTo);
   // p(ol.children.length);
   ol.children.forEach(function(kid, i){
-    if(typeof kid === "string"){
+    if (typeof kid === "string") {
       p("(text)");
     } else {
       printOutline(kid);
@@ -1040,7 +1040,9 @@ function toHTML(pageId, src, idTitleMap, opts) {
   WikiProc.idTitleMap = idTitleMap;
 
   opts = opts || {};
-  if(opts.pagePathType) WikiProc.opts.pagePathType = opts.pagePathType;
+  if (opts.pagePathType) {
+    WikiProc.opts.pagePathType = opts.pagePathType;
+  }
 
   var olParser = new OutlineParser();
   var outline = olParser.parse(src);
