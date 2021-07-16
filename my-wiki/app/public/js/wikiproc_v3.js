@@ -11,10 +11,10 @@
     ,escapeHTML: (src)=>{
       return src
         .replace(/&/g, "&amp;")
-        .replace(/[\&<>]/g, function(m){
+        .replace(/[\&<>]/g, function(m) {
           if(m === "&"){
             return "&amp;";
-          }else{
+          } else {
             return util.HTML_ESCAPE_MAP[m];
           }
         });
@@ -52,7 +52,7 @@ function Elem(type, content) {
 }
 Elem.prototype = {
   toHtml: function(){
-    if( ! this.type ){
+    if (! this.type) {
       return this.content ? lineToHtml(this.content) : "";
     }
 
@@ -68,17 +68,17 @@ Elem.prototype = {
     if(this.type === "pre"){
       if(this.attr["class"] === "ul"){
         innerHTML = this.content;
-      }else{
+      } else {
         // 通常の pre 要素
         innerHTML = util.escapeHTML(this.content);
       }
-    }else{
+    } else {
       innerHTML = this.content;
     }
 
     if(this.type === "hr"){
       return "<" + this.type + " />";
-    }else{
+    } else {
       return "<" + this.type + " "
         + attr
         + " >"
@@ -130,7 +130,7 @@ function makeEMIndex(formatted) {
 }
 
 
-////////////////////////////////
+// --------------------------------
 // utils
 
 
@@ -189,7 +189,7 @@ function formatDate(date) {
 }
 
 
-////////////////////////////////
+// --------------------------------
 
 
 var jsonTable = (function(){
@@ -246,7 +246,7 @@ var jsonTable = (function(){
 
     if(isArray){
       return jsonToTableForArray(rows);
-    }else{
+    } else {
       return jsonToTableForObject(rows);
     }
   }
@@ -257,7 +257,7 @@ var jsonTable = (function(){
 })();
 
 
-////////////////////////////////
+// --------------------------------
 
 
 /**
@@ -267,7 +267,7 @@ function searchFrom(str, re, fromIndex) {
   var idx = str.substring(fromIndex).search(re);
   if(idx < 0){
     return idx;
-  }else{
+  } else {
     return idx + fromIndex;
   }
 }
@@ -278,7 +278,7 @@ function makePageLink(content) {
   if(content.match( /^(\d+):(.+)$/ )){
     pageId = parseInt(RegExp.$1, 10);
     title = RegExp.$2;
-  }else{
+  } else {
     pageId = parseInt(content, 10);
     title = WikiProc.getTitleByPageId(pageId);
     if(!title){
@@ -308,11 +308,11 @@ function procInline(line) {
   var els = [];
 
   // 行頭の処理
-  if(      /^\*(.+?)\*( |$)/    .test(work)
+  if (     /^\*(.+?)\*( |$)/    .test(work)
         || /^_(.+?)_( |$)/      .test(work)
         || /^`(.+?)`( |$)/      .test(work)
         || /^\[\[(.+?)\]\]( |$)/.test(work)
-  ){
+ ) {
     work = " " + work;
   }
 
@@ -334,12 +334,12 @@ function procInline(line) {
         if(posEnd < 0){
           els.push(" *");
           work = work.substring(ws);
-        }else{
+        } else {
           els.push('<b>' + work.substring(ws, posEnd) + '</b>');
           work = work.substring(posEnd + we);
         }
 
-      }else if(/^ _/.test(work)){
+      } else if (/^ _/.test(work)){
 
         ws = 2; // " _"
         we = 2; // "_ "
@@ -347,12 +347,12 @@ function procInline(line) {
         if(posEnd < 0){
           els.push(" _");
           work = work.substring(ws);
-        }else{
+        } else {
           els.push('<em>' + work.substring(ws, posEnd) + '</em>');
           work = work.substring(posEnd + we);
         }
 
-      }else if(/^ `/.test(work)){
+      } else if (/^ `/.test(work)){
 
         ws = 2; // " `"
         we = 2; // "` "
@@ -360,12 +360,12 @@ function procInline(line) {
         if(posEnd < 0){
           els.push(" `");
           work = work.substring(ws);
-        }else{
+        } else {
           els.push('<tt>' + work.substring(ws, posEnd) + '</tt>');
           work = work.substring(posEnd + we);
         }
 
-      }else if(/^ \[\[/.test(work)){
+      } else if (/^ \[\[/.test(work)){
 
         ws = 3; // " [["
         we = 3; // "]] "
@@ -373,14 +373,14 @@ function procInline(line) {
         if(posEnd < 0){
           els.push(" [[");
           work = work.substring(ws);
-        }else{
+        } else {
           var content = work.substring(ws, posEnd);
           els.push(makePageLink(content));
           work = work.substring(posEnd + we);
         }
 
       }
-    }else{
+    } else {
       // 行内マークアップがこれ以後存在しない
       els.push(work);
       work = "";
@@ -393,7 +393,7 @@ function procInline(line) {
 
 function lineToHtml(line) {
 
-  if( line.match( /^(https?|file):\/\// ) ){
+  if (line.match( /^(https?|file):\/\// )) {
     var content = line;
     try{
       content = decodeURIComponent(line);
@@ -401,10 +401,10 @@ function lineToHtml(line) {
       ;
     }
     return '<a href="' + line + '">' + content + '</a>';
-  }else if( line.match( /^link: (.+)/ ) ){
+  }else if (line.match( /^link: (.+)/ )) {
     var href = RegExp.$1;
     return '<a href="' + href + '">' + href + '</a>';
-  }else if( line.match( /^youtube: ((https?|file):\/\/.+$)/ ) ){
+  }else if (line.match( /^youtube: ((https?|file):\/\/.+$)/ )) {
     var url = RegExp.$1;
     url.match(/v=([^&]+)/);
     var ytid = RegExp.$1;
@@ -413,9 +413,9 @@ function lineToHtml(line) {
         +'<iframe width="560" height="315" src="//www.youtube.com/embed/' + ytid + '" frameborder="0" allowfullscreen></iframe>'
         + '<br /><a href="' + url + '">' + url + '</a>'
         + '</div>';
-  }else if(line.match( /^img: (.+)$/ )){
+  } else if (line.match( /^img: (.+)$/ )){
     return '<img src="' + RegExp.$1 + '" />';
-  }else{
+  } else {
     return procInline(line).join("");
   }
 };
@@ -429,7 +429,7 @@ function Parser() {
     if(line.match( /^----/ )){
       elem.type = "hr";
       elem.content = "";
-    }else{
+    } else {
       elem.content = line;
     }
 
@@ -523,9 +523,9 @@ function Parser() {
     var line;
     while(lines.length > 0){
       line = lines.shift();
-      if( line.match(/^\}t-*$/) ){
+      if (line.match(/^\}t-*$/)) {
         break;
-      }else{
+      } else {
         _lines.push(line);
       }
     }
@@ -549,9 +549,9 @@ function Parser() {
     var line;
     while(lines.length > 0){
       line = lines.shift();
-      if( line.match(/^```/) ){
+      if (line.match(/^```/)) {
         break;
-      }else{
+      } else {
         _lines.push(line);
       }
     }
@@ -580,16 +580,16 @@ function Parser() {
         const elem = ret.elem;
         sli += ret.numLines;
         node.list.push(elem);
-      }else if( /^b\{-*$/.test(sline.text) ){
+      }else if (/^b\{-*$/.test(sline.text)) {
         node.list.push( new Elem(null, '<div class="box">') );
         sli++;
-      }else if( /^\}b-*$/.test(sline.text) ){
+      }else if (/^\}b-*$/.test(sline.text)) {
         node.list.push( new Elem(null, "</div>") );
         sli++;
-      }else if( /^q\{-*$/.test(sline.text) ){
+      }else if (/^q\{-*$/.test(sline.text)) {
         node.list.push( new Elem(null, "<blockquote>") );
         sli++;
-      }else if( /^\}q-*$/.test(sline.text) ){
+      }else if (/^\}q-*$/.test(sline.text)) {
         node.list.push( new Elem(null, "</blockquote>") );
         sli++;
       } else {
@@ -615,7 +615,7 @@ class Outline {
     this.isRoot = (parent == null);
     this.level = this.isRoot ? 0 : parent.level + 1;
     this.kids = [];
-    if( ! this.isRoot ){
+    if (! this.isRoot) {
       parent.kids.push(this);
     }
 
@@ -701,7 +701,7 @@ function OutlineParser() {
     var title;
     if(rawTitle.match( /^\[notoc\] (.+)/ )){
       title = strip(RegExp.$1);
-    }else{
+    } else {
       title = rawTitle;
     }
     return title;
@@ -812,7 +812,7 @@ function OutlineParser() {
             stack.pop();
           }
           current = new Outline(_last(stack), lineno);
-        }else{
+        } else {
           current = new Outline(_last(stack), lineno);
         }
 
@@ -823,7 +823,7 @@ function OutlineParser() {
 
         linenos.push({ lv: head.level, from: lineno, idx: current.index});
 
-      }else{
+      } else {
         buf.push(sline);
       }
     });
@@ -843,7 +843,7 @@ function OutlineParser() {
 
       if(nextHead){
         ln1.to = nextHead.from - 1;
-      }else{
+      } else {
         ln1.to = linenoMax;
       }
     });
@@ -863,7 +863,7 @@ function OutlineParser() {
         level: RegExp.$1.length
         , content: RegExp.$2
       };
-    }else{
+    } else {
       return null;
     }
   };
@@ -879,13 +879,13 @@ function OutlineParser() {
       temp = elem.toHtml();
       result += temp;
 
-      if( temp === '<div class="box">'
+      if (temp === '<div class="box">'
           || temp.match(/^<\/?blockquote/)
           || temp.match(/^<\/?pre/)
           || (elem.type === "hr" || (nextElem && nextElem.type === "hr"))
-        ){
+       ) {
           //
-        }else{
+        } else {
           //result += "<br />";
           result += "\n";
         }
@@ -908,9 +908,9 @@ function OutlineParser() {
   this.toHTMLElement = function(block, pageId){
     var html = '<div class="outline">';
 
-    if( block.title ){
+    if (block.title) {
       var klass = "";
-      if( ! block.showInToc ){
+      if (! block.showInToc) {
         klass = 'class="notoc"';
       }
       var hid = makeHeadingId(block.title);
@@ -931,11 +931,11 @@ function OutlineParser() {
       html += "</h" + block.level + ">";
     }
 
-    for( var a=0,len=block.kids.length; a<len; a++ ){
+    for( var a=0,len=block.kids.length; a<len; a++) {
       var kid = block.kids[a];
       if(this.isNode(kid)){
         html += this.toHTMLElement(kid, pageId);
-      }else{
+      } else {
         html += this.toHTMLElementLeaf(kid, pageId);
       }
     }
@@ -950,14 +950,14 @@ function splitPreamble(src) {
   var info = {};
   var preamble_range = 20;
     for(var a=0; a<preamble_range; a++){
-      if(!lines[a]){ continue; }
+      if (!lines[a]) { continue; }
       if(lines[a].match(/^title:(.+)/) ){
         info.title = RegExp.$1;
         delete lines[a];
-      }else if(lines[a].match(/^by:(.+)/) ){
+      } else if (lines[a].match(/^by:(.+)/)) {
         info.by = RegExp.$1;
         delete lines[a];
-      }else if(lines[a].match(/^date:(.+)/) ){
+      } else if (lines[a].match(/^date:(.+)/)) {
         info.date = RegExp.$1;
         delete lines[a];
       }
@@ -1003,7 +1003,7 @@ function getTitle(info) {
   return title;
 }
 
-////////////////////////////////
+// --------------------------------
 
 function printOutline(ol) {
   var ind0 = "";
@@ -1029,7 +1029,7 @@ function printOutline(ol) {
   ol.children.forEach(function(kid, i){
     if(typeof kid === "string"){
       p("(text)");
-    }else{
+    } else {
       printOutline(kid);
     }
   });
