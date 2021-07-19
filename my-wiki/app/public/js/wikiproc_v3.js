@@ -141,9 +141,10 @@ function xtag(elem, tagName) {
   return elem.getElementsByTagName( tagName );
 }
 
-function prepend(parent, child) {
-  parent.insertBefore(child, parent.firstChild);
-}
+// deprecated 2021-07-20
+// function prepend(parent, child) {
+//   parent.insertBefore(child, parent.firstChild);
+// }
 
 
 function unshift(first, arr) {
@@ -395,10 +396,6 @@ function Parser() {
                .replace(headSpacesRE, "");
            });
   };
-
-  function cdr(list) {
-    return list.slice(1, list.length);
-  }
 
   this.procPRE = function(slines, sli){
     puts("-->> procPRE", slines, sli);
