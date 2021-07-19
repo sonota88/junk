@@ -141,7 +141,7 @@ function xtag(elem, tagName) {
   return elem.getElementsByTagName( tagName );
 }
 
-function insertAsFirstChild(parent, child) {
+function prepend(parent, child) {
   parent.insertBefore(child, parent.firstChild);
 }
 
