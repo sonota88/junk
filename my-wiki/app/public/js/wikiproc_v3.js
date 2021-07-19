@@ -211,13 +211,13 @@ function makePageLink(content) {
   } else {
     pageId = parseInt(content, 10);
     title = WikiProc.getTitleByPageId(pageId);
-    if(!title){
+    if (!title) {
       title = "[?]" + content;
     }
   }
 
   var href;
-  switch(WikiProc.opts.pagePathType){
+  switch (WikiProc.opts.pagePathType) {
   case "absolute": 
     href = "/page/" + pageId;
     break;
@@ -248,7 +248,7 @@ function procInline(line) {
 
   var ws, we; // width start/end
 
-  while(work.length > 0){
+  while (work.length > 0) {
 
     var pos = work.search( /( \*| _| `| \[\[)/ );
 
@@ -269,7 +269,7 @@ function procInline(line) {
           work = work.substring(posEnd + we);
         }
 
-      } else if (/^ _/.test(work)){
+      } else if (/^ _/.test(work)) {
 
         ws = 2; // " _"
         we = 2; // "_ "
@@ -325,7 +325,7 @@ function lineToHtml(line) {
 
   if (line.match( /^(https?|file):\/\// )) {
     var content = line;
-    try{
+    try {
       content = decodeURIComponent(line);
     } catch (x) {
       ;
@@ -334,7 +334,7 @@ function lineToHtml(line) {
   } else if (line.match( /^link: (.+)/ )) {
     const href = RegExp.$1;
     return '<a href="' + href + '">' + href + '</a>';
-  }else if (line.match( /^youtube: ((https?|file):\/\/.+$)/ )) {
+  } else if (line.match( /^youtube: ((https?|file):\/\/.+$)/ )) {
     const url = RegExp.$1;
     url.match(/v=([^&]+)/);
     const ytid = RegExp.$1;
@@ -374,7 +374,7 @@ function Parser() {
 
     for (let a=0,len=lines.length; a<len; a++) {
       var line = expandTabs(lines[a]);
-      if(line.match(/^(\s*)/)){
+      if (line.match(/^(\s*)/)) {
         var length = RegExp.$1.length;
         if (length < minSpaces) {
           minSpaces = length;
@@ -655,7 +655,7 @@ function OutlineParser() {
   this.__find = (idx, linenos)=>{
       for (let i=0,len=linenos.length; i<len; i++) {
         var ln = linenos[i];
-        if(ln.idx === idx){
+        if (ln.idx === idx) {
           return ln;
         }
       }
@@ -697,7 +697,7 @@ function OutlineParser() {
       lineno = sline.ln;
 
       if (sline.type === "heading") {
-        if(buf.length > 0){
+        if (buf.length > 0) {
           current.kids.push(buf);
           buf = [];
         }
@@ -837,7 +837,7 @@ function OutlineParser() {
 
     for (let a=0,len=block.kids.length; a<len; a++) {
       const kid = block.kids[a];
-      if(this.isNode(kid)){
+      if (this.isNode(kid)) {
         html += this.toHTMLElement(kid, pageId);
       } else {
         html += this.toHTMLElementLeaf(kid, pageId);
