@@ -1,12 +1,12 @@
 @font-face {
-  font-family: "vl_gothic";
+  font-family: "my_monospace";
   src: url("/font/VL-Gothic-Regular.woff") format("woff");
 }
 
 * {
   line-height: 150%;
   box-sizing: border-box;
-  font-family: vl_gothic, monospace,
+  font-family: my_monospace, monospace,
     Courier /* monospace for Mac */
   ;
 }
