@@ -15,6 +15,15 @@
 (electric-indent-mode 0)
 
 ;; --------------------------------
+;; キーバインド
+
+(global-set-key (kbd "C-h") 'backward-delete-char)
+
+;; ウィンドウ切り替え
+(global-set-key (kbd "C-t") 'other-window)
+
+
+;; --------------------------------
 
 (setq sh-basic-offset 2)
 (setq sh-indentation 2)
