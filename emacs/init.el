@@ -160,3 +160,13 @@
      t)))
 
 (global-set-key (kbd "C-x C-r") 'eval-by-ruby)
+
+; --------------------------------
+; web-mode
+
+;; web-modeでペースト時に自動でインデントされるのをやめる - $shibayu36->blog;
+;; https://blog.shibayu36.org/entry/2016/03/17/183209
+
+(add-hook 'web-mode-hook
+          '(lambda ()
+             (setq web-mode-enable-auto-indentation nil)))
