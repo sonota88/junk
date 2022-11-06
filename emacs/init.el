@@ -14,6 +14,8 @@
 
 (electric-indent-mode 0)
 
+(setq visible-bell 1)
+
 ;; --------------------------------
 ;; キーバインド
 
