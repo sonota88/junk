@@ -39,6 +39,14 @@
 (set-face-foreground 'font-lock-regexp-grouping-backslash "#666")
 (set-face-foreground 'font-lock-regexp-grouping-construct "#f60")
 
+;; ----------------
+
+(defun insert-current-datetime ()
+  "現在の日付と時刻を挿入"
+  (interactive)
+  (insert (format-time-string "%Y-%m-%d %T" (current-time))))
+
+(global-set-key (kbd "C-M-t") 'insert-current-datetime)
 
 ;; --------------------------------
 ;; 括弧のハイライト
