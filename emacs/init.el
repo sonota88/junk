@@ -7,6 +7,8 @@
 (setq inhibit-startup-message t) ; 起動時にメッセージを出さない
 (setq initial-scratch-message nil)
 
+(fset 'yes-or-no-p 'yes-or-no-p)
+
 ;; ファイル末尾に自動で改行追加
 (setq require-final-newline nil)
 ;; 末尾が改行でない場合ユーザに問い合わせ
