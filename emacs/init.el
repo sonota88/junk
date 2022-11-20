@@ -26,6 +26,8 @@
 ;; ウィンドウ切り替え
 (global-set-key (kbd "C-t") 'other-window)
 
+;; 折り返し
+(global-set-key (kbd "C-M-y") 'toggle-truncate-lines)
 
 ;; --------------------------------
 
