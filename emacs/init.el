@@ -184,3 +184,9 @@
 (add-hook 'web-mode-hook
           '(lambda ()
              (setq web-mode-enable-auto-indentation nil)))
+
+;; --------------------------------
+;; http://www.emacswiki.org/emacs/RotateWordCapitalization
+
+(require 'fdlcap)
+(global-set-key (kbd "M-l") 'fdlcap-change-case-current-word)
