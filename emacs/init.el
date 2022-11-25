@@ -18,6 +18,11 @@
 
 (setq visible-bell 1)
 
+;; 1行ずつスクロールさせる
+(setq scroll-conservatively 35
+      scroll-margin 0
+      scroll-step 1)
+
 ;; --------------------------------
 ;; キーバインド
 
