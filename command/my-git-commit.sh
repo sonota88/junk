@@ -1,5 +1,13 @@
 #!/bin/bash
 
+## .bashrc
+# wip-commit() {
+#   bash /path/to/this-script.sh
+# }
+
+## .tigrc
+# bind status C !/path/to/this-script.sh
+
 set -o errexit
 
 changed_files() {
