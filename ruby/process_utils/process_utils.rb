@@ -1,5 +1,5 @@
 class ProcessUtils
-  def self.get_process_items
+  def self.ps_ef
     out_lines = `LANG=C ps -ef`.lines
 
     head = out_lines[0]
@@ -33,7 +33,7 @@ class ProcessUtils
 end
 
 if $0 == __FILE__
-  pis = ProcessUtils.get_process_items
+  pis = ProcessUtils.ps_ef
 
   pp pis.select { |pi|
     pi.cmd.start_with?("/usr/lib/firefox")
