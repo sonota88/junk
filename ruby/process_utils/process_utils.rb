@@ -1,15 +1,4 @@
 class ProcessUtils
-  class PsItem
-    attr_reader :uid, :pid, :ppid, :cmd
-
-    def initialize(uid:, pid:, ppid:, cmd:)
-      @uid  = uid
-      @pid  = pid
-      @ppid = ppid
-      @cmd  = cmd
-    end
-  end
-
   def self.get_process_items
     out_lines = `LANG=C ps -ef`.lines
 
@@ -29,6 +18,17 @@ class ProcessUtils
       }
 
     items
+  end
+
+  class PsItem
+    attr_reader :uid, :pid, :ppid, :cmd
+
+    def initialize(uid:, pid:, ppid:, cmd:)
+      @uid  = uid
+      @pid  = pid
+      @ppid = ppid
+      @cmd  = cmd
+    end
   end
 end
 
