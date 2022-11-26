@@ -12,7 +12,7 @@ module ProcessUtils
         parts = left.split(/ +/)
         uid, pid, ppid, _, _, __ = parts
 
-        PsItem.new(uid: uid, pid: pid, ppid: ppid, cmd: cmd)
+        PsItem.new(uid: uid, pid: pid.to_i, ppid: ppid.to_i, cmd: cmd)
       }
 
     items
