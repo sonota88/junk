@@ -1,4 +1,4 @@
-class ProcessUtils
+module ProcessUtils
   def self.ps_ef
     out_lines = `LANG=C ps -ef`.lines
 
