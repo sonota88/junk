@@ -2,17 +2,15 @@ module ProcessUtils
   def self.ps_ef
     out_lines = `LANG=C ps -ef`.lines
 
-    head = out_lines[0]
-
-    left_size = head.index("CMD")
+    head_line = out_lines[0]
+    left_size = head_line.index("CMD")
 
     items =
       out_lines[1..].map { |line|
-
         left = line[0...left_size].strip
         cmd = line[left_size..].chomp
-        xs = left.split(/ +/)
-        uid, pid, ppid, _, _, __ = xs
+        parts = left.split(/ +/)
+        uid, pid, ppid, _, _, __ = parts
 
         PsItem.new(uid: uid, pid: pid, ppid: ppid, cmd: cmd)
       }
