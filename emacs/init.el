@@ -202,3 +202,15 @@
 
 (require 'fdlcap)
 (global-set-key (kbd "M-l") 'fdlcap-change-case-current-word)
+
+;; --------------------------------
+;; highlight-symbol
+
+(require 'highlight-symbol)
+(setq highlight-symbol-idle-delay 1.0)
+(set-face-foreground 'highlight-symbol-face "#f0f")
+(set-face-background 'highlight-symbol-face "#400")
+(global-set-key (kbd "C-.") 'highlight-symbol-prev)
+(global-set-key (kbd "C-,") 'highlight-symbol-next)
+(global-set-key (kbd "C-M-r") 'highlight-symbol-query-replace)
+(add-hook 'prog-mode-hook 'highlight-symbol-mode)
