@@ -42,6 +42,13 @@
 ;; --------------------------------
 ;; 色
 
+(setq default-frame-alist
+      (append (list
+               '(foreground-color . "#c0c0c0")  ; 文字
+               '(background-color . "#282828")  ; 背景
+               '(cursor-color     . "#666666")) ; カーソル
+              default-frame-alist))
+
 ;; http://d.hatena.ne.jp/sonota88/20110111/1294695497
 (set-face-foreground 'font-lock-regexp-grouping-backslash "#666")
 (set-face-foreground 'font-lock-regexp-grouping-construct "#f60")
