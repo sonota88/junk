@@ -1,31 +1,42 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>align regexp </title>
-    <style>
-     * {
-       font-family: monospace;
-     }
-     body {
-       padding: 1rem 4%;
-     }
-     textarea {
-       width: 90%;
-       height: 40vh;
-     }
-    </style>
-  </head>
-  <body>
 
-    pattern: <input id="pattern" style="width: 50%;" />
-    <br />
-    index: <input id="index" type="number" value="0" />
-    <br />
-    <textarea id="input"></textarea>
-    <br />
-    <textarea id="output"></textarea>
+<head>
+  <meta charset="utf-8" />
+  <title>align-regexp</title>
+  <style>
+   * {
+     font-family: Firge, monospace;
+   }
+   body {
+     padding: 1rem 4%;
+   }
+   input, textarea {
+     margin: 0.2rem 0;
+   }
+   textarea {
+     width: 90%;
+     height: 40vh;
+   }
+  </style>
 
-    <script src="app.js"></script>
+  <script src="app.js"></script>
+</head>
 
-  </body>
+<body>
+
+  pattern: <input id="pattern" style="width: 50%;" />
+  <br />
+  position: <input id="index" type="number" value="0" min="0" />
+  <br />
+  <textarea id="input"></textarea>
+
+  <hr />
+  preview
+  <button id="btn_apply">apply (C-RET)</button>
+  <br />
+  <textarea id="preview" style="color: #444;"></textarea>
+
+</body>
+
 </html>
