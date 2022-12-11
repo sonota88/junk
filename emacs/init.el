@@ -34,6 +34,9 @@
 ;; 折り返し
 (global-set-key (kbd "C-M-y") 'toggle-truncate-lines)
 
+;; 効かない場合は SCIM の設定を確認
+(global-set-key (kbd "S-SPC") 'dabbrev-expand)
+
 ;; --------------------------------
 
 (setq sh-basic-offset 2)
