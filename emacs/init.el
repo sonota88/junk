@@ -217,3 +217,10 @@
 (global-set-key (kbd "C-,") 'highlight-symbol-next)
 (global-set-key (kbd "C-M-r") 'highlight-symbol-query-replace)
 (add-hook 'prog-mode-hook 'highlight-symbol-mode)
+
+;; --------------------------------
+;; undo-tree
+
+(require 'undo-tree)
+(global-undo-tree-mode)
+(global-set-key (kbd "C-\\") 'undo-tree-redo)
