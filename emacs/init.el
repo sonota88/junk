@@ -66,6 +66,30 @@
 (global-set-key (kbd "C-M-t") 'insert-current-datetime)
 
 ;; --------------------------------
+;; transient-mark-mode + リージョン設定 + SPC or S-SPC でインデント増減
+
+(defun my-space-indent (arg normal-proc)
+  (interactive)
+  (if (and transient-mark-mode mark-active)
+      (save-excursion
+        (let ((deactivate-mark nil))
+          ;; (if (> (point) (mark))
+          ;;     (exchange-point-and-mark))
+          (beginning-of-line)
+          (indent-rigidly (region-beginning) (region-end) arg)))
+    (funcall normal-proc)))
+
+(global-set-key (kbd "SPC")
+                (lambda () (interactive)
+                  (my-space-indent 1
+                                   (lambda () (insert " ")))))
+(global-set-key (kbd "S-SPC")
+                (lambda () (interactive)
+                  (my-space-indent -1
+                                   (lambda () (dabbrev-expand nil)))))
+
+
+;; --------------------------------
 ;; 括弧のハイライト
 
 (defface my-paren-face
