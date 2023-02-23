@@ -58,6 +58,13 @@
 
 ;; ----------------
 
+(add-to-list 'auto-mode-alist '("Dockerfile\\'" . shell-script-mode))
+(add-to-list 'auto-mode-alist '("Steepfile\\'" . ruby-mode))
+
+(add-to-list 'auto-mode-alist '("\\.rbs\\'" . ruby-mode))
+
+;; ----------------
+
 (defun insert-current-datetime ()
   "現在の日付と時刻を挿入"
   (interactive)
