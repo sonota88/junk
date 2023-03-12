@@ -7,7 +7,8 @@
 (setq inhibit-startup-message t) ; 起動時にメッセージを出さない
 (setq initial-scratch-message nil)
 
-(fset 'yes-or-no-p 'yes-or-no-p)
+;; (fset 'yes-or-no-p 'y-or-n-p)
+(defalias 'yes-or-no-p 'y-or-n-p)
 
 ;; ファイル末尾に自動で改行追加
 (setq require-final-newline nil)
