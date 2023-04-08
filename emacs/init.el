@@ -256,3 +256,9 @@
 (require 'undo-tree)
 (global-undo-tree-mode)
 (global-set-key (kbd "C-\\") 'undo-tree-redo)
+
+;; --------------------------------
+;; mwim
+
+(require 'mwim)
+(global-set-key (kbd "C-a") 'mwim-beginning)
