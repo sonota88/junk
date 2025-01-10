@@ -59,6 +59,8 @@ class Archive
       Gempkg.new(path)
     when ".tar.gz"
       TarGz.new(path)
+    when ".tgz"
+      Tgz.new(path)
     when ".tar.xz"
       TarXz.new(path)
     when ".zip"
@@ -148,6 +150,13 @@ class TarGz < Tar
   def initialize(path)
     super
     @ext = ".tar.gz"
+  end
+end
+
+class Tgz < Tar
+  def initialize(path)
+    super
+    @ext = ".tgz"
   end
 end
 
