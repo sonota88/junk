@@ -1,3 +1,7 @@
+# Ruby: HTMLパーサGammoでルート以外の要素を起点にcssメソッドを使いたい
+date: 2025-02-16
+url: https://memo88.hatenablog.com/entry/ruby-gammo-html-parser-element-css
+
 # Web Audio API/GainNode: デシベル指定で音量調整
 date: 2025-01-21
 url: https://memo88.hatenablog.com/entry/web-audio-api-gainnode-decibel
