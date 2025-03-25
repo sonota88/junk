@@ -1,3 +1,7 @@
+# Web Audio API/GainNode: デシベル指定で音量調整
+date: 2025-01-21
+url: https://memo88.hatenablog.com/entry/web-audio-api-gainnode-decibel
+
 # Web Audio API: GainNode.gain に指定する値について調べたメモ
 date: 2025-01-19
 url: https://memo88.hatenablog.com/entry/web-audio-api-gainnode-gain-value
