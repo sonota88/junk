@@ -14,6 +14,9 @@
     <description>TODO</description>
     <items>
       <rdf:Seq>
+        <rdf:li resource="https://qiita.com/sonota88/items/86817527bcabdb15b5cd"/>
+        <rdf:li resource="https://memo88.hatenablog.com/entry/ruby-mastodon-fediverse-accounts"/>
+        <rdf:li resource="https://memo88.hatenablog.com/entry/ruby-gammo-html-parser-element-css"/>
         <rdf:li resource="https://memo88.hatenablog.com/entry/web-audio-api-gainnode-decibel"/>
         <rdf:li resource="https://memo88.hatenablog.com/entry/web-audio-api-gainnode-gain-value"/>
         <rdf:li resource="https://qiita.com/sonota88/items/dafa9fc8a9afa8bfc264"/>
@@ -86,6 +89,21 @@
       </rdf:Seq>
     </items>
   </channel>
+  <item rdf:about="https://qiita.com/sonota88/items/86817527bcabdb15b5cd">
+    <title>Rubyで簡単な言語サーバーを書いてみた</title>
+    <link>https://qiita.com/sonota88/items/86817527bcabdb15b5cd</link>
+    <dc:date>2025-03-23T12:00:00+09:00</dc:date>
+  </item>
+  <item rdf:about="https://memo88.hatenablog.com/entry/ruby-mastodon-fediverse-accounts">
+    <title>Ruby関連のMastodon/Fediverseアカウント集</title>
+    <link>https://memo88.hatenablog.com/entry/ruby-mastodon-fediverse-accounts</link>
+    <dc:date>2025-03-20T12:00:00+09:00</dc:date>
+  </item>
+  <item rdf:about="https://memo88.hatenablog.com/entry/ruby-gammo-html-parser-element-css">
+    <title>Ruby: HTMLパーサGammoでルート以外の要素を起点にcssメソッドを使いたい</title>
+    <link>https://memo88.hatenablog.com/entry/ruby-gammo-html-parser-element-css</link>
+    <dc:date>2025-02-16T12:00:00+09:00</dc:date>
+  </item>
   <item rdf:about="https://memo88.hatenablog.com/entry/web-audio-api-gainnode-decibel">
     <title>Web Audio API/GainNode: デシベル指定で音量調整</title>
     <link>https://memo88.hatenablog.com/entry/web-audio-api-gainnode-decibel</link>
