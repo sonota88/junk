@@ -14,6 +14,7 @@
     <description>TODO</description>
     <items>
       <rdf:Seq>
+        <rdf:li resource="https://memo88.hatenablog.com/entry/web-audio-api-gainnode-decibel"/>
         <rdf:li resource="https://memo88.hatenablog.com/entry/web-audio-api-gainnode-gain-value"/>
         <rdf:li resource="https://qiita.com/sonota88/items/dafa9fc8a9afa8bfc264"/>
         <rdf:li resource="https://qiita.com/sonota88/items/a8b612e75b8f13d55772"/>
@@ -85,6 +86,11 @@
       </rdf:Seq>
     </items>
   </channel>
+  <item rdf:about="https://memo88.hatenablog.com/entry/web-audio-api-gainnode-decibel">
+    <title>Web Audio API/GainNode: デシベル指定で音量調整</title>
+    <link>https://memo88.hatenablog.com/entry/web-audio-api-gainnode-decibel</link>
+    <dc:date>2025-01-21T12:00:00+09:00</dc:date>
+  </item>
   <item rdf:about="https://memo88.hatenablog.com/entry/web-audio-api-gainnode-gain-value">
     <title>Web Audio API: GainNode.gain に指定する値について調べたメモ</title>
     <link>https://memo88.hatenablog.com/entry/web-audio-api-gainnode-gain-value</link>
