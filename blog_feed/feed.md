@@ -1,3 +1,7 @@
+# Rubyで簡単な言語サーバーを書いてみた
+date: 2025-03-23
+url: https://qiita.com/sonota88/items/86817527bcabdb15b5cd
+
 # Ruby関連のMastodon/Fediverseアカウント集
 date: 2025-03-20
 url: https://memo88.hatenablog.com/entry/ruby-mastodon-fediverse-accounts
