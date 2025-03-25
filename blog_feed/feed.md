@@ -1,3 +1,7 @@
+# Ruby関連のMastodon/Fediverseアカウント集
+date: 2025-03-20
+url: https://memo88.hatenablog.com/entry/ruby-mastodon-fediverse-accounts
+
 # Ruby: HTMLパーサGammoでルート以外の要素を起点にcssメソッドを使いたい
 date: 2025-02-16
 url: https://memo88.hatenablog.com/entry/ruby-gammo-html-parser-element-css
