@@ -1,0 +1,364 @@
+- title: Rubyで簡単な言語サーバーを書いてみた（VSCode版）
+  date: 2025-03-23
+  url: https://qiita.com/sonota88/items/86817527bcabdb15b5cd
+  tags: ["ruby"]
+
+- title: Rubyで簡単な言語サーバーを書いてみた
+  date: 2025-03-23
+  url: https://qiita.com/sonota88/items/86817527bcabdb15b5cd
+  tags: ["ruby", "emacs"]
+
+- title: Ruby関連のMastodon/Fediverseアカウント集
+  date: 2025-03-20
+  url: https://memo88.hatenablog.com/entry/ruby-mastodon-fediverse-accounts
+  tags: ["ruby"]
+
+- title: "Ruby: HTMLパーサGammoでルート以外の要素を起点にcssメソッドを使いたい"
+  date: 2025-02-16
+  url: https://qiita.com/sonota88/items/d68c4d17876a41a5e097
+  tags: ["ruby"]
+
+- title: "Web Audio API/GainNode: デシベル指定で音量調整"
+  date: 2025-01-21
+  url: https://memo88.hatenablog.com/entry/web-audio-api-gainnode-decibel
+  tags: []
+
+- title: "Web Audio API: GainNode.gain に指定する値について調べたメモ"
+  date: 2025-01-19
+  url: https://memo88.hatenablog.com/entry/web-audio-api-gainnode-gain-value
+  tags: []
+
+- title: SDL-Crystal-Bindingsをちょっと触ってみた（Crystal Advent Calendar 2024）
+  date: 2025-01-04
+  url: https://qiita.com/sonota88/items/dafa9fc8a9afa8bfc264
+  tags: ["crystal"]
+
+- title: Emacs Lispでシンプルな自作言語のコンパイラを書いた（Emacs Advent Calendar 2024）
+  date: 2024-12-16
+  url: https://qiita.com/sonota88/items/a8b612e75b8f13d55772
+  tags: ["emacs", "lisp"]
+
+- title: MinRubyを改造する 2024（REPLと宇宙線演算子の追加）（Ruby Advent Calendar 2024）
+  date: 2024-12-14
+  url: https://zenn.dev/sonota88/articles/6e05c93d3150b3
+  tags: ["ruby"]
+
+- title: "LibreOffice Calc/Basic: セル内の数式で自作マクロの関数を使う"
+  date: 2024-12-08
+  url: https://memo88.hatenablog.com/entry/libreoffice-calc-basic-macro-function
+  tags: ["libreoffice"]
+
+- title: Swiftでシンプルな自作言語のコンパイラを書いた（Swift Advent Calendar 2024）
+  date: 2024-12-03
+  url: https://qiita.com/sonota88/items/309753549677ccf8209d
+  tags: []
+
+- title: "Gradle: タスク間の依存関係を図示する（Graphviz 使用）"
+  date: 2024-07-28
+  url: https://memo88.hatenablog.com/entry/gradle-task-graph-dependency-graphviz
+  tags: ["java"]
+
+- title: AWK（gawk）でシンプルな自作言語のコンパイラを書いた
+  date: 2024-07-21
+  url: https://qiita.com/sonota88/items/2e2fd758b491c94dc821
+  tags: []
+
+- title: Scalaでシンプルな自作言語のコンパイラを書いた
+  date: 2024-04-21
+  url: https://memo88.hatenablog.com/entry/mini-ruccola-compiler-scala
+  tags: []
+
+- title: Rubyで素朴なdiff（動的計画法）を書いてみた
+  date: 2024-02-12
+  url: https://zenn.dev/sonota88/articles/6efd83d606cc2f
+  tags: ["ruby", "algorithm"]
+
+- title: プログラミングのお題としてCrystalで簡単なbeepコマンドを作る
+  date: 2024-01-03
+  url: https://qiita.com/sonota88/items/fffe2588f8da15ac264d
+  tags: ["crystal"]
+
+- title: R言語で簡単な自作言語のコンパイラを書いた（R言語 Advent Calendar 2023）
+  date: 2023-12-25
+  url: https://qiita.com/sonota88/items/ad58f8af8f11a3d6495c
+  tags: []
+
+- title: プログラミングのお題としてCrystalで簡単なコマンドラインRSSリーダーを作る
+  date: 2023-12-24
+  url: https://qiita.com/sonota88/items/013bcbd3f8a12e2687db
+  tags: ["crystal"]
+
+- title: Elixirで簡単な自作言語のコンパイラを書いた
+  date: 2023-12-11
+  url: https://qiita.com/sonota88/items/fefef95264320a903300
+  tags: []
+
+- title: DXOpalでスイカゲームみたいなのを作った（Ruby Advent Calendar 2023）
+  date: 2023-12-06
+  url: https://qiita.com/sonota88/items/105e141d18372918e675
+  tags: ["dxopal", "ruby"]
+
+- title: C#で簡単な自作言語のコンパイラを書いた
+  date: 2023-07-02
+  url: https://qiita.com/sonota88/items/c0a5bf76d7eb3aa4c507
+  tags: []
+
+- title: "Ruby/StringScanner: scan_full, search_full 系メソッドの整理"
+  date: 2023-05-28
+  url: https://qiita.com/sonota88/items/a7da299b84f17459967c
+  tags: ["ruby"]
+
+- title: Lramaで簡単な自作言語のパーサを書いた
+  date: 2023-05-21
+  url: https://qiita.com/sonota88/items/372da20581c16cbd4eea
+  tags: ["ruby", "parser"]
+
+- title: Ruby + PyCall でデータサイエンス100本ノック（構造化データ加工編）をやってみた
+  date: 2023-05-17
+  url: https://qiita.com/sonota88/items/52d0e35dc5e6e112c02f
+  tags: ["ruby"]
+
+- title: "PyCall.rb + Pandas: DataFrame#query の代わりにS式っぽく書けないか試してみた"
+  date: 2023-05-06
+  url: https://qiita.com/sonota88/items/7c81beca2c86fdf21556
+  tags: ["ruby"]
+
+- title: V言語でかんたんな自作言語のコンパイラを書いた
+  date: 2023-04-23
+  url: https://memo88.hatenablog.com/entry/mini_ruccola_vlang
+  tags: []
+
+- title: Forth（Gforth）でかんたんな自作言語のコンパイラを書いた
+  date: 2023-03-12
+  url: https://qiita.com/sonota88/items/cdc6322d802844dc0953
+  tags: []
+
+- title: 『RubyでつくるRuby』のMinRubyのパーサを書いた（手書きの再帰下降パーサ）（Ruby Advent Calendar 2022）
+  date: 2022-12-25
+  url: https://qiita.com/sonota88/items/84e4c16e5602b9771e92
+  tags: ["ruby", "parser"]
+
+- title: "Ruby: 入れ子の配列だけをパースできるパーサを作る（手書きの再帰下降パーサ）"
+  date: 2022-12-25
+  url: https://qiita.com/sonota88/items/816b6b8d7a362ef4e332
+  tags: ["ruby", "parser"]
+
+- title: DockerでLibreOffice Basicマクロを実行する（2022年版）
+  date: 2022-12-11
+  url: https://qiita.com/sonota88/items/395a32555d1187df2cc3
+  tags: ["libreoffice"]
+
+- title: HTML+JavaScriptでEmacsのalign-regexpっぽいやつを作った
+  date: 2022-12-03
+  url: https://zenn.dev/sonota88/articles/33581c9dc3b686
+  tags: ["emacs"]
+
+- title: Dockerを利用してDXOpalアプリケーションを手軽に事前コンパイルする
+  date: 2022-10-09
+  url: https://qiita.com/sonota88/items/536c76d7383356592b92
+  tags: ["dxopal", "opal"]
+
+- title: 自作言語のコンパイラにオレオレアセンブリではなくx86_64アセンブリを生成させる（関数呼び出しと足し算だけ）
+  date: 2022-08-21
+  url: https://qiita.com/sonota88/items/6870ef5fe5b2a9275ab7
+  tags: []
+
+- title: vm2gol v2 （63） sub_sp 命令を廃止 / panic
+  date: 2022-08-11
+  url: https://memo88.hatenablog.com/entry/20220811_vm2gol_v2_63_sub_sp_panic
+  tags: []
+
+- title: "SVG::Graph（svg-graph gem）で散布図を描く"
+  date: 2022-07-03
+  url: https://qiita.com/sonota88/items/86afece3b2595648a656
+  tags: ["ruby"]
+
+- title: Galaaz を触ってみた（TruffleRuby + ggplot2 で散布図を描いてみた）
+  date: 2022-06-12
+  url: https://qiita.com/sonota88/items/b586e96f7805a5695a34
+  tags: ["ruby"]
+
+- title: Ruby + Victor でSVGお絵描き（簡単な散布図を描いてみた）
+  date: 2022-06-05
+  url: https://qiita.com/sonota88/items/7e2ab396163c081657b1
+  tags: ["ruby"]
+
+- title: Ruby + Numo::Gnuplot（numo-gnuplot gem）で散布図を描く
+  date: 2022-06-05
+  url: https://qiita.com/sonota88/items/da02c6f9f85c5a33f0a1
+  tags: ["ruby"]
+
+- title: Ruby + ruby_gnuplot（gnuplot gem）で散布図を描く
+  date: 2022-05-29
+  url: https://qiita.com/sonota88/items/50609275668fcd7511e4
+  tags: ["ruby"]
+
+- title: Ubuntu 22.04にJupyter NotebookとIRubyをインストール（pyenv, rbenv を使用）
+  date: 2022-05-07
+  url: https://qiita.com/sonota88/items/539c631b0f7dfb295fec
+  tags: ["ruby", "iruby"]
+
+- title: Opal::Builder を使ってコンパイルする際に source map も生成する
+  date: 2022-05-04
+  url: https://qiita.com/sonota88/items/22183b135084a8875494
+  tags: ["ruby", "opal"]
+
+- title: Tclでかんたんな自作言語のコンパイラを書いた（Tcl/Tk Advent Calendar 2021）
+  date: 2021-12-26
+  url: https://qiita.com/sonota88/items/988d9cb4ba2077c49d64
+  tags: []
+
+- title: malでかんたんなテンプレートエンジンを書いてみた（Lisp Advent Calendar 2021）
+  date: 2021-12-25
+  url: https://qiita.com/sonota88/items/afc83016ae199ff3e0ee
+  tags: ["lisp"]
+
+- title: シェルスクリプト（Bashスクリプト）でかんたんな自作言語のコンパイラを書いた（シェルスクリプト Advent Calendar 2021）
+  date: 2021-12-20
+  url: https://qiita.com/sonota88/items/79dd2b0c1dae776c56d9
+  tags: []
+
+- title: なでしこ3でかんたんな自作言語のコンパイラを書いた（日本語プログラミング言語「なでしこ」 Advent Calendar 2021）
+  date: 2021-12-13
+  url: https://qiita.com/sonota88/items/54c65e97aa563009137e
+  tags: []
+
+- title: LibreOffice Calcのfodsファイルを読み書きするサンプルをweb API化してみた（LibreOffice Advent Calendar 2021）
+  date: 2021-12-11
+  url: https://qiita.com/sonota88/items/2412dc6389d9bae3add6
+  tags: ["libreoffice", "jruby"]
+
+- title: なでしこ3で簡単なcatコマンドを作る（日本語プログラミング言語「なでしこ」 Advent Calendar 2021）
+  date: 2021-12-07
+  url: https://qiita.com/sonota88/items/d43c9618498062863e58
+  tags: []
+
+- title: Parsletでかんたんな自作言語のパーサを書いた
+  date: 2021-11-02
+  url: https://qiita.com/sonota88/items/edce05e86d3248f49401
+  tags: ["ruby", "parser"]
+
+- title: Raccでかんたんな自作言語のパーサを書いた
+  date: 2021-10-12
+  url: https://qiita.com/sonota88/items/97ba1f0c377fbe86d5b1
+  tags: ["ruby", "parser"]
+
+- title: Haskellでかんたんな自作言語のコンパイラを書いた
+  date: 2021-06-28
+  url: https://memo88.hatenablog.com/entry/20210628_vm2gol_v2_haskell
+  tags: []
+
+- title: OCamlでかんたんな自作言語のコンパイラを書いた
+  date: 2021-06-26
+  url: https://memo88.hatenablog.com/entry/20210626_vm2gol_v2_ocaml
+  tags: []
+
+- title: 素朴な自作言語Ruccolaのコンパイラをセルフホストした
+  date: 2021-06-21
+  url: https://qiita.com/sonota88/items/1e683276541cf1b87b76
+  tags: ["ruby"]
+
+- title: Pascalでかんたんな自作言語のコンパイラを書いた
+  date: 2021-05-22
+  url: https://qiita.com/sonota88/items/4d446b778ffbbaab267c
+  tags: []
+
+- title: Juliaでかんたんな自作言語のコンパイラを書いた
+  date: 2021-05-02
+  url: https://qiita.com/sonota88/items/b80696f23a08c3c2fc5d
+  tags: []
+
+- title: "Reline.readmultilineの練習: mysqlコマンドのラッパーを作ってちょっといい感じにしてみる"
+  date: 2021-04-18
+  url: https://zenn.dev/sonota88/articles/12636911b45ebc
+  tags: ["ruby"]
+
+- title: Reline.readmultiline ちょっと調べたメモ
+  date: 2021-04-17
+  url: https://memo88.hatenablog.com/entry/20210417_reline_readmultiline
+  tags: ["ruby"]
+
+- title: 素朴な自作言語のコンパイラをRustに移植した
+  date: 2021-04-07
+  url: https://memo88.hatenablog.com/entry/20210407_vm2gol_v2_rust
+  tags: []
+
+- title: 素朴な自作言語のコンパイラをCrystalに移植した
+  date: 2021-03-27
+  url: https://qiita.com/sonota88/items/275c2b5407986b100cc8
+  tags: ["crystal"]
+
+- title: "hive-modoki: かんたんな Apache Hive のクローンを作っていた話"
+  date: 2021-03-08
+  url: https://memo88.hatenablog.com/entry/20210308_hive_modoki
+  tags: []
+
+- title: 素朴な自作言語のコンパイラをKotlinに移植した
+  date: 2021-01-14
+  url: https://memo88.hatenablog.com/entry/2021/01/14/032813
+  tags: []
+
+- title: 素朴な自作言語のコンパイラをZigに移植した
+  date: 2021-01-07
+  url: https://memo88.hatenablog.com/entry/2021/01/07/235019
+  tags: []
+
+- title: "Ruby/Racc: パース時のスタックの動きをFlameGraphっぽくビジュアライズする"
+  date: 2021-01-04
+  url: https://qiita.com/sonota88/items/6a96d2bcea9d134e38b7
+  tags: ["ruby", "parser"]
+
+- title: JRubyでLibreOffice Calcのfodsファイルを読み書きするサンプル 2021
+  date: 2021-01-02
+  url: https://qiita.com/sonota88/items/b88c89d763cf872db5a1
+  tags: ["jruby", "libreoffice"]
+
+- title: "Ruby/Racc: パースに失敗した位置（行、桁）を得る"
+  date: 2021-01-01
+  url: https://qiita.com/sonota88/items/f55c1654fe101fa0e557
+  tags: ["ruby", "parser"]
+
+- title: JavaでLibreOffice Calcのfodsファイルを読み書きするサンプル 2021
+  date: 2021-01-01
+  url: https://qiita.com/sonota88/items/d459b25b1309867645cb
+  tags: ["java", "libreoffice"]
+
+- title: LibreOffice BasicでLispインタプリタ（mal）を書いた（Lisp Advent Calendar 2020）
+  date: 2020-12-04
+  url: https://qiita.com/sonota88/items/501f0efa437bc4d53cc7
+  tags: ["libreoffice", "lisp"]
+
+- title: きしださんのかわいいリレーショナルデータベースをRubyで写経した
+  date: 2020-08-16
+  url: https://memo88.hatenablog.com/entry/2020/08/16/083046
+  tags: ["ruby"]
+
+- title: 正規表現エンジン（ロブ・パイクのバックトラック実装）をRubyで写経した
+  date: 2020-07-23
+  url: https://memo88.hatenablog.com/entry/2020/07/23/090115
+  tags: ["ruby", "algorithm"]
+
+- title: Rubyでかんたんな自作言語のコンパイラを作った
+  date: 2020-05-04
+  url: https://qiita.com/sonota88/items/2b95378b43a22109513c
+  tags: ["ruby"]
+
+- title: Ruby＋DXOpalでリレー式論理回路シミュレータを自作して1bit CPUまで動かした
+  date: 2020-05-03
+  url: https://qiita.com/sonota88/items/a5d6d3539e0fb8040f74
+  tags: ["ruby", "dxopal"]
+
+- title: RubyでオレオレVMとアセンブラとコード生成器を2週間で作ってライフゲームを動かした話
+  date: 2019-05-04
+  url: https://qiita.com/sonota88/items/f9cb3fc4a496b354b729
+  tags: ["ruby"]
+
+- title: Rubyで素朴なSA-IS（suffix array induced sorting）を書いてみた
+  date: 2016-03-17
+  url: https://memo88.hatenablog.com/entry/20160317/1458224137
+  tags: ["ruby", "algorithm"]
+
+- title: Rubyで素朴なFM-indexを書いてみた
+  date: 2016-03-03
+  url: https://memo88.hatenablog.com/entry/20160303/1457007566
+  tags: ["ruby", "algorithm"]
