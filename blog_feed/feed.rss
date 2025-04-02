@@ -8,15 +8,16 @@
   xmlns:sy="http://purl.org/rss/1.0/modules/syndication/"
   xmlns:taxo="http://purl.org/rss/1.0/modules/taxonomy/"
   xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
-  <channel rdf:about="TODO">
-    <title>memo88</title>
+  <channel rdf:about="">
+    <title>memo486</title>
     <link>https://memo88.hatenablog.com/</link>
-    <description>TODO</description>
+    <description></description>
     <items>
       <rdf:Seq>
         <rdf:li resource="https://qiita.com/sonota88/items/86817527bcabdb15b5cd"/>
+        <rdf:li resource="https://qiita.com/sonota88/items/86817527bcabdb15b5cd"/>
         <rdf:li resource="https://memo88.hatenablog.com/entry/ruby-mastodon-fediverse-accounts"/>
-        <rdf:li resource="https://memo88.hatenablog.com/entry/ruby-gammo-html-parser-element-css"/>
+        <rdf:li resource="https://qiita.com/sonota88/items/d68c4d17876a41a5e097"/>
         <rdf:li resource="https://memo88.hatenablog.com/entry/web-audio-api-gainnode-decibel"/>
         <rdf:li resource="https://memo88.hatenablog.com/entry/web-audio-api-gainnode-gain-value"/>
         <rdf:li resource="https://qiita.com/sonota88/items/dafa9fc8a9afa8bfc264"/>
@@ -27,7 +28,7 @@
         <rdf:li resource="https://memo88.hatenablog.com/entry/gradle-task-graph-dependency-graphviz"/>
         <rdf:li resource="https://qiita.com/sonota88/items/2e2fd758b491c94dc821"/>
         <rdf:li resource="https://memo88.hatenablog.com/entry/mini-ruccola-compiler-scala"/>
-        <rdf:li resource="https://qiita.com/sonota88/items/5f040d7aaf494477eefa"/>
+        <rdf:li resource="https://zenn.dev/sonota88/articles/6efd83d606cc2f"/>
         <rdf:li resource="https://qiita.com/sonota88/items/fffe2588f8da15ac264d"/>
         <rdf:li resource="https://qiita.com/sonota88/items/ad58f8af8f11a3d6495c"/>
         <rdf:li resource="https://qiita.com/sonota88/items/013bcbd3f8a12e2687db"/>
@@ -90,6 +91,11 @@
     </items>
   </channel>
   <item rdf:about="https://qiita.com/sonota88/items/86817527bcabdb15b5cd">
+    <title>Rubyで簡単な言語サーバーを書いてみた（VSCode版）</title>
+    <link>https://qiita.com/sonota88/items/86817527bcabdb15b5cd</link>
+    <dc:date>2025-03-23T12:00:00+09:00</dc:date>
+  </item>
+  <item rdf:about="https://qiita.com/sonota88/items/86817527bcabdb15b5cd">
     <title>Rubyで簡単な言語サーバーを書いてみた</title>
     <link>https://qiita.com/sonota88/items/86817527bcabdb15b5cd</link>
     <dc:date>2025-03-23T12:00:00+09:00</dc:date>
@@ -99,9 +105,9 @@
     <link>https://memo88.hatenablog.com/entry/ruby-mastodon-fediverse-accounts</link>
     <dc:date>2025-03-20T12:00:00+09:00</dc:date>
   </item>
-  <item rdf:about="https://memo88.hatenablog.com/entry/ruby-gammo-html-parser-element-css">
+  <item rdf:about="https://qiita.com/sonota88/items/d68c4d17876a41a5e097">
     <title>Ruby: HTMLパーサGammoでルート以外の要素を起点にcssメソッドを使いたい</title>
-    <link>https://memo88.hatenablog.com/entry/ruby-gammo-html-parser-element-css</link>
+    <link>https://qiita.com/sonota88/items/d68c4d17876a41a5e097</link>
     <dc:date>2025-02-16T12:00:00+09:00</dc:date>
   </item>
   <item rdf:about="https://memo88.hatenablog.com/entry/web-audio-api-gainnode-decibel">
@@ -115,17 +121,17 @@
     <dc:date>2025-01-19T12:00:00+09:00</dc:date>
   </item>
   <item rdf:about="https://qiita.com/sonota88/items/dafa9fc8a9afa8bfc264">
-    <title>SDL-Crystal-Bindingsをちょっと触ってみた</title>
+    <title>SDL-Crystal-Bindingsをちょっと触ってみた（Crystal Advent Calendar 2024）</title>
     <link>https://qiita.com/sonota88/items/dafa9fc8a9afa8bfc264</link>
     <dc:date>2025-01-04T12:00:00+09:00</dc:date>
   </item>
   <item rdf:about="https://qiita.com/sonota88/items/a8b612e75b8f13d55772">
-    <title>Emacs Lispでシンプルな自作言語のコンパイラを書いた</title>
+    <title>Emacs Lispでシンプルな自作言語のコンパイラを書いた（Emacs Advent Calendar 2024）</title>
     <link>https://qiita.com/sonota88/items/a8b612e75b8f13d55772</link>
     <dc:date>2024-12-16T12:00:00+09:00</dc:date>
   </item>
   <item rdf:about="https://zenn.dev/sonota88/articles/6e05c93d3150b3">
-    <title>MinRubyを改造する 2024（REPLと宇宙線演算子の追加）</title>
+    <title>MinRubyを改造する 2024（REPLと宇宙線演算子の追加）（Ruby Advent Calendar 2024）</title>
     <link>https://zenn.dev/sonota88/articles/6e05c93d3150b3</link>
     <dc:date>2024-12-14T12:00:00+09:00</dc:date>
   </item>
@@ -135,7 +141,7 @@
     <dc:date>2024-12-08T12:00:00+09:00</dc:date>
   </item>
   <item rdf:about="https://qiita.com/sonota88/items/309753549677ccf8209d">
-    <title>Swiftでシンプルな自作言語のコンパイラを書いた</title>
+    <title>Swiftでシンプルな自作言語のコンパイラを書いた（Swift Advent Calendar 2024）</title>
     <link>https://qiita.com/sonota88/items/309753549677ccf8209d</link>
     <dc:date>2024-12-03T12:00:00+09:00</dc:date>
   </item>
@@ -154,9 +160,9 @@
     <link>https://memo88.hatenablog.com/entry/mini-ruccola-compiler-scala</link>
     <dc:date>2024-04-21T12:00:00+09:00</dc:date>
   </item>
-  <item rdf:about="https://qiita.com/sonota88/items/5f040d7aaf494477eefa">
+  <item rdf:about="https://zenn.dev/sonota88/articles/6efd83d606cc2f">
     <title>Rubyで素朴なdiff（動的計画法）を書いてみた</title>
-    <link>https://qiita.com/sonota88/items/5f040d7aaf494477eefa</link>
+    <link>https://zenn.dev/sonota88/articles/6efd83d606cc2f</link>
     <dc:date>2024-02-12T12:00:00+09:00</dc:date>
   </item>
   <item rdf:about="https://qiita.com/sonota88/items/fffe2588f8da15ac264d">
@@ -165,7 +171,7 @@
     <dc:date>2024-01-03T12:00:00+09:00</dc:date>
   </item>
   <item rdf:about="https://qiita.com/sonota88/items/ad58f8af8f11a3d6495c">
-    <title>R言語で簡単な自作言語のコンパイラを書いた</title>
+    <title>R言語で簡単な自作言語のコンパイラを書いた（R言語 Advent Calendar 2023）</title>
     <link>https://qiita.com/sonota88/items/ad58f8af8f11a3d6495c</link>
     <dc:date>2023-12-25T12:00:00+09:00</dc:date>
   </item>
@@ -180,7 +186,7 @@
     <dc:date>2023-12-11T12:00:00+09:00</dc:date>
   </item>
   <item rdf:about="https://qiita.com/sonota88/items/105e141d18372918e675">
-    <title>DXOpalでスイカゲームみたいなのを作った</title>
+    <title>DXOpalでスイカゲームみたいなのを作った（Ruby Advent Calendar 2023）</title>
     <link>https://qiita.com/sonota88/items/105e141d18372918e675</link>
     <dc:date>2023-12-06T12:00:00+09:00</dc:date>
   </item>
@@ -220,7 +226,7 @@
     <dc:date>2023-03-12T12:00:00+09:00</dc:date>
   </item>
   <item rdf:about="https://qiita.com/sonota88/items/84e4c16e5602b9771e92">
-    <title>『RubyでつくるRuby』のMinRubyのパーサを書いた（手書きの再帰下降パーサ） / Ruby Advent Calendar 2022 25日目</title>
+    <title>『RubyでつくるRuby』のMinRubyのパーサを書いた（手書きの再帰下降パーサ）（Ruby Advent Calendar 2022）</title>
     <link>https://qiita.com/sonota88/items/84e4c16e5602b9771e92</link>
     <dc:date>2022-12-25T12:00:00+09:00</dc:date>
   </item>
@@ -290,32 +296,32 @@
     <dc:date>2022-05-04T12:00:00+09:00</dc:date>
   </item>
   <item rdf:about="https://qiita.com/sonota88/items/988d9cb4ba2077c49d64">
-    <title>Tclでかんたんな自作言語のコンパイラを書いた / Tcl/Tk Advent Calendar 2021 25日目</title>
+    <title>Tclでかんたんな自作言語のコンパイラを書いた（Tcl/Tk Advent Calendar 2021）</title>
     <link>https://qiita.com/sonota88/items/988d9cb4ba2077c49d64</link>
     <dc:date>2021-12-26T12:00:00+09:00</dc:date>
   </item>
   <item rdf:about="https://qiita.com/sonota88/items/afc83016ae199ff3e0ee">
-    <title>malでかんたんなテンプレートエンジンを書いてみた / Lisp Advent Calendar 2021 25日目</title>
+    <title>malでかんたんなテンプレートエンジンを書いてみた（Lisp Advent Calendar 2021）</title>
     <link>https://qiita.com/sonota88/items/afc83016ae199ff3e0ee</link>
     <dc:date>2021-12-25T12:00:00+09:00</dc:date>
   </item>
   <item rdf:about="https://qiita.com/sonota88/items/79dd2b0c1dae776c56d9">
-    <title>シェルスクリプト（Bashスクリプト）でかんたんな自作言語のコンパイラを書いた / シェルスクリプト Advent Calendar 2021 20日目</title>
+    <title>シェルスクリプト（Bashスクリプト）でかんたんな自作言語のコンパイラを書いた（シェルスクリプト Advent Calendar 2021）</title>
     <link>https://qiita.com/sonota88/items/79dd2b0c1dae776c56d9</link>
     <dc:date>2021-12-20T12:00:00+09:00</dc:date>
   </item>
   <item rdf:about="https://qiita.com/sonota88/items/54c65e97aa563009137e">
-    <title>なでしこ3でかんたんな自作言語のコンパイラを書いた / 日本語プログラミング言語「なでしこ」 Advent Calendar 2021 13日目</title>
+    <title>なでしこ3でかんたんな自作言語のコンパイラを書いた（日本語プログラミング言語「なでしこ」 Advent Calendar 2021）</title>
     <link>https://qiita.com/sonota88/items/54c65e97aa563009137e</link>
     <dc:date>2021-12-13T12:00:00+09:00</dc:date>
   </item>
   <item rdf:about="https://qiita.com/sonota88/items/2412dc6389d9bae3add6">
-    <title>LibreOffice Calcのfodsファイルを読み書きするサンプルをweb API化してみた / LibreOffice Advent Calendar 2021 11日目</title>
+    <title>LibreOffice Calcのfodsファイルを読み書きするサンプルをweb API化してみた（LibreOffice Advent Calendar 2021）</title>
     <link>https://qiita.com/sonota88/items/2412dc6389d9bae3add6</link>
     <dc:date>2021-12-11T12:00:00+09:00</dc:date>
   </item>
   <item rdf:about="https://qiita.com/sonota88/items/d43c9618498062863e58">
-    <title>なでしこ3で簡単なcatコマンドを作る / 日本語プログラミング言語「なでしこ」 Advent Calendar 2021 6日目</title>
+    <title>なでしこ3で簡単なcatコマンドを作る（日本語プログラミング言語「なでしこ」 Advent Calendar 2021）</title>
     <link>https://qiita.com/sonota88/items/d43c9618498062863e58</link>
     <dc:date>2021-12-07T12:00:00+09:00</dc:date>
   </item>
@@ -340,7 +346,7 @@
     <dc:date>2021-06-26T12:00:00+09:00</dc:date>
   </item>
   <item rdf:about="https://qiita.com/sonota88/items/1e683276541cf1b87b76">
-    <title>素朴な自作言語Pricのコンパイラをセルフホストした</title>
+    <title>素朴な自作言語Ruccolaのコンパイラをセルフホストした</title>
     <link>https://qiita.com/sonota88/items/1e683276541cf1b87b76</link>
     <dc:date>2021-06-21T12:00:00+09:00</dc:date>
   </item>
@@ -410,7 +416,7 @@
     <dc:date>2021-01-01T12:00:00+09:00</dc:date>
   </item>
   <item rdf:about="https://qiita.com/sonota88/items/501f0efa437bc4d53cc7">
-    <title>LibreOffice BasicでLispインタプリタ（mal）を書いた</title>
+    <title>LibreOffice BasicでLispインタプリタ（mal）を書いた（Lisp Advent Calendar 2020）</title>
     <link>https://qiita.com/sonota88/items/501f0efa437bc4d53cc7</link>
     <dc:date>2020-12-04T12:00:00+09:00</dc:date>
   </item>
