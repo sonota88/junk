@@ -48,7 +48,7 @@ class Archive
 
   def self.of(path)
     ext =
-      if m = path.match(/\.tar\.(gz|xz)$/)
+      if m = path.match(/\.tar\.(gz|bz2|xz)$/)
         m[0]
       else
         File.extname(path)
@@ -61,6 +61,8 @@ class Archive
       TarGz.new(path)
     when ".tgz"
       Tgz.new(path)
+    when ".tar.bz2"
+      TarBz2.new(path)
     when ".tar.xz"
       TarXz.new(path)
     when ".zip"
@@ -157,6 +159,13 @@ class Tgz < Tar
   def initialize(path)
     super
     @ext = ".tgz"
+  end
+end
+
+class TarBz2 < Tar
+  def initialize(path)
+    super
+    @ext = ".tar.bz2"
   end
 end
 
