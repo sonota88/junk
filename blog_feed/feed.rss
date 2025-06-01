@@ -14,6 +14,7 @@
     <description></description>
     <items>
       <rdf:Seq>
+        <rdf:li resource="https://qiita.com/sonota88/items/18620d1b50122006dbb2"/>
         <rdf:li resource="https://qiita.com/sonota88/items/ac71e0726f891cc754ae"/>
         <rdf:li resource="https://qiita.com/sonota88/items/86817527bcabdb15b5cd"/>
         <rdf:li resource="https://qiita.com/sonota88/items/86817527bcabdb15b5cd"/>
@@ -91,6 +92,11 @@
       </rdf:Seq>
     </items>
   </channel>
+  <item rdf:about="https://qiita.com/sonota88/items/18620d1b50122006dbb2">
+    <title>JREとJRubyのインストール（2025年）</title>
+    <link>https://qiita.com/sonota88/items/18620d1b50122006dbb2</link>
+    <dc:date>2025-05-31T12:00:00+09:00</dc:date>
+  </item>
   <item rdf:about="https://qiita.com/sonota88/items/ac71e0726f891cc754ae">
     <title>自作言語に簡単な型検査器を追加した</title>
     <link>https://qiita.com/sonota88/items/ac71e0726f891cc754ae</link>
