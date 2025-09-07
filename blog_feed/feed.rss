@@ -15,6 +15,7 @@
     <items>
       <rdf:Seq>
         <rdf:li resource="https://qiita.com/sonota88/items/d2c7d91d7058cda63e82"/>
+        <rdf:li resource="https://memo88.hatenablog.com/entry/ps-command-v4-pss-uss"/>
         <rdf:li resource="https://qiita.com/sonota88/items/18620d1b50122006dbb2"/>
         <rdf:li resource="https://qiita.com/sonota88/items/ac71e0726f891cc754ae"/>
         <rdf:li resource="https://qiita.com/sonota88/items/86817527bcabdb15b5cd"/>
@@ -97,6 +98,11 @@
     <title>Rubyでファミコンのノイズ音を作ってみた</title>
     <link>https://qiita.com/sonota88/items/d2c7d91d7058cda63e82</link>
     <dc:date>2025-09-07T12:00:00+09:00</dc:date>
+  </item>
+  <item rdf:about="https://memo88.hatenablog.com/entry/ps-command-v4-pss-uss">
+    <title>ps コマンド v4.0.0 以降では PSS, USS も表示できる</title>
+    <link>https://memo88.hatenablog.com/entry/ps-command-v4-pss-uss</link>
+    <dc:date>2025-06-18T12:00:00+09:00</dc:date>
   </item>
   <item rdf:about="https://qiita.com/sonota88/items/18620d1b50122006dbb2">
     <title>JREとJRubyのインストール（2025年）</title>
