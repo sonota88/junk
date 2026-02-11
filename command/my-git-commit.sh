@@ -10,7 +10,7 @@
 
 set -o errexit
 
-readonly SIZE_LIMIT=4
+readonly SIZE_LIMIT=3
 
 changed_files() {
   # egrep -v '^ '
