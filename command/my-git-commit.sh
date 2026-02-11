@@ -10,6 +10,8 @@
 
 set -o errexit
 
+readonly SIZE_LIMIT=4
+
 changed_files() {
   # egrep -v '^ '
   #   ステージング領域にあるものだけに限定
@@ -23,11 +25,9 @@ changed_files() {
 
   local size=$(echo "$all_files" | wc -l)
 
-  local size_limit=4
-
-  if [ $size -gt $size_limit ]; then
+  if [ $size -gt $SIZE_LIMIT ]; then
     files="$(
-      echo "$all_files" | head -${size_limit}
+      echo "$all_files" | head -${SIZE_LIMIT}
       printf "..."
     )"
   else
@@ -54,11 +54,9 @@ changed_basenames() {
 
   local size=$(echo "$all_files" | wc -l)
 
-  local size_limit=4
-
-  if [ $size -gt $size_limit ]; then
+  if [ $size -gt $SIZE_LIMIT ]; then
     files="$(
-      echo "$all_files" | head -${size_limit}
+      echo "$all_files" | head -${SIZE_LIMIT}
       printf "..."
     )"
   else
