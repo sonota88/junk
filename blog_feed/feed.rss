@@ -14,6 +14,7 @@
     <description></description>
     <items>
       <rdf:Seq>
+        <rdf:li resource="https://qiita.com/sonota88/items/0fdd9aec44bb1979749f"/>
         <rdf:li resource="https://qiita.com/sonota88/items/1869f0a9e4723c9fbc67"/>
         <rdf:li resource="https://qiita.com/sonota88/items/011394d89f370fb3aaac"/>
         <rdf:li resource="https://qiita.com/sonota88/items/8d64cd21ce2fc14bf5ed"/>
@@ -98,6 +99,11 @@
       </rdf:Seq>
     </items>
   </channel>
+  <item rdf:about="https://qiita.com/sonota88/items/0fdd9aec44bb1979749f">
+    <title>WineでDXRubyを動かす（Ubuntu 24.04）</title>
+    <link>https://qiita.com/sonota88/items/0fdd9aec44bb1979749f</link>
+    <dc:date>2026-03-01T12:00:00+09:00</dc:date>
+  </item>
   <item rdf:about="https://qiita.com/sonota88/items/1869f0a9e4723c9fbc67">
     <title>DXRuby/DXOpal: 任意の音を実行時に生成して鳴らす</title>
     <link>https://qiita.com/sonota88/items/1869f0a9e4723c9fbc67</link>
